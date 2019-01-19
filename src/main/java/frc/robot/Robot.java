@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Subsystems.DriveTrain;
+import frc.robot.Subsystems.Elevator;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -26,6 +27,7 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   public static DriveTrain driveTrain;
   public static OI oi;
+  public static Elevator elevator;
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -37,6 +39,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
     driveTrain = new DriveTrain();
     oi = new OI();
+    elevator = new Elevator();
   }
 
   /**
