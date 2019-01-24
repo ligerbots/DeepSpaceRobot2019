@@ -36,6 +36,8 @@ public class DriveTrain extends Subsystem {
   DifferentialDrive diffDrive;
   Boolean fieldCentric = false;
   AHRS navX;
+
+  double turnOutput;
   
 
   public DriveTrain () {
@@ -54,6 +56,8 @@ public class DriveTrain extends Subsystem {
     diffDrive = new DifferentialDrive(leftLeader, rightLeader);
 
     navX = new AHRS(Port.kMXP, (byte) 200);
+
+    turningController = new PIDController(0.045, 0.004, 0.06, navx, output -> this.turnOutput = output);
 
   }
 
@@ -90,6 +94,27 @@ public class DriveTrain extends Subsystem {
 
   public FieldPosition getRobotPosition () {
     return new FieldPosition(0,0); //TODO
+  }
+
+  public void enableTurningControl(double angle, double tolerance) {
+    double startAngle = this.getYaw();
+    double temp = startAngle + angle;
+   // RobotMap.TURN_P = turningController.getP();
+   // RobotMap.TURN_D = turningController.getD();
+   // RobotMap.TURN_I = turningController.getI();
+    temp = temporaryFixDegrees(temp);
+    turningController.setSetpoint(temp);
+    turningController.enable();
+    turningController.setInputRange(-180.0, 180.0);
+    turningController.setOutputRange(-1.0,1.0);
+    turningController.setAbsoluteTolerance(tolerance);
+    turningController.setToleranceBuffer(1);
+    turningController.setContinuous(true);
+    turningController.setSetpoint(temp);
+}
+
+  public double getTurnOutput() {
+    return this.turnOutput; 
   }
 
   @Override

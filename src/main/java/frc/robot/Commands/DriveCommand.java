@@ -33,14 +33,16 @@ public class DriveCommand extends Command {
       }
 
       if (Math.abs(correctedYaw) > RobotMap.YAW_ERROR_THRESHOLD) {
-        correctedYaw = savedYaw - driveTrain.getYaw();
+        driveTrain.enableTurningControl(savedYaw - driveTrain.getYaw(), 0.3);
+
+        correctedYaw = driveTrain.getTurnOutput();
       }
     } else {
       savedYaw = null;
       correctedYaw = oi.getRotate();
     }
 
-    robot.allDrive(oi.getThrottle(), Math.signum(correctedYaw), oi.getStrafe());
+    robot.allDrive(oi.getThrottle(), correctedYaw, oi.getStrafe());
   }
 
   // Make this return true when this Command no longer needs to run execute()
