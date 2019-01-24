@@ -10,6 +10,9 @@ package frc.robot.Commands;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class DriveCommand extends Command {
+  private double savedYaw = null;
+  double correctedYaw;
+
   public DriveCommand() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
@@ -23,6 +26,21 @@ public class DriveCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+
+    if (oi.getStrafe() > 0) {//robot is strafing
+      if (savedYaw == null) {
+        savedYaw = driveTrain.getYaw();
+      }
+
+      if (Math.abs(correctedYaw) > RobotMap.YAW_ERROR_THRESHOLD) {
+        correctedYaw = savedYaw - driveTrain.getYaw();
+      }
+    } else {
+      savedYaw = null;
+      correctedYaw = oi.getRotate();
+    }
+
+    robot.allDrive(oi.getThrottle(), Math.signum(correctedYaw), oi.getStrafe());
   }
 
   // Make this return true when this Command no longer needs to run execute()

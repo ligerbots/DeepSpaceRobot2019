@@ -20,11 +20,6 @@ public class OI {
 
     public OI () {
         xbox = new XboxController(0);
-
-
-
-
-        
     }
 
     public double getThrottle () {
