@@ -14,6 +14,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import frc.robot.FieldPosition;
 
 /**
  * Add your docs here.
@@ -21,6 +22,11 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 public class DriveTrain extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
+
+  enum DriveSide {
+    LEFT, RIGHT
+  }
+
   CANSparkMax leftLeader;
   CANSparkMax leftFollower;
   CANSparkMax rightLeader;
@@ -64,6 +70,26 @@ public class DriveTrain extends Subsystem {
 
   public float getYaw() {
     return navX.getYaw();
+  }
+
+  public double getEncoderDistance (DriveSide driveSide) {
+    return 0; //TODO
+  }
+
+  public double turnSpeedCalc (double error) {
+    if (error > 30) {return 1;}
+    else if (error > 10) {return 0.3;}
+    return 0.2;
+  }
+
+  public double driveSpeedCalc (double error) {
+    if (error > 24) {return 1;}
+    else if (error > 12) {return 0.7;}
+    return 0.45;
+  }
+
+  public FieldPosition getRobotPosition () {
+    return new FieldPosition(0,0); //TODO
   }
 
   @Override
