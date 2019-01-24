@@ -11,6 +11,7 @@ import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -19,9 +20,11 @@ import frc.robot.FieldPosition;
 /**
  * Add your docs here.
  */
+@SuppressWarnings("deprecation")
 public class DriveTrain extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
+
 
   enum DriveSide {
     LEFT, RIGHT
@@ -35,6 +38,7 @@ public class DriveTrain extends Subsystem {
   CANSparkMax centerFollower;
   DifferentialDrive diffDrive;
   Boolean fieldCentric = false;
+  PIDController turningController;
   AHRS navX;
 
   double turnOutput;
@@ -57,7 +61,7 @@ public class DriveTrain extends Subsystem {
 
     navX = new AHRS(Port.kMXP, (byte) 200);
 
-    turningController = new PIDController(0.045, 0.004, 0.06, navx, output -> this.turnOutput = output);
+    turningController = new PIDController(0.045, 0.004, 0.06, navX, output -> this.turnOutput = output);
 
   }
 
@@ -116,6 +120,12 @@ public class DriveTrain extends Subsystem {
   public double getTurnOutput() {
     return this.turnOutput; 
   }
+
+  double temporaryFixDegrees(double input) {
+    if (input > 180) {return input - 360;}
+    else if (input < -180){return input + 360;}
+    else {return input;}
+}
 
   @Override
   public void initDefaultCommand() {
