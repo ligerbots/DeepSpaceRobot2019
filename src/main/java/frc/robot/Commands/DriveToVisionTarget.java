@@ -16,10 +16,9 @@ import frc.robot.RobotMap;
 public class DriveToVisionTarget extends Command {
 
   enum Phase {
-    DRIVE, DRIVE_AND_ALIGN, ALIGN
+    DRIVE, DRIVE_AND_ALIGN, ALIGN, FINISHED
   }
   
-  double startAngle;
   double angleOffset;
   double targetAngle;
   double currentOffset;
@@ -47,7 +46,9 @@ public class DriveToVisionTarget extends Command {
 
     switch (currentPhase) {
       case DRIVE:
-        Robot.driveTrain.allDrive(1, Math.signum(currentOffset), Math.signum(Math.tan(angleOffset)));
+        //Will rotate to the given direction via PIDController, and strafe to the target
+        Robot.driveTrain.enableTurningControl(currentOffset, 0.3);
+        Robot.driveTrain.allDrive(1, Robot.driveTrain.getTurnOutput(), Math.signum(Math.tan(angleOffset)));
         
         if (Robot.driveTrain.getRobotPosition().distanceTo(targetPos) <= RobotMap.AUTO_DRIVE_STARTALIGN_THRESHOLD) {
           currentPhase = Phase.DRIVE_AND_ALIGN;
@@ -56,24 +57,30 @@ public class DriveToVisionTarget extends Command {
         break;
 
       case DRIVE_AND_ALIGN:
-        if (Math.abs(currentOffset) > RobotMap.AUTO_TURN_ACCURACY_THRESHOLD) {
-          Robot.driveTrain.enableTurningControl(currentOffset, 0.3);
-
-          alignAngle = Robot.driveTrain.getTurnOutput(); //the smoothed value from the PIDController
-        }
-
-        Robot.driveTrain.allDrive(1, alignAngle, Math.signum(Math.tan(angleOffset)));
-
         if (Robot.driveTrain.getRobotPosition().distanceTo(targetPos) <= RobotMap.AUTO_DRIVE_DISTANCE_THRESHOLD) {
           currentPhase = Phase.ALIGN;
+          break;
         }
-      break;
+
+        if (Math.abs(currentOffset) > RobotMap.AUTO_TURN_ACCURACY_THRESHOLD) {
+          Robot.driveTrain.enableTurningControl(currentOffset, 0.3);
+          
+          alignAngle = Robot.driveTrain.getTurnOutput(); //the smoothed value from the PIDController
+        } else { //If the accuracy limit is reached, don't rotate at all
+          alignAngle = 0;
+        }
+
+        //Full speed foward with strafing along a direct hypotenuse to the target
+        Robot.driveTrain.allDrive(1, alignAngle, Math.signum(Math.tan(angleOffset)));
+        break;
 
       case ALIGN:
         if (Math.abs(currentOffset) > RobotMap.AUTO_TURN_ACCURACY_THRESHOLD) {
           Robot.driveTrain.enableTurningControl(angleOffset, 0.3);
-
           alignAngle = Robot.driveTrain.getTurnOutput(); //the smoothed value from the PIDController
+        } else {
+          currentPhase = Phase.FINISHED;
+          break;
         }
 
         Robot.driveTrain.allDrive(0, alignAngle, 0);
@@ -86,7 +93,7 @@ public class DriveToVisionTarget extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return currentPhase == Phase.FINISHED;
   }
 
   // Called once after isFinished returns true
