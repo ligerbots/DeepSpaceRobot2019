@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.Commands;
+package org.ligerbots.robot2019.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 

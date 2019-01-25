@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.Subsystems;
+package org.ligerbots.robot2019.Subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import frc.robot.FieldPosition;
+import org.ligerbots.robot2019.FieldPosition;
 
 /**
  * Add your docs here.
@@ -42,7 +42,7 @@ public class DriveTrain extends Subsystem {
   AHRS navX;
 
   double turnOutput;
-  
+
 
   public DriveTrain () {
 
@@ -53,7 +53,7 @@ public class DriveTrain extends Subsystem {
     centerLeader = new CANSparkMax(4, MotorType.kBrushless);
     centerFollower = new CANSparkMax(5, MotorType.kBrushless);
 
-    leftFollower.follow(leftLeader); 
+    leftFollower.follow(leftLeader);
     rightFollower.follow(rightLeader);
     centerFollower.follow(centerLeader); //MIGHT NEED TO BE INVERTED
 
@@ -118,7 +118,7 @@ public class DriveTrain extends Subsystem {
 }
 
   public double getTurnOutput() {
-    return this.turnOutput; 
+    return this.turnOutput;
   }
 
   double temporaryFixDegrees(double input) {
