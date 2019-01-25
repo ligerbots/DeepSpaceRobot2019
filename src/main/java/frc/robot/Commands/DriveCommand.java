@@ -8,9 +8,11 @@
 package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import frc.robot.Robot;
+import frc.robot.RobotMap;
 
 public class DriveCommand extends Command {
-  private double savedYaw = null;
+  private double savedYaw;
   double correctedYaw;
 
   public DriveCommand() {
@@ -27,22 +29,21 @@ public class DriveCommand extends Command {
   @Override
   protected void execute() {
 
-    if (oi.getStrafe() > 0) {//robot is strafing
-      if (savedYaw == null) {
-        savedYaw = driveTrain.getYaw();
+    if (Robot.oi.getStrafe() > 0) {//robot is strafing
+      if (Math.abs(Robot.oi.getRotate()) > 0.04) {
+        savedYaw = Robot.driveTrain.getYaw();
       }
 
       if (Math.abs(correctedYaw) > RobotMap.YAW_ERROR_THRESHOLD) {
-        driveTrain.enableTurningControl(savedYaw - driveTrain.getYaw(), 0.3);
+        Robot.driveTrain.enableTurningControl(savedYaw - Robot.driveTrain.getYaw(), 0.3);
 
-        correctedYaw = driveTrain.getTurnOutput();
+        correctedYaw = Robot.driveTrain.getTurnOutput();
       }
     } else {
-      savedYaw = null;
-      correctedYaw = oi.getRotate();
+      correctedYaw = Robot.oi.getRotate();
     }
 
-    robot.allDrive(oi.getThrottle(), correctedYaw, oi.getStrafe());
+    Robot.driveTrain.allDrive(Robot.oi.getThrottle(), correctedYaw, Robot.oi.getStrafe());
   }
 
   // Make this return true when this Command no longer needs to run execute()
