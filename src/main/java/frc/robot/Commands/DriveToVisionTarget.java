@@ -45,18 +45,21 @@ public class DriveToVisionTarget extends Command {
     currentOffset = targetAngle - Robot.driveTrain.getYaw();
 
     switch (currentPhase) {
+      //Drives to most direct line to target, and rotates to orient along the line
       case DRIVE:
         //Will rotate to the given direction via PIDController, and strafe to the target
         Robot.driveTrain.enableTurningControl(currentOffset, 0.3);
         Robot.driveTrain.allDrive(1, Robot.driveTrain.getTurnOutput(), Math.signum(Math.tan(angleOffset)));
         
+        //Checking for distance threshold, whether we're close enough to start aligning
         if (Robot.driveTrain.getRobotPosition().distanceTo(targetPos) <= RobotMap.AUTO_DRIVE_STARTALIGN_THRESHOLD) {
           currentPhase = Phase.DRIVE_AND_ALIGN;
         }
         
         break;
-
+      //Drives along direct line to target while beginning to orient to the target
       case DRIVE_AND_ALIGN:
+        //Checking for distance threshold, whether we're close enough to start aligning entirely
         if (Robot.driveTrain.getRobotPosition().distanceTo(targetPos) <= RobotMap.AUTO_DRIVE_DISTANCE_THRESHOLD) {
           currentPhase = Phase.ALIGN;
           break;
@@ -71,9 +74,10 @@ public class DriveToVisionTarget extends Command {
         }
 
         //Full speed foward with strafing along a direct hypotenuse to the target
-        Robot.driveTrain.allDrive(1, alignAngle, Math.signum(Math.tan(angleOffset)));
+        Robot.driveTrain.allDrive(1, alignAngle, Math.signum(Math.tan(currentOffset)*5));
         break;
-
+      
+      //STOPS foward motion, orients with target
       case ALIGN:
         if (Math.abs(currentOffset) > RobotMap.AUTO_TURN_ACCURACY_THRESHOLD) {
           Robot.driveTrain.enableTurningControl(angleOffset, 0.3);
@@ -83,6 +87,7 @@ public class DriveToVisionTarget extends Command {
           break;
         }
 
+        //Will only rotate the robot to the specified offset
         Robot.driveTrain.allDrive(0, alignAngle, 0);
 
         break;
