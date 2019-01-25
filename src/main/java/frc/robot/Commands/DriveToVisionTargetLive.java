@@ -53,7 +53,7 @@ public class DriveToVisionTargetLive extends Command {
   @Override
   protected boolean isFinished() {
     return traveledDistance <= estimatedDistance/1.5; //Not sure if this can be replaced with something else, ie, passing in an angle that updates in real time to the command?
-  }
+  } // Command will need to be interrupted in order to update the angleoffset
 
   // Called once after isFinished returns true
   @Override

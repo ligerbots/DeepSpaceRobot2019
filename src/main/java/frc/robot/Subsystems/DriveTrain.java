@@ -27,7 +27,7 @@ public class DriveTrain extends Subsystem {
   // here. Call these from Commands.
 
 
-  enum DriveSide {
+  public enum DriveSide {
     LEFT, RIGHT, CENTER
   }
 
