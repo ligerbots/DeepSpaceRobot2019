@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.FieldPosition;
+import frc.robot.RobotMap;
 
 /**
  * Add your docs here.
@@ -27,7 +28,7 @@ public class DriveTrain extends Subsystem {
 
 
   enum DriveSide {
-    LEFT, RIGHT
+    LEFT, RIGHT, CENTER
   }
 
   CANSparkMax leftLeader;
@@ -81,7 +82,19 @@ public class DriveTrain extends Subsystem {
   }
 
   public double getEncoderDistance (DriveSide driveSide) {
-    return 0; //TODO
+    switch (driveSide) {
+      case LEFT: 
+        return leftLeader.getEncoder().getPosition() / 42 /*I think?*/ * 
+          RobotMap.SIDE_GEAR_RATIO * RobotMap.SIDE_WHEEL_DIAMETER;
+      case RIGHT:
+        return leftLeader.getEncoder().getPosition() / 42 /*I think?*/ * 
+          RobotMap.SIDE_GEAR_RATIO * RobotMap.SIDE_WHEEL_DIAMETER;
+      case CENTER:
+        return leftLeader.getEncoder().getPosition() / 42 /*I think?*/ * 
+          RobotMap.CENTER_GEAR_RATIO * RobotMap.CENTER_WHEEL_DIAMETER;
+      default:
+        return 0.0;
+    } 
   }
 
   public double turnSpeedCalc (double error) {
