@@ -16,15 +16,16 @@ import frc.robot.RobotMap;
 public class DriveToVisionTarget extends Command {
 
   enum Phase {
-    TURN_TO_ANGLE, DRIVE, ALIGN
+    DRIVE, DRIVE_AND_ALIGN, ALIGN
   }
   
   double startAngle;
-  FieldPosition targetPos;
   double angleOffset;
   double targetAngle;
   double currentOffset;
-  Phase currentPhase = Phase.TURN_TO_ANGLE;
+  double alignAngle;
+  FieldPosition targetPos;
+  Phase currentPhase = Phase.DRIVE;
 
   public DriveToVisionTarget(FieldPosition targetPos, double angleOffset) {
     // Use requires() here to declare subsystem dependencies
@@ -42,23 +43,41 @@ public class DriveToVisionTarget extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    currentOffset = Math.abs(targetAngle - Robot.driveTrain.getYaw());
+    currentOffset = targetAngle - Robot.driveTrain.getYaw();
+
     switch (currentPhase) {
-      case TURN_TO_ANGLE:
-        if (currentOffset > RobotMap.AUTO_TURN_ACCURACY_THRESHOLD) {
-          Robot.driveTrain.allDrive(0, -Math.signum(angleOffset) * Robot.driveTrain.turnSpeedCalc(currentOffset), 0);
-          break;
-        }
-        currentPhase = Phase.DRIVE;
-        break;
       case DRIVE:
-        if (Robot.driveTrain.getRobotPosition().distanceTo(targetPos) > RobotMap.AUTO_DRIVE_DISTANCE_THRESHOLD) {
-          Robot.driveTrain.allDrive(Robot.driveTrain.driveSpeedCalc(Robot.driveTrain.getRobotPosition().distanceTo(targetPos)), 0, 0);
-          break;
-        } 
-        currentPhase = Phase.ALIGN;
+        Robot.driveTrain.allDrive(1, Math.signum(currentOffset), Math.signum(Math.tan(angleOffset)));
+        
+        if (Robot.driveTrain.getRobotPosition().distanceTo(targetPos) <= RobotMap.AUTO_DRIVE_STARTALIGN_THRESHOLD) {
+          currentPhase = Phase.DRIVE_AND_ALIGN;
+        }
+        
         break;
+
+      case DRIVE_AND_ALIGN:
+        if (Math.abs(currentOffset) > RobotMap.AUTO_TURN_ACCURACY_THRESHOLD) {
+          Robot.driveTrain.enableTurningControl(currentOffset, 0.3);
+
+          alignAngle = Robot.driveTrain.getTurnOutput(); //the smoothed value from the PIDController
+        }
+
+        Robot.driveTrain.allDrive(1, alignAngle, Math.signum(Math.tan(angleOffset)));
+
+        if (Robot.driveTrain.getRobotPosition().distanceTo(targetPos) <= RobotMap.AUTO_DRIVE_DISTANCE_THRESHOLD) {
+          currentPhase = Phase.ALIGN;
+        }
+      break;
+
       case ALIGN:
+        if (Math.abs(currentOffset) > RobotMap.AUTO_TURN_ACCURACY_THRESHOLD) {
+          Robot.driveTrain.enableTurningControl(angleOffset, 0.3);
+
+          alignAngle = Robot.driveTrain.getTurnOutput(); //the smoothed value from the PIDController
+        }
+
+        Robot.driveTrain.allDrive(0, alignAngle, 0);
+
         break;
       default:
     }
