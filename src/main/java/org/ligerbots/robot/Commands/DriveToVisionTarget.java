@@ -8,6 +8,8 @@
 package org.ligerbots.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import org.ligerbots.robot.FieldPosition;
 import org.ligerbots.robot.Robot;
 import org.ligerbots.robot.RobotMap;
@@ -23,6 +25,7 @@ public class DriveToVisionTarget extends Command {
   double targetAngle;
   double currentOffset;
   double alignAngle;
+  double distanceTo;
   FieldPosition targetPos;
   Phase currentPhase = Phase.DRIVE;
 
@@ -37,12 +40,16 @@ public class DriveToVisionTarget extends Command {
   @Override
   protected void initialize() {
     targetAngle = Robot.driveTrain.getYaw() + angleOffset;
+    SmartDashboard.putString("VisionTargetStatus", "DRIVE");
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
     currentOffset = targetAngle - Robot.driveTrain.getYaw();
+    distanceTo = Robot.driveTrain.getRobotPosition().distanceTo(targetPos);
+    SmartDashboard.putNumber("VisionTargetDistance", distanceTo);
+    SmartDashboard.putNumber("VisionTargetCurrentAngleOffset", currentOffset);
 
     switch (currentPhase) {
       //Drives to most direct line to target, and rotates to orient along the line
@@ -52,8 +59,9 @@ public class DriveToVisionTarget extends Command {
         Robot.driveTrain.allDrive(1, Robot.driveTrain.getTurnOutput(), Math.signum(Math.tan(angleOffset)));
         
         //Checking for distance threshold, whether we're close enough to start aligning
-        if (Robot.driveTrain.getRobotPosition().distanceTo(targetPos) <= RobotMap.AUTO_DRIVE_STARTALIGN_THRESHOLD) {
+        if (distanceTo <= RobotMap.AUTO_DRIVE_STARTALIGN_THRESHOLD) {
           currentPhase = Phase.DRIVE_AND_ALIGN;
+          SmartDashboard.putString("VisionTargetStatus", "DRIVE_AND_ALIGN");
         }
         
         break;
@@ -62,6 +70,7 @@ public class DriveToVisionTarget extends Command {
         //Checking for distance threshold, whether we're close enough to start aligning entirely
         if (Robot.driveTrain.getRobotPosition().distanceTo(targetPos) <= RobotMap.AUTO_DRIVE_DISTANCE_THRESHOLD) {
           currentPhase = Phase.ALIGN;
+          SmartDashboard.putString("VisionTargetStatus", "ALIGN");
           break;
         }
 
@@ -83,6 +92,7 @@ public class DriveToVisionTarget extends Command {
           Robot.driveTrain.enableTurningControl(angleOffset, 0.3);
           alignAngle = Robot.driveTrain.getTurnOutput(); //the smoothed value from the PIDController
         } else {
+          SmartDashboard.putString("VisionTargetStatus", "FINISHED");
           currentPhase = Phase.FINISHED;
           break;
         }
