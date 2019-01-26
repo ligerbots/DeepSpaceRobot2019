@@ -1,4 +1,4 @@
-package frc.robot;
+package org.ligerbots.robot;
 
 
 public class RobotMap {

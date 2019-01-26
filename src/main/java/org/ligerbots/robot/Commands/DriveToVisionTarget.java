@@ -5,12 +5,12 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.Commands;
+package org.ligerbots.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.FieldPosition;
-import frc.robot.Robot;
-import frc.robot.RobotMap;
+import org.ligerbots.robot.FieldPosition;
+import org.ligerbots.robot.Robot;
+import org.ligerbots.robot.RobotMap;
 
 
 public class DriveToVisionTarget extends Command {
@@ -18,7 +18,7 @@ public class DriveToVisionTarget extends Command {
   enum Phase {
     TURN_TO_ANGLE, DRIVE, ALIGN
   }
-  
+
   double startAngle;
   FieldPosition targetPos;
   double angleOffset;
@@ -55,7 +55,7 @@ public class DriveToVisionTarget extends Command {
         if (Robot.driveTrain.getRobotPosition().distanceTo(targetPos) > RobotMap.AUTO_DRIVE_DISTANCE_THRESHOLD) {
           Robot.driveTrain.allDrive(Robot.driveTrain.driveSpeedCalc(Robot.driveTrain.getRobotPosition().distanceTo(targetPos)), 0, 0);
           break;
-        } 
+        }
         currentPhase = Phase.ALIGN;
         break;
       case ALIGN:

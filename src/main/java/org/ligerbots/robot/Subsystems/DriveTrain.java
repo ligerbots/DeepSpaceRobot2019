@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.Subsystems;
+package org.ligerbots.robot.Subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
@@ -15,8 +15,8 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import frc.robot.FieldPosition;
-import frc.robot.RobotMap;
+import org.ligerbots.robot.FieldPosition;
+import org.ligerbots.robot.RobotMap;
 
 /**
  * Add your docs here.
@@ -43,7 +43,7 @@ public class DriveTrain extends Subsystem {
   AHRS navX;
 
   double turnOutput;
-  
+
 
   public DriveTrain () {
 
@@ -54,7 +54,7 @@ public class DriveTrain extends Subsystem {
     centerLeader = new CANSparkMax(4, MotorType.kBrushless);
     centerFollower = new CANSparkMax(5, MotorType.kBrushless);
 
-    leftFollower.follow(leftLeader); 
+    leftFollower.follow(leftLeader);
     rightFollower.follow(rightLeader);
     centerFollower.follow(centerLeader); //MIGHT NEED TO BE INVERTED
 
@@ -83,18 +83,18 @@ public class DriveTrain extends Subsystem {
 
   public double getEncoderDistance (DriveSide driveSide) {
     switch (driveSide) {
-      case LEFT: 
-        return leftLeader.getEncoder().getPosition() / 42 /*I think?*/ * 
+      case LEFT:
+        return leftLeader.getEncoder().getPosition() / 42 /*I think?*/ *
           RobotMap.SIDE_GEAR_RATIO * RobotMap.SIDE_WHEEL_DIAMETER;
       case RIGHT:
-        return leftLeader.getEncoder().getPosition() / 42 /*I think?*/ * 
+        return leftLeader.getEncoder().getPosition() / 42 /*I think?*/ *
           RobotMap.SIDE_GEAR_RATIO * RobotMap.SIDE_WHEEL_DIAMETER;
       case CENTER:
-        return leftLeader.getEncoder().getPosition() / 42 /*I think?*/ * 
+        return leftLeader.getEncoder().getPosition() / 42 /*I think?*/ *
           RobotMap.CENTER_GEAR_RATIO * RobotMap.CENTER_WHEEL_DIAMETER;
       default:
         return 0.0;
-    } 
+    }
   }
 
   public double turnSpeedCalc (double error) {
@@ -131,7 +131,7 @@ public class DriveTrain extends Subsystem {
 }
 
   public double getTurnOutput() {
-    return this.turnOutput; 
+    return this.turnOutput;
   }
 
   double temporaryFixDegrees(double input) {
