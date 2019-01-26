@@ -30,17 +30,17 @@ public class DriveCommand extends Command {
   protected void execute() {
 
     if (Robot.oi.getStrafe() > 0) {//robot is strafing
-      if (Math.abs(Robot.oi.getRotate()) > 0.04) {
-        savedYaw = Robot.driveTrain.getYaw();
+      if (Math.abs(Robot.oi.getRotate()) > 0.04) { //wants to rotate
+        savedYaw = Robot.driveTrain.getYaw(); //caches the yaw used to center
       }
 
       if (Math.abs(correctedYaw) > RobotMap.YAW_ERROR_THRESHOLD) {
         Robot.driveTrain.enableTurningControl(savedYaw - Robot.driveTrain.getYaw(), 0.3);
 
-        correctedYaw = Robot.driveTrain.getTurnOutput();
+        correctedYaw = Robot.driveTrain.getTurnOutput(); //the smoothed value from the PIDController
       }
     } else {
-      correctedYaw = Robot.oi.getRotate();
+      correctedYaw = Robot.oi.getRotate(); //doesn't have to correct for strafing
     }
 
     Robot.driveTrain.allDrive(Robot.oi.getThrottle(), correctedYaw, Robot.oi.getStrafe());
