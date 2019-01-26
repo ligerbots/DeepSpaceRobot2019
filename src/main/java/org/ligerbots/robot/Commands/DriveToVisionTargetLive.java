@@ -5,11 +5,11 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.Commands;
+package org.ligerbots.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.Robot;
-import frc.robot.Subsystems.DriveTrain.DriveSide;
+import org.ligerbots.robot.Robot;
+import org.ligerbots.robot.Subsystems.DriveTrain.DriveSide;
 
 
 public class DriveToVisionTargetLive extends Command {

@@ -5,13 +5,13 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot;
+package org.ligerbots.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Subsystems.DriveTrain;
-import frc.robot.Subsystems.Elevator;
+import org.ligerbots.robot.Subsystems.DriveTrain;
+import org.ligerbots.robot.Subsystems.Elevator;
 
 /**
  * The VM is configured to automatically run this class, and to call the

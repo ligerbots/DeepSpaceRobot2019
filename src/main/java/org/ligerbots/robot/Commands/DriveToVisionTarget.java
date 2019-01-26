@@ -5,12 +5,12 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.Commands;
+package org.ligerbots.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.FieldPosition;
-import frc.robot.Robot;
-import frc.robot.RobotMap;
+import org.ligerbots.robot.FieldPosition;
+import org.ligerbots.robot.Robot;
+import org.ligerbots.robot.RobotMap;
 
 
 public class DriveToVisionTarget extends Command {
