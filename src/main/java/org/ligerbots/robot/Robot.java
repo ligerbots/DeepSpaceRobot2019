@@ -40,6 +40,8 @@ public class Robot extends TimedRobot {
     driveTrain = new DriveTrain();
     oi = new OI();
     elevator = new Elevator();
+    //TESTING HERE:
+    SmartDashboard.setDefaultNumber("", defaultValue)
   }
 
   /**
