@@ -15,9 +15,9 @@ import org.ligerbots.robot.Robot;
 import org.ligerbots.robot.RobotMap;
 
 
-public class DriveToVisionTarget extends Command {
+public class DriveToVisionTargetTest extends Command {
 
-  enum Phase {
+  public enum Phase {
     DRIVE, DRIVE_AND_ALIGN, ALIGN, FINISHED
   }
   
@@ -26,13 +26,13 @@ public class DriveToVisionTarget extends Command {
   double currentOffset;
   double alignAngle;
   double distanceTo;
+  double time = 0;
   FieldPosition targetPos;
   Phase currentPhase = Phase.DRIVE;
 
-  public DriveToVisionTarget(FieldPosition targetPos, double angleOffset) {
+  public DriveToVisionTargetTest(double angleOffset) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    this.targetPos = targetPos;
     this.angleOffset = angleOffset;
   }
 
@@ -46,10 +46,8 @@ public class DriveToVisionTarget extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    currentOffset = targetAngle - Robot.driveTrain.getYaw();
-    distanceTo = Robot.driveTrain.getRobotPosition().distanceTo(targetPos);
-    SmartDashboard.putNumber("VisionTargetDistance", distanceTo);
-    SmartDashboard.putNumber("VisionTargetCurrentAngleOffset", currentOffset);
+    time++;
+    SmartDashboard.putNumber("TickElasped", time);
 
     switch (currentPhase) {
       //Drives to most direct line to target, and rotates to orient along the line
@@ -57,9 +55,7 @@ public class DriveToVisionTarget extends Command {
         //Will rotate to the given direction via PIDController, and strafe to the target
         Robot.driveTrain.enableTurningControl(currentOffset, 0.3);
         Robot.driveTrain.allDrive(1, Robot.driveTrain.getTurnOutput(), Math.signum(Math.tan(angleOffset)));
-        
-        //Checking for distance threshold, whether we're close enough to start aligning
-        if (distanceTo <= RobotMap.AUTO_DRIVE_STARTALIGN_THRESHOLD) {
+        if (time >= 4) {
           currentPhase = Phase.DRIVE_AND_ALIGN;
           SmartDashboard.putString("VisionTargetStatus", "DRIVE_AND_ALIGN");
         }
@@ -68,7 +64,7 @@ public class DriveToVisionTarget extends Command {
       //Drives along direct line to target while beginning to orient to the target
       case DRIVE_AND_ALIGN:
         //Checking for distance threshold, whether we're close enough to start aligning entirely
-        if (Robot.driveTrain.getRobotPosition().distanceTo(targetPos) <= RobotMap.AUTO_DRIVE_DISTANCE_THRESHOLD) {
+        if (time >= 10) {
           currentPhase = Phase.ALIGN;
           SmartDashboard.putString("VisionTargetStatus", "ALIGN");
           break;
@@ -78,6 +74,8 @@ public class DriveToVisionTarget extends Command {
           Robot.driveTrain.enableTurningControl(currentOffset, 0.3);
           
           alignAngle = Robot.driveTrain.getTurnOutput(); //the smoothed value from the PIDController
+          //TEST PURPOSES ONLY - WILL INCREMENTALLY REDUCE THE CURRENTOFFSET
+          currentOffset = (currentOffset > 0) ? currentOffset-1 : (currentOffset < 0) ? currentOffset+1 : 0;
         } else { //If the accuracy limit is reached, don't rotate at all
           alignAngle = 0;
         }
@@ -91,6 +89,8 @@ public class DriveToVisionTarget extends Command {
         if (Math.abs(currentOffset) > RobotMap.AUTO_TURN_ACCURACY_THRESHOLD) {
           Robot.driveTrain.enableTurningControl(angleOffset, 0.3);
           alignAngle = Robot.driveTrain.getTurnOutput(); //the smoothed value from the PIDController
+          //TEST PURPOSES ONLY - WILL INCREMENTALLY REDUCE THE CURRENTOFFSET
+          currentOffset = (currentOffset > 0) ? currentOffset-1 : (currentOffset < 0) ? currentOffset+1 : 0;
         } else {
           SmartDashboard.putString("VisionTargetStatus", "FINISHED");
           currentPhase = Phase.FINISHED;
@@ -103,6 +103,12 @@ public class DriveToVisionTarget extends Command {
         break;
       default:
     }
+
+    SmartDashboard.putNumber("AngleOffset", currentOffset);
+  }
+
+  public DriveToVisionTargetTest.Phase GetCurrentPhase() {
+    return currentPhase;
   }
 
   // Make this return true when this Command no longer needs to run execute()

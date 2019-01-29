@@ -10,6 +10,9 @@ package org.ligerbots.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//TEMP
+import org.ligerbots.robot.Commands.DriveToVisionTargetTest;
+
 import org.ligerbots.robot.Subsystems.DriveTrain;
 import org.ligerbots.robot.Subsystems.Elevator;
 
@@ -41,7 +44,9 @@ public class Robot extends TimedRobot {
     oi = new OI();
     elevator = new Elevator();
     //TESTING HERE:
-    SmartDashboard.setDefaultNumber("", defaultValue)
+    SmartDashboard.setDefaultNumber("AngleOffset", 10);
+    SmartDashboard.setDefaultNumber("CurrentYaw", 0);
+    SmartDashboard.putData("StartVisionTargetTest", new DriveToVisionTargetTest(SmartDashboard.getNumber("AngleOffset", 0)));
   }
 
   /**
