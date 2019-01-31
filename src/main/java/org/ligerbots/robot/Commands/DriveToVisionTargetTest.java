@@ -55,6 +55,7 @@ public class DriveToVisionTargetTest extends Command {
         //Will rotate to the given direction via PIDController, and strafe to the target
         Robot.driveTrain.enableTurningControl(currentOffset, 0.3);
         Robot.driveTrain.allDrive(1, Robot.driveTrain.getTurnOutput(), Math.signum(Math.tan(angleOffset)));
+        //If we've been driving for enough time, starting aligning and driving at the same time
         if (time >= 4) {
           currentPhase = Phase.DRIVE_AND_ALIGN;
           SmartDashboard.putString("VisionTargetStatus", "DRIVE_AND_ALIGN");
@@ -63,7 +64,7 @@ public class DriveToVisionTargetTest extends Command {
         break;
       //Drives along direct line to target while beginning to orient to the target
       case DRIVE_AND_ALIGN:
-        //Checking for distance threshold, whether we're close enough to start aligning entirely
+        //If we've been driving for enough time, start aligning
         if (time >= 10) {
           currentPhase = Phase.ALIGN;
           SmartDashboard.putString("VisionTargetStatus", "ALIGN");
@@ -79,6 +80,7 @@ public class DriveToVisionTargetTest extends Command {
         } else { //If the accuracy limit is reached, don't rotate at all
           alignAngle = 0;
         }
+        SmartDashboard.putNumber("AlignAngle", alignAngle);
 
         //Full speed foward with strafing along a direct hypotenuse to the target
         Robot.driveTrain.allDrive(1, alignAngle, Math.signum(Math.tan(currentOffset)*5));
@@ -105,6 +107,7 @@ public class DriveToVisionTargetTest extends Command {
     }
 
     SmartDashboard.putNumber("AngleOffset", currentOffset);
+    SmartDashboard.putNumber("ThrottleTurning", Math.signum(Math.tan(currentOffset)));
   }
 
   public DriveToVisionTargetTest.Phase GetCurrentPhase() {
@@ -114,6 +117,7 @@ public class DriveToVisionTargetTest extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
+    //Will stop looping the command once we're finished aligning with the target
     return currentPhase == Phase.FINISHED;
   }
 

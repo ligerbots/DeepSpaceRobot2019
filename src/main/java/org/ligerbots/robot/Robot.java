@@ -44,9 +44,8 @@ public class Robot extends TimedRobot {
     oi = new OI();
     elevator = new Elevator();
     //TESTING HERE:
-    SmartDashboard.setDefaultNumber("AngleOffset", 10);
-    SmartDashboard.setDefaultNumber("CurrentYaw", 0);
-    SmartDashboard.putData("StartVisionTargetTest", new DriveToVisionTargetTest(SmartDashboard.getNumber("AngleOffset", 0)));
+    SmartDashboard.setDefaultNumber("AngleOffset", 10); //The current offset to the target, settable by a human
+    SmartDashboard.putData("StartVisionTargetTest", new DriveToVisionTargetTest(SmartDashboard.getNumber("AngleOffset", 5)));
   }
 
   /**
