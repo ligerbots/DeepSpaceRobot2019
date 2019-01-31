@@ -9,48 +9,51 @@ package org.ligerbots.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import org.ligerbots.robot.Robot;
-import org.ligerbots.robot.RobotMap;
+import org.ligerbots.robot.Subsystems.DriveTrain.DriveSide;
 
-public class DriveCommand extends Command {
-  private double savedYaw;
-  double correctedYaw;
 
-  public DriveCommand() {
+public class DriveToVisionTargetLive extends Command {
+
+  enum Phase {
+    DRIVE, DRIVE_AND_ALIGN, ALIGN
+  }
+  
+  double startAngle;
+  double angleOffset;
+  double targetAngle;
+  double currentOffset;
+  float estimatedDistance;
+  float traveledDistance;
+
+  public DriveToVisionTargetLive(float estimatedDistance, double angleOffset) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
+    this.estimatedDistance = estimatedDistance;
+    this.angleOffset = angleOffset;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    targetAngle = Robot.driveTrain.getYaw() + angleOffset;
+    traveledDistance = 0;
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    currentOffset = targetAngle - Robot.driveTrain.getYaw();
 
-    if (Robot.oi.getStrafe() > 0) {//robot is strafing
-      if (Math.abs(Robot.oi.getRotate()) > 0.04) { //wants to rotate
-        savedYaw = Robot.driveTrain.getYaw(); //caches the yaw used to center
-      }
+    traveledDistance += (Robot.driveTrain.getEncoderDistance(DriveSide.LEFT) + Robot.driveTrain.getEncoderDistance(DriveSide.RIGHT))/2;
 
-      if (Math.abs(correctedYaw) > RobotMap.YAW_ERROR_THRESHOLD) {
-        Robot.driveTrain.enableTurningControl(savedYaw - Robot.driveTrain.getYaw(), 0.3);
-
-        correctedYaw = Robot.driveTrain.getTurnOutput(); //the smoothed value from the PIDController
-      }
-    } else {
-      correctedYaw = Robot.oi.getRotate(); //doesn't have to correct for strafing
-    }
-
-    Robot.driveTrain.allDrive(Robot.oi.getThrottle(), correctedYaw, Robot.oi.getStrafe());
+    Robot.driveTrain.allDrive(1, Math.signum(currentOffset), Math.signum(Math.tan(angleOffset)));
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
-  }
+    return traveledDistance <= estimatedDistance/1.5; //Not sure if this can be replaced with something else, ie, passing in an angle that updates in real time to the command?
+  } // Command will need to be interrupted in order to update the angleoffset
 
   // Called once after isFinished returns true
   @Override

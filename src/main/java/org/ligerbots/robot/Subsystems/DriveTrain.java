@@ -27,7 +27,7 @@ public class DriveTrain extends Subsystem {
   // here. Call these from Commands.
 
 
-  enum DriveSide {
+  public enum DriveSide {
     LEFT, RIGHT, CENTER
   }
 
@@ -87,10 +87,10 @@ public class DriveTrain extends Subsystem {
         return leftLeader.getEncoder().getPosition() / 42 /*I think?*/ *
           RobotMap.SIDE_GEAR_RATIO * RobotMap.SIDE_WHEEL_DIAMETER;
       case RIGHT:
-        return leftLeader.getEncoder().getPosition() / 42 /*I think?*/ *
+        return rightLeader.getEncoder().getPosition() / 42 /*I think?*/ *
           RobotMap.SIDE_GEAR_RATIO * RobotMap.SIDE_WHEEL_DIAMETER;
       case CENTER:
-        return leftLeader.getEncoder().getPosition() / 42 /*I think?*/ *
+        return centerLeader.getEncoder().getPosition() / 42 /*I think?*/ *
           RobotMap.CENTER_GEAR_RATIO * RobotMap.CENTER_WHEEL_DIAMETER;
       default:
         return 0.0;

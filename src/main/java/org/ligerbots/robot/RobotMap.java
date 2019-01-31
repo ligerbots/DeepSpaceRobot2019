@@ -10,6 +10,8 @@ public class RobotMap {
 
     public static final double AUTO_DRIVE_DISTANCE_THRESHOLD = 2; //in inches
 
+    public static final double AUTO_DRIVE_STARTALIGN_THRESHOLD = 20; //in inches
+
     public static final double SIDE_GEAR_RATIO = 12 / 72 * 44 / 72;
 
     public static final double CENTER_GEAR_RATIO = 1 / 12; //Not actually. Fix later
