@@ -22,10 +22,24 @@ import org.ligerbots.robot.RobotMap;
 public class Manipulator extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
+  DoubleSolenoid solenoid1;
+  DoubleSolenoid solenoid2;
+  DoubleSolenoid solenoid3;
+  WPI_TalonSRX talon1;
+  WPI_TalonSRX talon2;
   
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
+  }
+  public void setMotorPID(double p, double i, double d) {
+      talon1.config_kP(0, p);
+      talon1.config_kI(0, i);
+      talon1.config_kD(0, d);
+  }
+  public void setMotorPosition(double setPoint);
+  public void openSolenoids() {
+    
   }
 }
