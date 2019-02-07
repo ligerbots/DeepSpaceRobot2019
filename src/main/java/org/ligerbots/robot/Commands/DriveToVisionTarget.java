@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.ligerbots.robot.FieldPosition;
 import org.ligerbots.robot.Robot;
 import org.ligerbots.robot.RobotMap;
+import org.ligerbots.robot.Subsystems.DriveTrain.DriveSide;
 
 
 public class DriveToVisionTarget extends Command {
@@ -25,14 +26,15 @@ public class DriveToVisionTarget extends Command {
   double targetAngle;
   double currentOffset;
   double alignAngle;
-  double distanceTo;
+  double distanceToTarget;
+  double distanceTraveled;
   FieldPosition targetPos;
   Phase currentPhase = Phase.DRIVE;
 
-  public DriveToVisionTarget(FieldPosition targetPos, double angleOffset) {
+  public DriveToVisionTarget(double distanceToTarget, double angleOffset) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    this.targetPos = targetPos;
+    this.distanceToTarget = distanceToTarget;
     this.angleOffset = angleOffset;
   }
 
@@ -41,14 +43,15 @@ public class DriveToVisionTarget extends Command {
   protected void initialize() {
     targetAngle = Robot.driveTrain.getYaw() + angleOffset;
     SmartDashboard.putString("VisionTargetStatus", "DRIVE");
+    SmartDashboard.putNumber("VisionTargetDistance", distanceToTarget);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
     currentOffset = targetAngle - Robot.driveTrain.getYaw();
-    distanceTo = Robot.driveTrain.getRobotPosition().distanceTo(targetPos);
-    SmartDashboard.putNumber("VisionTargetDistance", distanceTo);
+    distanceTraveled = (Robot.driveTrain.getEncoderDistance(DriveSide.RIGHT)+Robot.driveTrain.getEncoderDistance(DriveSide.LEFT))/2;
+    distanceToTarget -= distanceTraveled;
     SmartDashboard.putNumber("VisionTargetCurrentAngleOffset", currentOffset);
 
     switch (currentPhase) {
@@ -56,10 +59,10 @@ public class DriveToVisionTarget extends Command {
       case DRIVE:
         //Will rotate to the given direction via PIDController, and strafe to the target
         Robot.driveTrain.enableTurningControl(currentOffset, 0.3);
-        Robot.driveTrain.allDrive(1, Robot.driveTrain.getTurnOutput(), Math.signum(Math.tan(angleOffset)));
+        Robot.driveTrain.allDrive(Math.cos(angleOffset), Robot.driveTrain.getTurnOutput(), Math.sin(angleOffset));
         
         //Checking for distance threshold, whether we're close enough to start aligning
-        if (distanceTo <= RobotMap.AUTO_DRIVE_STARTALIGN_THRESHOLD) {
+        if (distanceToTarget <= RobotMap.AUTO_DRIVE_STARTALIGN_THRESHOLD) {
           currentPhase = Phase.DRIVE_AND_ALIGN;
           SmartDashboard.putString("VisionTargetStatus", "DRIVE_AND_ALIGN");
         }
@@ -76,14 +79,13 @@ public class DriveToVisionTarget extends Command {
 
         if (Math.abs(currentOffset) > RobotMap.AUTO_TURN_ACCURACY_THRESHOLD) {
           Robot.driveTrain.enableTurningControl(currentOffset, 0.3);
-          
           alignAngle = Robot.driveTrain.getTurnOutput(); //the smoothed value from the PIDController
         } else { //If the accuracy limit is reached, don't rotate at all
           alignAngle = 0;
         }
 
         //Full speed foward with strafing along a direct hypotenuse to the target
-        Robot.driveTrain.allDrive(1, alignAngle, Math.signum(Math.tan(currentOffset)*5));
+        Robot.driveTrain.allDrive(Math.cos(currentOffset), alignAngle, Math.sin(currentOffset));
         break;
       
       //STOPS foward motion, orients with target

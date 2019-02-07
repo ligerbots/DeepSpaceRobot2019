@@ -10,6 +10,8 @@ package org.ligerbots.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import org.ligerbots.robot.Commands.DriveToVisionTarget;
 //TEMP
 import org.ligerbots.robot.Commands.DriveToVisionTargetTest;
 
@@ -44,8 +46,9 @@ public class Robot extends TimedRobot {
     oi = new OI();
     elevator = new Elevator();
     //TESTING HERE:
-    SmartDashboard.setDefaultNumber("AngleOffset", 10); //The current offset to the target, settable by a human
-    SmartDashboard.putData("StartVisionTargetTest", new DriveToVisionTargetTest(SmartDashboard.getNumber("AngleOffset", 5)));
+    SmartDashboard.putNumber("DistanceToTarget", 10); //The current offset to the target, settable by a human, only applies to initializing vision command
+    SmartDashboard.putNumber("AngleOffset", 10); //The current distance to the target, settable by a human, only applies to initializing vision command
+    SmartDashboard.putData("StartVisionTargetTest", new DriveToVisionTarget(SmartDashboard.getNumber("DistanceToTarget", 10), SmartDashboard.getNumber("AngleOffset", 5)));
   }
 
   /**
