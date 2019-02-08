@@ -97,16 +97,32 @@ public class DriveTrain extends Subsystem {
     }
   }
 
-  public double turnSpeedCalc (double error) {
-    if (error > 30) {return 1;}
-    else if (error > 10) {return 0.3;}
-    return 0.2;
+  public double turnSpeedCalc(double error) {
+    //if (error <= 5.0 && error >= -5.0) {return 0.0;}
+    if (error / 90.0 <= 0.4) return 0.4 * Math.signum(error);  //have 30 degrees be the cutoff point
+    return error / 90.0 * Math.signum(error);
+
+    /*if (error > 30) {return 0.8;}
+    else if (error > 10) {return 0.8;}
+    return 0.8;*/
   }
 
-  public double driveSpeedCalc (double error) {
-    if (error > 24) {return 1;}
-    else if (error > 12) {return 0.7;}
-    return 0.45;
+  public double driveSpeedCalc(double error) {
+    final double distance = error;
+    if (distance <= 40) {return 0.0;}
+    else if (distance / 85.0 <= 0.4) return 0.4 * Math.signum(error);  //have 24 inches be the cutoff point
+    return error / 85.0 * Math.signum(error); //shouldn't need signum, but just in case we do ever use (-) numbers...
+
+    // if (error > 24) {return 0.9;}
+    // else if (error > 12) {return 0.5;}
+    // return 0.35;
+  }
+
+  public double strafeSpeedCalc (double error) {
+    //if (error <= 5.0 && error >= -5.0) {return 0.0;}
+    if (error > 25) {return 0.9 * Math.signum(error);}
+    else if (error > 15) {return 0.45 * Math.signum(error);}
+    return 0.4 * Math.signum(error);
   }
 
   public FieldPosition getRobotPosition () {
