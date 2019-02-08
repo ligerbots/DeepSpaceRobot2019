@@ -18,4 +18,8 @@ public class RobotMap {
 
     public static final double CENTER_WHEEL_DIAMETER = 4.0;
 
+    public static final int CT_INTAKE = 1; //placeholder number
+
+    public static final int PCM_ID = 2; //placeholder number
+
 }
