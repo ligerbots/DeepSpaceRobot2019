@@ -8,60 +8,41 @@
 package org.ligerbots.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import org.ligerbots.robot.FieldPosition;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import org.ligerbots.robot.Robot;
-import org.ligerbots.robot.RobotMap;
 
 
 public class DriveToVisionTarget extends Command {
 
-  enum Phase {
-    TURN_TO_ANGLE, DRIVE, ALIGN
-  }
+  double[] visionInfo;                                          //holds info recieved from the Odroid through NT
+  double[] empty = new double[] {0.0,0.0,0.0,0.0,0.0,0.0};      //empty array of values to be used for default value when fetching
+  double[] previousInfo;
 
-  double startAngle;
-  FieldPosition targetPos;
-  double angleOffset;
-  double targetAngle;
-  double currentOffset;
-  Phase currentPhase = Phase.TURN_TO_ANGLE;
+  double distance;                           //total distance (raw from NT) from robot to target
+  double angle;                              //angle from robot to target in degrees (NT is initially in radians)
+  double deltaAngle;
 
-  public DriveToVisionTarget(FieldPosition targetPos, double angleOffset) {
+  public DriveToVisionTarget() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    this.targetPos = targetPos;
-    this.angleOffset = angleOffset;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    targetAngle = Robot.driveTrain.getYaw() + angleOffset;
+    SmartDashboard.putString("vision/active_mode", "rrtarget");
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    currentOffset = Math.abs(targetAngle - Robot.driveTrain.getYaw());
-    switch (currentPhase) {
-      case TURN_TO_ANGLE:
-        if (currentOffset > RobotMap.AUTO_TURN_ACCURACY_THRESHOLD) {
-          Robot.driveTrain.allDrive(0, -Math.signum(angleOffset) * Robot.driveTrain.turnSpeedCalc(currentOffset), 0);
-          break;
-        }
-        currentPhase = Phase.DRIVE;
-        break;
-      case DRIVE:
-        if (Robot.driveTrain.getRobotPosition().distanceTo(targetPos) > RobotMap.AUTO_DRIVE_DISTANCE_THRESHOLD) {
-          Robot.driveTrain.allDrive(Robot.driveTrain.driveSpeedCalc(Robot.driveTrain.getRobotPosition().distanceTo(targetPos)), 0, 0);
-          break;
-        }
-        currentPhase = Phase.ALIGN;
-        break;
-      case ALIGN:
-        break;
-      default:
-    }
+    visionInfo = SmartDashboard.getNumberArray("vision/target_info", empty);  //refetch value
+    distance = visionInfo[3];                                                 //reset distance and angle
+    angle = visionInfo[4] * (180/Math.PI);
+    deltaAngle = angle + (visionInfo[5] * (180/Math.PI));
+
+    Robot.driveTrain.allDrive(Robot.driveTrain.driveSpeedCalc(distance), Robot.driveTrain.turnSpeedCalc(deltaAngle), Robot.driveTrain.strafeSpeedCalc(angle));
   }
 
   // Make this return true when this Command no longer needs to run execute()

@@ -8,7 +8,7 @@ public class RobotMap {
 
     public static final double AUTO_TURN_ACCURACY_THRESHOLD = 1; //in degrees
 
-    public static final double AUTO_DRIVE_DISTANCE_THRESHOLD = 2; //in inches
+    public static final double AUTO_DRIVE_DISTANCE_THRESHOLD = 24; //in inches
 
     public static final double SIDE_GEAR_RATIO = 12 / 72 * 44 / 72;
 
