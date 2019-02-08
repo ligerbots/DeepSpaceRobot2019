@@ -22,6 +22,7 @@ public class DriveToVisionTarget extends Command {
   double distance;                           //total distance (raw from NT) from robot to target
   double angle;                              //angle from robot to target in degrees (NT is initially in radians)
   double deltaAngle;
+  double[] lastVisionInfo;
 
   public DriveToVisionTarget() {
     // Use requires() here to declare subsystem dependencies
@@ -41,8 +42,12 @@ public class DriveToVisionTarget extends Command {
     distance = visionInfo[3];                                                 //reset distance and angle
     angle = visionInfo[4] * (180/Math.PI);
     deltaAngle = angle + (visionInfo[5] * (180/Math.PI));
+    if (visionInfo[1] < 0.3 || ((Math.abs(distance - lastVisionInfo[3]) > 20 || Math.abs(angle - (lastVisionInfo[4] * 180 / Math.PI)) > 30) && lastVisionInfo[1] > 0.5)){
+      return;
+    }
 
     Robot.driveTrain.allDrive(Robot.driveTrain.driveSpeedCalc(distance), Robot.driveTrain.turnSpeedCalc(deltaAngle), Robot.driveTrain.strafeSpeedCalc(angle));
+    lastVisionInfo = visionInfo;
   }
 
   // Make this return true when this Command no longer needs to run execute()
