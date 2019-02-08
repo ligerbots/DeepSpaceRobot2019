@@ -18,4 +18,8 @@ public class RobotMap {
 
     public static final double CENTER_WHEEL_DIAMETER = 4.0;
 
+    public static final double WRIST_ENCODER_TICKS_PER_REV = 4096;
+
+    public static final double INTAKE_IN_HEIGHT = 18; //ACTUALLY CHECK (UNITS IN WEIRD ELEVATOR HEIGHT)
+
 }
