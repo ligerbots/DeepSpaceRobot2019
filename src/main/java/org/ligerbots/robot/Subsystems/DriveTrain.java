@@ -18,9 +18,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import org.ligerbots.robot.FieldPosition;
 import org.ligerbots.robot.RobotMap;
 
-/**
- * Add your docs here.
- */
+
 @SuppressWarnings("deprecation")
 public class DriveTrain extends Subsystem {
   // Put methods for controlling this subsystem
@@ -101,10 +99,6 @@ public class DriveTrain extends Subsystem {
     //if (error <= 5.0 && error >= -5.0) {return 0.0;}
     if (error / 90.0 <= 0.4) return 0.4 * Math.signum(error);  //have 30 degrees be the cutoff point
     return error / 90.0 * Math.signum(error);
-
-    /*if (error > 30) {return 0.8;}
-    else if (error > 10) {return 0.8;}
-    return 0.8;*/
   }
 
   public double driveSpeedCalc(double error) {
@@ -112,10 +106,6 @@ public class DriveTrain extends Subsystem {
     if (distance <= 40) {return 0.0;}
     else if (distance / 85.0 <= 0.4) return 0.4 * Math.signum(error);  //have 24 inches be the cutoff point
     return error / 85.0 * Math.signum(error); //shouldn't need signum, but just in case we do ever use (-) numbers...
-
-    // if (error > 24) {return 0.9;}
-    // else if (error > 12) {return 0.5;}
-    // return 0.35;
   }
 
   public double strafeSpeedCalc (double error) {
@@ -123,10 +113,6 @@ public class DriveTrain extends Subsystem {
     if (error > 25) {return 0.9 * Math.signum(error);}
     else if (error > 15) {return 0.45 * Math.signum(error);}
     return 0.4 * Math.signum(error);
-  }
-
-  public FieldPosition getRobotPosition () {
-    return new FieldPosition(0,0); //TODO
   }
 
   public void enableTurningControl(double angle, double tolerance) {
