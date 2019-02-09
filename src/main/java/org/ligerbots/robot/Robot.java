@@ -10,6 +10,10 @@ package org.ligerbots.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+
 import org.ligerbots.robot.Subsystems.DriveTrain;
 import org.ligerbots.robot.Subsystems.Elevator;
 import org.ligerbots.robot.Subsystems.Grabber;
@@ -32,6 +36,7 @@ public class Robot extends TimedRobot {
   public static Elevator elevator;
   public static Intake intake;
   public static Grabber grabber;
+  public static Boolean isSecondRobot;
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -44,6 +49,8 @@ public class Robot extends TimedRobot {
     driveTrain = new DriveTrain();
     oi = new OI();
     elevator = new Elevator();
+    // Detect the motor controllers we're using
+    isSecondRobot = (new TalonSRX(RobotMap.DETERMINE_WHICH_ROBOT).getFirmwareVersion() != -1);
   }
 
   /**

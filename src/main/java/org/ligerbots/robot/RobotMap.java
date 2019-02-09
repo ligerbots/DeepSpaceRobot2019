@@ -25,4 +25,6 @@ public class RobotMap {
     public static final int CT_INTAKE = 1; //placeholder number
 
     public static final int PCM_ID = 2; //placeholder number
+
+    public static final int DETERMINE_WHICH_ROBOT = 8; //Whether this deviceId is a talon will determine if we're controlling the second robot
 }
