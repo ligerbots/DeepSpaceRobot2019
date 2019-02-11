@@ -135,6 +135,13 @@ public class DriveTrain extends Subsystem {
   public double getTurnOutput() {
     return this.turnOutput;
   }
+  public boolean isFieldCentric(){
+    return fieldCentric;
+  }
+
+  public void setFieldCentric(boolean set){
+    fieldCentric = set;
+  }
 
   double temporaryFixDegrees(double input) {
     if (input > 180) {return input - 360;}
