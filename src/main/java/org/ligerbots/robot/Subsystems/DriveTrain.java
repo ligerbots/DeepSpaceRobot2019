@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import org.ligerbots.robot.FieldPosition;
 import org.ligerbots.robot.RobotMap;
 
 

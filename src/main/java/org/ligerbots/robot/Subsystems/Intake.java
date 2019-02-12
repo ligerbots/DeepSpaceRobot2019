@@ -40,16 +40,18 @@ public class Intake extends Subsystem {
   }
 
   public void toggleIntake(){
-    /*if (Robot.elevator.getHeight > 18){
-      if (isDeployed){
-        intakeSolenoid.set(Value.kReverse);
-        isDeployed = false;
-      }else{
-        intakeSolenoid.set(Value.kForward);
-        isDeployed = true;
-      }
-    }*/
-    //TODO make getheight function in elevator
+    if (isDeployed){
+      intakeSolenoid.set(Value.kReverse);
+      isDeployed = false;
+    }
+    else {
+      intakeSolenoid.set(Value.kForward);
+      isDeployed = true;
+    }
+  }
+
+  public void deployIntake (boolean deploy) {
+    intakeSolenoid.set(deploy ? Value.kForward : Value.kReverse);
   }
   
   public void setIntakeMotor(double value){
