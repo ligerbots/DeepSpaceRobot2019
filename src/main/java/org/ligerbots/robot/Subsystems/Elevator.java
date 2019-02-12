@@ -40,7 +40,7 @@ public class Elevator extends Subsystem {
   }
 
   public enum WristPosition {
-    HIGH, LOW, INTAKE
+    HIGH, FLAT, INTAKE
   }
 
   public Elevator () {
@@ -91,7 +91,7 @@ public class Elevator extends Subsystem {
       case HIGH:
         wrist.set(ControlMode.Position, 0.0); //FIX POSITIONS LATER
         break;
-      case LOW:
+      case FLAT:
         wrist.set(ControlMode.Position, 0.0);
         break;
       case INTAKE:
