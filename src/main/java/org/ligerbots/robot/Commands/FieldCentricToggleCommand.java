@@ -11,8 +11,8 @@ import org.ligerbots.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class IntakeRunCommand extends Command {
-  public IntakeRunCommand() {
+public class FieldCentricToggleCommand extends Command {
+  public FieldCentricToggleCommand() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
@@ -25,7 +25,11 @@ public class IntakeRunCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.intake.setIntakeMotor(Robot.oi.getIntakeIn() + -Robot.oi.getIntakeOut());
+    if (Robot.driveTrain.isFieldCentric()) {
+      Robot.driveTrain.setFieldCentric(false);
+    }else{
+      Robot.driveTrain.setFieldCentric(true);
+    }
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -37,13 +41,11 @@ public class IntakeRunCommand extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.intake.setIntakeMotor(0);
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    Robot.intake.setIntakeMotor(0);
   }
 }
