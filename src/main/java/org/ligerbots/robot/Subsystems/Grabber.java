@@ -22,7 +22,7 @@ public class Grabber extends Subsystem {
   // here. Call these from Commands.
   private DoubleSolenoid armsolenoid;
   private DoubleSolenoid kickersolenoid;
-  boolean open;
+  boolean open = false;
 
   @Override
   public void initDefaultCommand() {
