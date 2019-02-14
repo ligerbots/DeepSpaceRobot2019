@@ -51,7 +51,13 @@ public class Elevator extends Subsystem {
     follower3 = new WPI_TalonSRX(9);
     wrist = new WPI_TalonSRX(10);
 
-    if (RobotMap.WRIST_USES_ABSOLUTE_ENCODER) encoder = new AnalogInput(RobotMap.ABSOLUTE_ENCODER_CHANNEL);
+    if (RobotMap.WRIST_USES_ABSOLUTE_ENCODER) {
+      encoder = new AnalogInput(RobotMap.ABSOLUTE_ENCODER_CHANNEL);
+      pidController = new PIDController(0, 0, 0, 0, encoder, wrist);
+
+      leader1.set(ControlMode.PercentOutput, 0);
+    }
+    
     Arrays.asList(leader1, follower1, follower2, follower3, wrist)
         .forEach((WPI_TalonSRX talon) -> talon.setNeutralMode(NeutralMode.Brake));
 
@@ -87,6 +93,22 @@ public class Elevator extends Subsystem {
   }
 
   public void setWristPosition (WristPosition pos) {
+    if (RobotMap.WRIST_USES_ABSOLUTE_ENCODER) {
+      switch (pos) {
+        case HIGH:
+          pidController.setSetpoint(0); //FIX POSITIONS LATER
+          break;
+        case FLAT:
+          pidController.setSetpoint(0);
+          break;
+        case INTAKE:
+          pidController.setSetpoint(0);
+          break;
+      }
+      //Avoid waviness of if/elses
+      return;
+    }
+    //Otherwise if we're using the motor's encoder
     switch (pos) {
       case HIGH:
         wrist.set(ControlMode.Position, 0.0); //FIX POSITIONS LATER
