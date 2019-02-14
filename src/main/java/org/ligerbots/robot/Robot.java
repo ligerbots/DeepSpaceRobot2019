@@ -10,6 +10,8 @@ package org.ligerbots.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import org.ligerbots.robot.Commands.SetIntakeCommand;
 import org.ligerbots.robot.Subsystems.DriveTrain;
 import org.ligerbots.robot.Subsystems.Elevator;
 import org.ligerbots.robot.Subsystems.Grabber;
@@ -32,6 +34,8 @@ public class Robot extends TimedRobot {
   public static Elevator elevator;
   public static Intake intake;
   public static Grabber grabber;
+  static SetIntakeCommand initialSetIntake;
+
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -44,6 +48,8 @@ public class Robot extends TimedRobot {
     driveTrain = new DriveTrain();
     oi = new OI();
     elevator = new Elevator();
+    initialSetIntake = new SetIntakeCommand(true);
+    initialSetIntake.start();
   }
 
   /**

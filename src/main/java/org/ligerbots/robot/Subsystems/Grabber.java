@@ -20,8 +20,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Grabber extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-  private DoubleSolenoid armsolenoid;
-  private DoubleSolenoid kickersolenoid;
+  private DoubleSolenoid armSolenoid;
+  private DoubleSolenoid kickerSolenoid;
   boolean open = false;
 
   @Override
@@ -31,28 +31,28 @@ public class Grabber extends Subsystem {
   }
 
   public Grabber(){
-    kickersolenoid = new DoubleSolenoid(RobotMap.PCM_ID, 1, 0); //placeholder channel numbers
-    armsolenoid = new DoubleSolenoid(RobotMap.PCM_ID, 3, 2); //placeholder channel numbers
+    kickerSolenoid = new DoubleSolenoid(RobotMap.PCM_ID, 1, 0); //placeholder channel numbers
+    armSolenoid = new DoubleSolenoid(RobotMap.PCM_ID, 3, 2); //placeholder channel numbers
   }
 
   public void setPistons(boolean open){
     if (open){
-      armsolenoid.set(Value.kReverse);
+      armSolenoid.set(Value.kReverse);
     }
     else{
-      armsolenoid.set(Value.kForward);
+      armSolenoid.set(Value.kForward);
     }
   }
 
   public void kicker() {
     if (open){
-      kickersolenoid.set(Value.kReverse);
+      kickerSolenoid.set(Value.kReverse);
       open = false;
     }
     else{
-      kickersolenoid.set(Value.kForward);
+      kickerSolenoid.set(Value.kForward);
       Timer.delay(0.1);
-      armsolenoid.set(Value.kReverse);
+      armSolenoid.set(Value.kReverse);
       open = true;
     }
   }
