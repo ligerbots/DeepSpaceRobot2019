@@ -12,7 +12,7 @@ import org.ligerbots.robot.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class IntakeToggleCommand extends Command {
-  public IntakeToggleCommand(boolean on) {
+  public IntakeToggleCommand() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     requires(Robot.intake);
