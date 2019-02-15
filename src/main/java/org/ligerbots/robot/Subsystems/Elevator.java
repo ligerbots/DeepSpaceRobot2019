@@ -11,6 +11,7 @@ import java.util.Arrays;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
@@ -44,11 +45,19 @@ public class Elevator extends Subsystem {
 
   public Elevator () {
 
-    leader1 = new WPI_TalonSRX(6);
-    follower1 = new WPI_TalonSRX(7);
-    follower2 = new WPI_TalonSRX(8);
-    follower3 = new WPI_TalonSRX(9);
+    leader1 = new WPI_TalonSRX(6); //It is the top right motor when looking at the back of the robot
+    follower1 = new WPI_TalonSRX(7); //Same side as leader
+    follower2 = new WPI_TalonSRX(8); //top left
+    follower3 = new WPI_TalonSRX(9); //bottom left
     wrist = new WPI_TalonSRX(10);
+
+    follower1.set(ControlMode.Follower, 6);
+    follower2.set(ControlMode.Follower, 6);
+    follower3.set(ControlMode.Follower, 6);
+
+    follower2.setInverted(true);
+    follower3.setInverted(true);
+
 
     Arrays.asList(leader1, follower1, follower2, follower3, wrist)
         .forEach((WPI_TalonSRX talon) -> talon.setNeutralMode(NeutralMode.Brake));
