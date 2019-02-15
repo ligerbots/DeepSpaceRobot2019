@@ -101,9 +101,8 @@ public class DriveTrain extends Subsystem {
   }
 
   public double driveSpeedCalc(double error) {
-    final double distance = error;
-    if (distance <= 40) {return 0.0;}
-    else if (distance / 85.0 <= 0.4) return 0.4 * Math.signum(error);  //have 24 inches be the cutoff point
+    if (error <= 40) {return 0.0;}
+    else if (error / 85.0 <= 0.4) return 0.4 * Math.signum(error);  //have 24 inches be the cutoff point
     return error / 85.0 * Math.signum(error); //shouldn't need signum, but just in case we do ever use (-) numbers...
   }
 
