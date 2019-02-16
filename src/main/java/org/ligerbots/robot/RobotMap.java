@@ -35,4 +35,6 @@ public class RobotMap {
     public static final boolean WRIST_USES_ABSOLUTE_ENCODER = false;
 
     public static final double SHAFT_DIAMETER = 0.5;
+
+    public static final int LED_PWM_CHANNEL = 21;
 }

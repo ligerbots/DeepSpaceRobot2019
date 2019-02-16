@@ -7,6 +7,7 @@
 
 package org.ligerbots.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -20,6 +21,7 @@ import org.ligerbots.robot.Subsystems.DriveTrain;
 import org.ligerbots.robot.Subsystems.Elevator;
 import org.ligerbots.robot.Subsystems.Grabber;
 import org.ligerbots.robot.Subsystems.Intake;
+import org.ligerbots.robot.Subsystems.LEDStrip;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -40,6 +42,8 @@ public class Robot extends TimedRobot {
   public static Grabber grabber;
   static SetIntakeCommand initialSetIntake;
   public static Boolean isSecondRobot;
+  public static LEDStrip blinkin;
+  public DriverStation.Alliance color;
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -68,6 +72,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    color = DriverStation.getInstance().getAlliance();
+    Robot.blinkin.setAllianceColor(color);
   }
 
   /**
@@ -103,6 +109,10 @@ public class Robot extends TimedRobot {
         // Put default auto code here
         break;
     }
+  }
+
+  @Override
+  public void teleopInit() {
   }
 
   /**
