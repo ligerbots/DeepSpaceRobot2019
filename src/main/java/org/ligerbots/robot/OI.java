@@ -26,6 +26,7 @@ import org.ligerbots.robot.Commands.FieldCentricToggleCommand;
 import org.ligerbots.robot.Commands.GrabberKickerToggleCommand;
 import org.ligerbots.robot.Commands.GrabberToggleCommand;
 import org.ligerbots.robot.Commands.IntakeToggleCommand;
+import org.ligerbots.robot.Commands.MoveWristCommand;
 import org.ligerbots.robot.Subsystems.Elevator.ElevatorPosition;
 
 /**
@@ -57,7 +58,7 @@ public class OI {
         xBoxB.whenPressed(new DriveToVisionTarget());
 
         JoystickButton xBoxY = new JoystickButton(xbox, 4);
-        xBoxY.whenPressed(/*new ElevatorPositionCommand(ElevatorPosition.HATCH_MID)*/new IntakeToggleCommand());
+        xBoxY.whenPressed(new MoveWristCommand());
 
         JoystickButton xBoxBumperLeft = new JoystickButton(xbox, 5);
         xBoxBumperLeft.whenPressed(new IntakeToggleCommand());
