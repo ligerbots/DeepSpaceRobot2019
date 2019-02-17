@@ -16,7 +16,6 @@ public class IntakeRunCommand extends Command {
   public IntakeRunCommand(boolean isIntaking) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    requires(Robot.intake);
     this.isIntaking = isIntaking;
   }
 

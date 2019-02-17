@@ -59,6 +59,7 @@ public class Robot extends TimedRobot {
     manualElevator = new ManualElevator();
     SmartDashboard.putString("RobotDidInit?", "Yes");
     compressor = new Pneumatics();
+    intake = new Intake();
    // initialSetIntake = new SetIntakeCommand(true);
    // initialSetIntake.start();
   }
@@ -124,6 +125,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     //driveTrain.allDrive(0.5, 0.5, 0.5);
     Scheduler.getInstance().run();
+    SmartDashboard.putNumber("Pressure", compressor.getPressure());
   }
 
   /**

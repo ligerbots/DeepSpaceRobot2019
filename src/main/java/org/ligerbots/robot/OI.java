@@ -10,6 +10,7 @@ package org.ligerbots.robot;
 import org.ligerbots.robot.Commands.CompressorCommand;
 import org.ligerbots.robot.Commands.DriveCommand;
 import org.ligerbots.robot.Commands.ElevatorPositionCommand;
+import org.ligerbots.robot.Commands.IntakeRunCommand;
 import org.ligerbots.robot.Subsystems.Elevator.ElevatorPosition;
 
 import edu.wpi.first.wpilibj.XboxController;
@@ -35,18 +36,22 @@ public class OI {
 
         JoystickButton compressorOn = new JoystickButton (xbox, 8);
         compressorOn.whenPressed(new CompressorCommand(true));
+
+        JoystickButton rightBumper = new JoystickButton (xbox, 6);
+        rightBumper.whileHeld(new IntakeRunCommand(true));
+
     }
 
     public double getThrottle () {
-        return xbox.getY(Hand.kLeft);
+        return  Math.abs(xbox.getY(Hand.kLeft)) > 0.05 ? xbox.getY(Hand.kLeft) : 0.0;
     }
 
     public double getRotate () {
-        return xbox.getX(Hand.kRight);
+        return Math.abs(xbox.getX(Hand.kRight)) > 0.05 ? xbox.getX(Hand.kRight) : 0.0;
     }
 
     public double getStrafe () {
-        return xbox.getX(Hand.kLeft);
+        return  Math.abs(xbox.getX(Hand.kLeft)) > 0.05 ? xbox.getX(Hand.kLeft) : 0.0;
     }
 
     public double elevatorUp () {
