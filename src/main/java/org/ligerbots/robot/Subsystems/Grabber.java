@@ -23,6 +23,7 @@ public class Grabber extends Subsystem {
   private DoubleSolenoid armSolenoid;
   private DoubleSolenoid kickerSolenoid;
   boolean open = false;
+  boolean kickerOpen = false;
 
   @Override
   public void initDefaultCommand() {
@@ -31,8 +32,8 @@ public class Grabber extends Subsystem {
   }
 
   public Grabber(){
-    kickerSolenoid = new DoubleSolenoid(RobotMap.PCM_ID, 5, 4); //placeholder channel numbers
-    armSolenoid = new DoubleSolenoid(RobotMap.PCM_ID, 3, 2); //placeholder channel numbers
+    kickerSolenoid = new DoubleSolenoid(RobotMap.PCM_ID, 3, 5); //placeholder channel numbers
+    armSolenoid = new DoubleSolenoid(RobotMap.PCM_ID, 2, 4); 
   }
 
   public void setPistons(boolean open){
@@ -41,6 +42,9 @@ public class Grabber extends Subsystem {
     }
     else{
       armSolenoid.set(Value.kForward);
+      if (this.open){
+        kickerSolenoid.set(Value.kReverse);
+      }
     }
   }
 
