@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.ligerbots.robot.Commands.DriveCommand;
+import org.ligerbots.robot.Commands.IntakeRunCommand;
 import org.ligerbots.robot.Commands.SetIntakeCommand;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -45,6 +46,7 @@ public class Robot extends TimedRobot {
   public static Pneumatics compressor;
   //static SetIntakeCommand initialSetIntake;
   public static Boolean isSecondRobot;
+  public static IntakeRunCommand intakeCommand;
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -62,6 +64,7 @@ public class Robot extends TimedRobot {
     intake = new Intake();
     grabber = new Grabber();
     oi = new OI();
+    intakeCommand = new IntakeRunCommand();
 
    // initialSetIntake = new SetIntakeCommand(true);
    // initialSetIntake.start();
@@ -121,6 +124,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     driveCommand.start();
+    intakeCommand.start();
   }
   /**
    * This function is called periodically during operator control.
