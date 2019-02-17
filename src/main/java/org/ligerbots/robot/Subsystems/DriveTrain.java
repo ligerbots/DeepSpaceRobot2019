@@ -44,55 +44,59 @@ public class DriveTrain extends Subsystem {
 
   public DriveTrain () {
 
-    leftLeader = new CANSparkMax(0, MotorType.kBrushless);
+    leftLeader = new CANSparkMax(14, MotorType.kBrushless);
     leftFollower = new CANSparkMax(1, MotorType.kBrushless);
     rightLeader = new CANSparkMax(2, MotorType.kBrushless);
     rightFollower = new CANSparkMax(3, MotorType.kBrushless);
     centerLeader = new CANSparkMax(4, MotorType.kBrushless);
     centerFollower = new CANSparkMax(5, MotorType.kBrushless);
 
-    leftFollower.follow(leftLeader);
+    leftLeader.setInverted(true);
+    leftFollower.follow(leftLeader, true);
     rightFollower.follow(rightLeader);
     centerFollower.follow(centerLeader); //MIGHT NEED TO BE INVERTED
 
-    diffDrive = new DifferentialDrive(leftLeader, rightLeader);
+    diffDrive = new DifferentialDrive(leftLeader, rightLeader); //fix l8r
 
     navX = new AHRS(Port.kMXP, (byte) 200);
 
-    turningController = new PIDController(0.045, 0.004, 0.06, navX, output -> this.turnOutput = output);
+   // turningController = new PIDController(0.045, 0.004, 0.06, navX, output -> this.turnOutput = output);
 
   }
 
   public void allDrive (double throttle, double rotate, double strafe) {
-    if (fieldCentric) {
+   /* if (fieldCentric) {
       diffDrive.arcadeDrive(throttle * Math.cos(getYaw() + strafe * Math.sin(getYaw())), rotate);
       centerLeader.set(-throttle * Math.sin(getYaw()) + strafe * Math.cos(getYaw()));
     }
-    else {
-      diffDrive.arcadeDrive(throttle, rotate);
+    else {*/
+      diffDrive.arcadeDrive(throttle, -rotate);
       centerLeader.set(strafe);
-    }
+   // }
+   // rightLeader.set(0.5);
+   // leftLeader.set(0.5);
+   // centerLeader.set(0.5);
   }
 
   public float getYaw() {
     return navX.getYaw();
   }
 
-  public double getEncoderDistance (DriveSide driveSide) {
+ /* public double getEncoderDistance (DriveSide driveSide) {
     switch (driveSide) {
       case LEFT:
-        return leftLeader.getEncoder().getPosition() / 42 /*I think?*/ *
+        return leftLeader.getEncoder().getPosition() / 42 *
           RobotMap.SIDE_GEAR_RATIO * RobotMap.SIDE_WHEEL_DIAMETER;
       case RIGHT:
-        return leftLeader.getEncoder().getPosition() / 42 /*I think?*/ *
+        return leftLeader.getEncoder().getPosition() / 42 *
           RobotMap.SIDE_GEAR_RATIO * RobotMap.SIDE_WHEEL_DIAMETER;
       case CENTER:
-        return leftLeader.getEncoder().getPosition() / 42 /*I think?*/ *
+        return leftLeader.getEncoder().getPosition() / 42 *
           RobotMap.CENTER_GEAR_RATIO * RobotMap.CENTER_WHEEL_DIAMETER;
       default:
         return 0.0;
     }
-  }
+  }*/
 
   public double turnSpeedCalc(double error) {
     //if (error <= 5.0 && error >= -5.0) {return 0.0;}
@@ -138,6 +142,10 @@ public class DriveTrain extends Subsystem {
     if (input > 180) {return input - 360;}
     else if (input < -180){return input + 360;}
     else {return input;}
+}
+
+public String leftLeaderInfo() {
+  return "CenterFollower: " + rightFollower.isFollower();
 }
 
   @Override

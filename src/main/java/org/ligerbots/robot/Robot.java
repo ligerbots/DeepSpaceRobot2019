@@ -8,6 +8,7 @@
 package org.ligerbots.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -51,7 +52,7 @@ public class Robot extends TimedRobot {
     oi = new OI();
     elevator = new Elevator();
     driveCommand = new DriveCommand();
-    driveCommand.start();
+    SmartDashboard.putString("RobotDidInit?", "Yes");
    // initialSetIntake = new SetIntakeCommand(true);
    // initialSetIntake.start();
   }
@@ -101,13 +102,21 @@ public class Robot extends TimedRobot {
         // Put default auto code here
         break;
     }
+    Scheduler.getInstance().run();
   }
 
+
+  @Override
+  public void teleopInit() {
+    driveCommand.start();
+  }
   /**
    * This function is called periodically during operator control.
    */
   @Override
   public void teleopPeriodic() {
+    //driveTrain.allDrive(0.5, 0.5, 0.5);
+    Scheduler.getInstance().run();
   }
 
   /**
@@ -115,5 +124,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+  }
+
+  @Override
+  public void disabledPeriodic() {
+    //Scheduler.getInstance().run();
   }
 }

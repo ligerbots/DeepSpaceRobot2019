@@ -22,7 +22,7 @@ public class RobotMap {
 
     public static final double INTAKE_IN_HEIGHT = 18; //ACTUALLY CHECK (UNITS IN WEIRD ELEVATOR HEIGHT)
   
-    public static final int CT_INTAKE = 1; //placeholder number
+    public static final int CT_INTAKE = 10; //placeholder number
 
-    public static final int PCM_ID = 2; //placeholder number
+    public static final int PCM_ID = 12; //placeholder number
 }

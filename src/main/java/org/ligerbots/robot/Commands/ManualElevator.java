@@ -8,18 +8,12 @@
 package org.ligerbots.robot.Commands;
 
 import org.ligerbots.robot.Robot;
-import org.ligerbots.robot.RobotMap;
-import org.ligerbots.robot.Subsystems.Elevator.ElevatorPosition;
-import org.ligerbots.robot.Subsystems.Elevator.WristPosition;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class ElevatorPositionCommand extends Command {
-
-  ElevatorPosition pos;
-
-  public ElevatorPositionCommand(ElevatorPosition pos) {
-    this.pos = pos;
+public class ManualElevator extends Command {
+  public ManualElevator() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
@@ -27,27 +21,18 @@ public class ElevatorPositionCommand extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-
-   // Robot.intake.deployIntake(true);
-
-    Robot.elevator.setElevatorPosition(pos);
-
-    if (pos == ElevatorPosition.BALL_HIGH) Robot.elevator.setWristPosition(WristPosition.HIGH);
-    else if (pos == ElevatorPosition.BALL_INTAKE) Robot.elevator.setWristPosition(WristPosition.INTAKE);
-    else Robot.elevator.setWristPosition(WristPosition.FLAT);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.elevator.stupidGOOO();
-    //if (Robot.elevator.getPosition() > RobotMap.INTAKE_IN_HEIGHT) Robot.intake.deployIntake(false);
+    SmartDashboard.putNumber("Elevator Height", Robot.elevator.getPosition());
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false /*Robot.elevator.getPosition() > RobotMap.INTAKE_IN_HEIGHT*/;
+    return false;
   }
 
   // Called once after isFinished returns true

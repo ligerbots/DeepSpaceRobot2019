@@ -7,8 +7,13 @@
 
 package org.ligerbots.robot;
 
+import org.ligerbots.robot.Commands.DriveCommand;
+import org.ligerbots.robot.Commands.ElevatorPositionCommand;
+import org.ligerbots.robot.Subsystems.Elevator.ElevatorPosition;
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 /**
  * Add your docs here.
@@ -20,6 +25,9 @@ public class OI {
 
     public OI () {
         xbox = new XboxController(0);
+
+        JoystickButton elevator = new JoystickButton(xbox, 1);
+        elevator.whenPressed(new ElevatorPositionCommand(ElevatorPosition.BALL_MID));
     }
 
     public double getThrottle () {
@@ -32,5 +40,13 @@ public class OI {
 
     public double getStrafe () {
         return xbox.getX(Hand.kLeft);
+    }
+
+    public double elevatorUp () {
+        return xbox.getTriggerAxis(Hand.kRight);
+    }
+
+    public double elevatorDown () {
+        return xbox.getTriggerAxis(Hand.kLeft);
     }
 }

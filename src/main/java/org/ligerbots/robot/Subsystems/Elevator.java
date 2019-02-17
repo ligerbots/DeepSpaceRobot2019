@@ -45,18 +45,16 @@ public class Elevator extends Subsystem {
 
   public Elevator () {
 
-    leader1 = new WPI_TalonSRX(6); //It is the top right motor when looking at the back of the robot
-    follower1 = new WPI_TalonSRX(7); //Same side as leader
-    follower2 = new WPI_TalonSRX(8); //top left
-    follower3 = new WPI_TalonSRX(9); //bottom left
-    wrist = new WPI_TalonSRX(10);
+    leader1 = new WPI_TalonSRX(9); //It is the top left motor when looking at the back of the robot
+    follower1 = new WPI_TalonSRX(8); //Same side as leader
+    follower2 = new WPI_TalonSRX(7); //top right
+    follower3 = new WPI_TalonSRX(6); //bottom right
+    wrist = new WPI_TalonSRX(11);
 
-    follower1.set(ControlMode.Follower, 6);
-    follower2.set(ControlMode.Follower, 6);
-    follower3.set(ControlMode.Follower, 6);
 
-    follower2.setInverted(true);
-    follower3.setInverted(true);
+    leader1.setInverted(true);
+    follower2.setInverted(InvertType.OpposeMaster);
+    follower3.setInverted(InvertType.OpposeMaster);
 
 
     Arrays.asList(leader1, follower1, follower2, follower3, wrist)
@@ -75,6 +73,10 @@ public class Elevator extends Subsystem {
     leader1.config_kP(0, p);
     leader1.config_kI(0, i);
     leader1.config_kD(0, d);
+  }
+
+  public void stupidGOOO () {
+    leader1.set(ControlMode.PercentOutput, 0.3);
   }
 
   public void setWristPID (double p, double i, double d) {
@@ -122,7 +124,7 @@ public class Elevator extends Subsystem {
         leader1.set(ControlMode.Position, 0.0);
         break;
       case BALL_MID:
-        leader1.set(ControlMode.Position, 0.0);
+        leader1.set(ControlMode.Position, 50.0); //temporary!!!!!
         break;
       case BALL_LOW:
         leader1.set(ControlMode.Position, 0.0);
