@@ -29,9 +29,8 @@ public class ElevatorPositionCommand extends Command {
   @Override
   protected void initialize() {
 
-    //Robot.elevator.setElevatorPID(0.5, 0.0, 0.0);
 
-   // Robot.intake.deployIntake(true);
+    Robot.intake.deployIntake(true);
 
     Robot.elevator.setElevatorPosition(pos);
 

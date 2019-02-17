@@ -55,12 +55,14 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
     driveTrain = new DriveTrain();
-    oi = new OI();
     elevator = new Elevator();
     driveCommand = new DriveCommand();
     SmartDashboard.putString("RobotDidInit?", "Yes");
     compressor = new Pneumatics();
     intake = new Intake();
+    grabber = new Grabber();
+    oi = new OI();
+
    // initialSetIntake = new SetIntakeCommand(true);
    // initialSetIntake.start();
     // Detect the motor controllers we're using
@@ -126,6 +128,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     //driveTrain.allDrive(0.5, 0.5, 0.5);
+    SmartDashboard.putNumber("encoder value", elevator.encoder.getValue());
     Scheduler.getInstance().run();
     SmartDashboard.putNumber("Pressure", compressor.getPressure());
   }

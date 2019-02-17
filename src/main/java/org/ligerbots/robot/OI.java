@@ -56,6 +56,9 @@ public class OI {
         JoystickButton xBoxB = new JoystickButton(xbox, 2);
         xBoxB.whenPressed(new DriveToVisionTarget());
 
+        JoystickButton xBoxY = new JoystickButton(xbox, 4);
+        xBoxY.whenPressed(/*new ElevatorPositionCommand(ElevatorPosition.HATCH_MID)*/new IntakeToggleCommand());
+
         JoystickButton xBoxBumperLeft = new JoystickButton(xbox, 5);
         xBoxBumperLeft.whenPressed(new IntakeToggleCommand());
 

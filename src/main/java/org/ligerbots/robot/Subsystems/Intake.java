@@ -36,7 +36,7 @@ public class Intake extends Subsystem {
 
   public Intake(){
     intakeMotor = new WPI_TalonSRX(RobotMap.CT_INTAKE);
-    intakeSolenoid = new DoubleSolenoid(RobotMap.PCM_ID, 0, 1); //placeholder channel numbers
+    intakeSolenoid = new DoubleSolenoid(RobotMap.PCM_ID, 1, 0); //placeholder channel numbers
   }
 
   public void toggleIntake(){
