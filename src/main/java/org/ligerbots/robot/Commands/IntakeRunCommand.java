@@ -27,7 +27,7 @@ public class IntakeRunCommand extends Command {
   protected void execute() {
     Robot.intake.setIntakeMotor(Robot.oi.getIntakeIn() + -Robot.oi.getIntakeOut());
   }
-
+  
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {

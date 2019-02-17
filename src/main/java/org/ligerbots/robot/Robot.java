@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.ligerbots.robot.Commands.DriveCommand;
-import org.ligerbots.robot.Commands.ManualElevator;
 import org.ligerbots.robot.Commands.SetIntakeCommand;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -44,7 +43,6 @@ public class Robot extends TimedRobot {
   public static Grabber grabber;
   public static DriveCommand driveCommand;
   public static Pneumatics compressor;
-  public static ManualElevator manualElevator;
   //static SetIntakeCommand initialSetIntake;
   public static Boolean isSecondRobot;
   /**
@@ -60,9 +58,9 @@ public class Robot extends TimedRobot {
     oi = new OI();
     elevator = new Elevator();
     driveCommand = new DriveCommand();
-    manualElevator = new ManualElevator();
     SmartDashboard.putString("RobotDidInit?", "Yes");
     compressor = new Pneumatics();
+    intake = new Intake();
    // initialSetIntake = new SetIntakeCommand(true);
    // initialSetIntake.start();
     // Detect the motor controllers we're using
@@ -120,7 +118,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    //manualElevator.start();
     driveCommand.start();
   }
   /**
@@ -130,6 +127,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     //driveTrain.allDrive(0.5, 0.5, 0.5);
     Scheduler.getInstance().run();
+    SmartDashboard.putNumber("Pressure", compressor.getPressure());
   }
 
   /**
