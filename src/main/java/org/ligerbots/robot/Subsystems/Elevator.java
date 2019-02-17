@@ -37,7 +37,7 @@ public class Elevator extends Subsystem {
 
   PIDController pidController;
   
-  private AnalogInput encoder;
+  public AnalogInput encoder;
 
   public enum ElevatorPosition {
     HATCH_HIGH, HATCH_MID, HATCH_LOW, BALL_HIGH, BALL_MID, BALL_LOW, BALL_CARGO, BALL_INTAKE
@@ -55,6 +55,7 @@ public class Elevator extends Subsystem {
     follower3 = new WPI_TalonSRX(6); //bottom right
     wrist = new WPI_TalonSRX(11);
 
+    encoder = new AnalogInput(1);
 
     leader1.setInverted(true);
     follower1.setInverted(InvertType.FollowMaster);

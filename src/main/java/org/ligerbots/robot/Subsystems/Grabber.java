@@ -31,7 +31,7 @@ public class Grabber extends Subsystem {
   }
 
   public Grabber(){
-    kickerSolenoid = new DoubleSolenoid(RobotMap.PCM_ID, 1, 0); //placeholder channel numbers
+    kickerSolenoid = new DoubleSolenoid(RobotMap.PCM_ID, 5, 4); //placeholder channel numbers
     armSolenoid = new DoubleSolenoid(RobotMap.PCM_ID, 3, 2); //placeholder channel numbers
   }
 
