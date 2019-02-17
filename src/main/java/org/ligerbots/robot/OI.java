@@ -7,6 +7,14 @@
 
 package org.ligerbots.robot;
 
+import org.ligerbots.robot.Commands.CompressorCommand;
+import org.ligerbots.robot.Commands.DriveCommand;
+import org.ligerbots.robot.Commands.ElevatorPositionCommand;
+import org.ligerbots.robot.Subsystems.Elevator.ElevatorPosition;
+
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
@@ -18,7 +26,6 @@ import org.ligerbots.robot.Commands.GrabberKickerToggleCommand;
 import org.ligerbots.robot.Commands.GrabberToggleCommand;
 import org.ligerbots.robot.Commands.IntakeToggleCommand;
 import org.ligerbots.robot.Subsystems.Elevator.ElevatorPosition;
-
 
 /**
  * Add your docs here.
@@ -32,6 +39,12 @@ public class OI {
     public OI () {
         xbox = new XboxController(0);
         farm = new Joystick(1);
+
+        JoystickButton compressorOff = new JoystickButton (xbox, 7);
+        compressorOff.whenPressed(new CompressorCommand(false));
+
+        JoystickButton compressorOn = new JoystickButton (xbox, 8);
+        compressorOn.whenPressed(new CompressorCommand(true));
 
         JoystickButton xBoxA = new JoystickButton(xbox, 1);
         xBoxA.whenPressed(new GrabberKickerToggleCommand());
@@ -95,6 +108,7 @@ public class OI {
     public double getStrafe () {
         return xbox.getX(Hand.kLeft);
     }
+
 
     public double getIntakeIn() {
         return xbox.getTriggerAxis(Hand.kRight);

@@ -8,9 +8,12 @@
 package org.ligerbots.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import org.ligerbots.robot.Commands.DriveCommand;
+import org.ligerbots.robot.Commands.ManualElevator;
 import org.ligerbots.robot.Commands.SetIntakeCommand;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -20,6 +23,7 @@ import org.ligerbots.robot.Subsystems.DriveTrain;
 import org.ligerbots.robot.Subsystems.Elevator;
 import org.ligerbots.robot.Subsystems.Grabber;
 import org.ligerbots.robot.Subsystems.Intake;
+import org.ligerbots.robot.Subsystems.Pneumatics;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -38,7 +42,10 @@ public class Robot extends TimedRobot {
   public static Elevator elevator;
   public static Intake intake;
   public static Grabber grabber;
-  static SetIntakeCommand initialSetIntake;
+  public static DriveCommand driveCommand;
+  public static Pneumatics compressor;
+  public static ManualElevator manualElevator;
+  //static SetIntakeCommand initialSetIntake;
   public static Boolean isSecondRobot;
   /**
    * This function is run when the robot is first started up and should be
@@ -52,8 +59,12 @@ public class Robot extends TimedRobot {
     driveTrain = new DriveTrain();
     oi = new OI();
     elevator = new Elevator();
-    initialSetIntake = new SetIntakeCommand(true);
-    initialSetIntake.start();
+    driveCommand = new DriveCommand();
+    manualElevator = new ManualElevator();
+    SmartDashboard.putString("RobotDidInit?", "Yes");
+    compressor = new Pneumatics();
+   // initialSetIntake = new SetIntakeCommand(true);
+   // initialSetIntake.start();
     // Detect the motor controllers we're using
     isSecondRobot = (new TalonSRX(RobotMap.DETERMINE_WHICH_ROBOT).getFirmwareVersion() != -1);
   }
@@ -103,13 +114,22 @@ public class Robot extends TimedRobot {
         // Put default auto code here
         break;
     }
+    Scheduler.getInstance().run();
   }
 
+
+  @Override
+  public void teleopInit() {
+    //manualElevator.start();
+    driveCommand.start();
+  }
   /**
    * This function is called periodically during operator control.
    */
   @Override
   public void teleopPeriodic() {
+    //driveTrain.allDrive(0.5, 0.5, 0.5);
+    Scheduler.getInstance().run();
   }
 
   /**
@@ -117,5 +137,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+  }
+
+  @Override
+  public void disabledPeriodic() {
+    //Scheduler.getInstance().run();
   }
 }

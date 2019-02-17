@@ -8,6 +8,8 @@
 package org.ligerbots.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import org.ligerbots.robot.Robot;
 import org.ligerbots.robot.RobotMap;
 
@@ -23,13 +25,14 @@ public class DriveCommand extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    SmartDashboard.putString("running", "yes");
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
 
-    if (Robot.oi.getStrafe() > 0) {//robot is strafing
+    /*if (Robot.oi.getStrafe() > 0) {//robot is strafing
       if (Math.abs(Robot.oi.getRotate()) > 0.04) {
         savedYaw = Robot.driveTrain.getYaw();
       }
@@ -41,9 +44,10 @@ public class DriveCommand extends Command {
       }
     } else {
       correctedYaw = Robot.oi.getRotate();
-    }
+    }*/
 
-    Robot.driveTrain.allDrive(Robot.oi.getThrottle(), correctedYaw, Robot.oi.getStrafe());
+    SmartDashboard.putString("LeftLeaderInfo", Robot.driveTrain.leftLeaderInfo());
+    Robot.driveTrain.allDrive(Robot.oi.getThrottle(), /*correctedYaw*/Robot.oi.getRotate(), Robot.oi.getStrafe());
   }
 
   // Make this return true when this Command no longer needs to run execute()

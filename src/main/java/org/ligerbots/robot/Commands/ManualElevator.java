@@ -8,19 +8,12 @@
 package org.ligerbots.robot.Commands;
 
 import org.ligerbots.robot.Robot;
-import org.ligerbots.robot.RobotMap;
-import org.ligerbots.robot.Subsystems.Elevator.ElevatorPosition;
-import org.ligerbots.robot.Subsystems.Elevator.WristPosition;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class ElevatorPositionCommand extends Command {
-
-  ElevatorPosition pos;
-
-  public ElevatorPositionCommand(ElevatorPosition pos) {
-    this.pos = pos;
+public class ManualElevator extends Command {
+  public ManualElevator() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
@@ -28,33 +21,24 @@ public class ElevatorPositionCommand extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-
-    //Robot.elevator.setElevatorPID(0.5, 0.0, 0.0);
-
-   // Robot.intake.deployIntake(true);
-
-    Robot.elevator.setElevatorPosition(pos);
-
-    /*if (pos == ElevatorPosition.BALL_HIGH) Robot.elevator.setWristPosition(WristPosition.HIGH);
-    else if (pos == ElevatorPosition.BALL_INTAKE) Robot.elevator.setWristPosition(WristPosition.INTAKE);
-    else Robot.elevator.setWristPosition(WristPosition.FLAT);*/
+    Robot.elevator.minHeight = Robot.elevator.getPosition();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    //Robot.elevator.setWrist(0.1);
     SmartDashboard.putNumber("Elevator Height", Robot.elevator.getPosition());
-    SmartDashboard.putNumber("Elevator Error", Robot.elevator.getClosedLoopError());
-
-    //Robot.elevator.setElevatorPosition(pos);
-
-    //if (Robot.elevator.getPosition() > RobotMap.INTAKE_IN_HEIGHT) Robot.intake.deployIntake(false);
+    if (Robot.elevator.getPosition() < Robot.elevator.minHeight + 1) {
+      Robot.elevator.set(Robot.oi.elevatorUp());
+    }
+    Robot.elevator.set(Robot.oi.elevatorUp() - Robot.oi.elevatorDown());
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return Robot.elevator.getPosition() > RobotMap.INTAKE_IN_HEIGHT;
+    return false;
   }
 
   // Called once after isFinished returns true
