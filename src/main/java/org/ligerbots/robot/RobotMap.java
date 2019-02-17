@@ -24,7 +24,17 @@ public class RobotMap {
   
     public static final int CT_INTAKE = 10; 
 
-    public static final int PCM_ID = 12; //placeholder number
+    public static final int PCM_ID = 12; 
 
     public static final double TICKS_TO_HEIGHT_COEFFICIENT = ELEVATOR_ENCODER_TICKS_PER_REV / (Math.PI * 0.6) * (54.0 / 18.0);
+
+    public static final int DETERMINE_WHICH_ROBOT = 8; //Whether this deviceId is a talon will determine if we're controlling the second robot
+
+    public static final int ABSOLUTE_ENCODER_CHANNEL = 1; //Not actually, fix later
+
+    public static final int ABSOLUTE_ENCODER_OFFSET = 0;
+
+    public static final boolean WRIST_USES_ABSOLUTE_ENCODER = false;
+
+    public static final double SHAFT_DIAMETER = 0.6;
 }

@@ -15,6 +15,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.ligerbots.robot.Commands.DriveCommand;
 import org.ligerbots.robot.Commands.ManualElevator;
 import org.ligerbots.robot.Commands.SetIntakeCommand;
+
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+
 import org.ligerbots.robot.Subsystems.DriveTrain;
 import org.ligerbots.robot.Subsystems.Elevator;
 import org.ligerbots.robot.Subsystems.Grabber;
@@ -42,7 +46,7 @@ public class Robot extends TimedRobot {
   public static Pneumatics compressor;
   public static ManualElevator manualElevator;
   //static SetIntakeCommand initialSetIntake;
-
+  public static Boolean isSecondRobot;
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -61,6 +65,8 @@ public class Robot extends TimedRobot {
     compressor = new Pneumatics();
    // initialSetIntake = new SetIntakeCommand(true);
    // initialSetIntake.start();
+    // Detect the motor controllers we're using
+    isSecondRobot = (new TalonSRX(RobotMap.DETERMINE_WHICH_ROBOT).getFirmwareVersion() != -1);
   }
 
   /**
