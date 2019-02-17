@@ -20,9 +20,11 @@ public class RobotMap {
 
     public static final double WRIST_ENCODER_TICKS_PER_REV = 4096;
 
-    public static final double INTAKE_IN_HEIGHT = 18; //ACTUALLY CHECK (UNITS IN WEIRD ELEVATOR HEIGHT)
+    public static final double INTAKE_IN_HEIGHT = 16; //ACTUALLY CHECK (UNITS IN WEIRD ELEVATOR HEIGHT)
   
-    public static final int CT_INTAKE = 10; //placeholder number
+    public static final int CT_INTAKE = 10; 
 
     public static final int PCM_ID = 12; //placeholder number
+
+    public static final double TICKS_TO_HEIGHT_COEFFICIENT = ELEVATOR_ENCODER_TICKS_PER_REV / (Math.PI * 0.6) * (54.0 / 18.0);
 }

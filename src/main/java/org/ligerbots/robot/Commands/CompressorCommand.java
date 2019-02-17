@@ -8,19 +8,15 @@
 package org.ligerbots.robot.Commands;
 
 import org.ligerbots.robot.Robot;
-import org.ligerbots.robot.RobotMap;
-import org.ligerbots.robot.Subsystems.Elevator.ElevatorPosition;
-import org.ligerbots.robot.Subsystems.Elevator.WristPosition;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class ElevatorPositionCommand extends Command {
+public class CompressorCommand extends Command {
 
-  ElevatorPosition pos;
+  boolean on;
 
-  public ElevatorPositionCommand(ElevatorPosition pos) {
-    this.pos = pos;
+  public CompressorCommand(boolean on) {
+    this.on = on;
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
@@ -29,32 +25,18 @@ public class ElevatorPositionCommand extends Command {
   @Override
   protected void initialize() {
 
-    //Robot.elevator.setElevatorPID(0.5, 0.0, 0.0);
-
-   // Robot.intake.deployIntake(true);
-
-    Robot.elevator.setElevatorPosition(pos);
-
-    /*if (pos == ElevatorPosition.BALL_HIGH) Robot.elevator.setWristPosition(WristPosition.HIGH);
-    else if (pos == ElevatorPosition.BALL_INTAKE) Robot.elevator.setWristPosition(WristPosition.INTAKE);
-    else Robot.elevator.setWristPosition(WristPosition.FLAT);*/
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    SmartDashboard.putNumber("Elevator Height", Robot.elevator.getPosition());
-    SmartDashboard.putNumber("Elevator Error", Robot.elevator.getClosedLoopError());
-
-    //Robot.elevator.setElevatorPosition(pos);
-
-    //if (Robot.elevator.getPosition() > RobotMap.INTAKE_IN_HEIGHT) Robot.intake.deployIntake(false);
+    Robot.compressor.setCompressor(on);
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return Robot.elevator.getPosition() > RobotMap.INTAKE_IN_HEIGHT;
+    return true;
   }
 
   // Called once after isFinished returns true

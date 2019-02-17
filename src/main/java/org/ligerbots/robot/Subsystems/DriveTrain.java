@@ -60,6 +60,9 @@ public class DriveTrain extends Subsystem {
 
     navX = new AHRS(Port.kMXP, (byte) 200);
 
+    centerLeader.setOpenLoopRampRate(0.005);
+    centerLeader.setSmartCurrentLimit(20);
+
    // turningController = new PIDController(0.045, 0.004, 0.06, navX, output -> this.turnOutput = output);
 
   }
@@ -71,7 +74,7 @@ public class DriveTrain extends Subsystem {
     }
     else {*/
       diffDrive.arcadeDrive(throttle, -rotate);
-      centerLeader.set(strafe);
+      centerLeader.set(strafe / 4);
    // }
    // rightLeader.set(0.5);
    // leftLeader.set(0.5);

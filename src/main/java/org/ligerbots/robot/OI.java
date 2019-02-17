@@ -7,6 +7,7 @@
 
 package org.ligerbots.robot;
 
+import org.ligerbots.robot.Commands.CompressorCommand;
 import org.ligerbots.robot.Commands.DriveCommand;
 import org.ligerbots.robot.Commands.ElevatorPositionCommand;
 import org.ligerbots.robot.Subsystems.Elevator.ElevatorPosition;
@@ -27,7 +28,13 @@ public class OI {
         xbox = new XboxController(0);
 
         JoystickButton elevator = new JoystickButton(xbox, 1);
-        elevator.whenPressed(new ElevatorPositionCommand(ElevatorPosition.BALL_MID));
+        elevator.whenPressed(new ElevatorPositionCommand(ElevatorPosition.HATCH_HIGH));
+
+        JoystickButton compressorOff = new JoystickButton (xbox, 7);
+        compressorOff.whenPressed(new CompressorCommand(false));
+
+        JoystickButton compressorOn = new JoystickButton (xbox, 8);
+        compressorOn.whenPressed(new CompressorCommand(true));
     }
 
     public double getThrottle () {

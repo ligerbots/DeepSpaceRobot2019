@@ -13,11 +13,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.ligerbots.robot.Commands.DriveCommand;
+import org.ligerbots.robot.Commands.ManualElevator;
 import org.ligerbots.robot.Commands.SetIntakeCommand;
 import org.ligerbots.robot.Subsystems.DriveTrain;
 import org.ligerbots.robot.Subsystems.Elevator;
 import org.ligerbots.robot.Subsystems.Grabber;
 import org.ligerbots.robot.Subsystems.Intake;
+import org.ligerbots.robot.Subsystems.Pneumatics;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -37,6 +39,8 @@ public class Robot extends TimedRobot {
   public static Intake intake;
   public static Grabber grabber;
   public static DriveCommand driveCommand;
+  public static Pneumatics compressor;
+  public static ManualElevator manualElevator;
   //static SetIntakeCommand initialSetIntake;
 
   /**
@@ -52,7 +56,9 @@ public class Robot extends TimedRobot {
     oi = new OI();
     elevator = new Elevator();
     driveCommand = new DriveCommand();
+    manualElevator = new ManualElevator();
     SmartDashboard.putString("RobotDidInit?", "Yes");
+    compressor = new Pneumatics();
    // initialSetIntake = new SetIntakeCommand(true);
    // initialSetIntake.start();
   }
@@ -108,6 +114,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    //manualElevator.start();
     driveCommand.start();
   }
   /**
