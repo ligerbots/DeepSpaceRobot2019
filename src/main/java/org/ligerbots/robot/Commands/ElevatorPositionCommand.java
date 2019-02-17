@@ -42,7 +42,7 @@ public class ElevatorPositionCommand extends Command {
 
   // Called repeatedly when this Command is scheduled to run
   @Override
-  protected void execute() {
+  protected void execute () {
     SmartDashboard.putNumber("Elevator Height", Robot.elevator.getPosition());
     SmartDashboard.putNumber("Elevator Error", Robot.elevator.getClosedLoopError());
 

@@ -12,11 +12,9 @@ import org.ligerbots.robot.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class IntakeRunCommand extends Command {
-  boolean isIntaking;
-  public IntakeRunCommand(boolean isIntaking) {
+  public IntakeRunCommand() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    this.isIntaking = isIntaking;
   }
 
   // Called just before this Command runs the first time
@@ -27,13 +25,9 @@ public class IntakeRunCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if (isIntaking){
-      Robot.intake.setIntakeMotor(1);
-    }else{
-      Robot.intake.setIntakeMotor(-1);
-    }
+    Robot.intake.setIntakeMotor(Robot.oi.getIntakeIn() + -Robot.oi.getIntakeOut());
   }
-
+  
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {

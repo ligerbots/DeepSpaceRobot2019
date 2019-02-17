@@ -10,10 +10,9 @@ package org.ligerbots.robot.Commands;
 import org.ligerbots.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class ManualElevator extends Command {
-  public ManualElevator() {
+public class FieldCentricToggleCommand extends Command {
+  public FieldCentricToggleCommand() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
@@ -21,18 +20,16 @@ public class ManualElevator extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    Robot.elevator.minHeight = Robot.elevator.getPosition();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    //Robot.elevator.setWrist(0.1);
-    SmartDashboard.putNumber("Elevator Height", Robot.elevator.getPosition());
-    if (Robot.elevator.getPosition() < Robot.elevator.minHeight + 1) {
-      Robot.elevator.set(Robot.oi.elevatorUp());
+    if (Robot.driveTrain.isFieldCentric()) {
+      Robot.driveTrain.setFieldCentric(false);
+    }else{
+      Robot.driveTrain.setFieldCentric(true);
     }
-    Robot.elevator.set(Robot.oi.elevatorUp() - Robot.oi.elevatorDown());
   }
 
   // Make this return true when this Command no longer needs to run execute()

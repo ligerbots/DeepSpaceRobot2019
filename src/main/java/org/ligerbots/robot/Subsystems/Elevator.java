@@ -18,7 +18,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.ligerbots.robot.RobotMap;
-
+import edu.wpi.first.wpilibj.AnalogInput;
 /**
  * Add your docs here.
  */
@@ -36,6 +36,8 @@ public class Elevator extends Subsystem {
   public double minHeight;
 
   PIDController pidController;
+  
+  private AnalogInput encoder;
 
   public enum ElevatorPosition {
     HATCH_HIGH, HATCH_MID, HATCH_LOW, BALL_HIGH, BALL_MID, BALL_LOW, BALL_CARGO, BALL_INTAKE
@@ -75,6 +77,13 @@ public class Elevator extends Subsystem {
     Arrays.asList(leader1, follower1, follower2, follower3, wrist)
         .forEach((WPI_TalonSRX talon) -> talon.configPeakCurrentDuration(3));
 
+    if (RobotMap.WRIST_USES_ABSOLUTE_ENCODER) {
+      encoder = new AnalogInput(RobotMap.ABSOLUTE_ENCODER_CHANNEL);
+      pidController = new PIDController(0, 0, 0, 0, encoder, wrist);
+
+      leader1.set(ControlMode.PercentOutput, 0);
+    }
+    
     Arrays.asList(leader1, follower1, follower2, follower3, wrist)
         .forEach((WPI_TalonSRX talon) -> talon.setNeutralMode(NeutralMode.Brake));
 
@@ -84,7 +93,7 @@ public class Elevator extends Subsystem {
 
 
   public double getPosition () {
-    return leader1.getSelectedSensorPosition() / RobotMap.ELEVATOR_ENCODER_TICKS_PER_REV * (Math.PI * 0.6) * (18.0 / 54.0); //I think the shaft is 0.5 inch diameter
+    return leader1.getSelectedSensorPosition() / RobotMap.ELEVATOR_ENCODER_TICKS_PER_REV * (Math.PI * RobotMap.SHAFT_DIAMETER) * (18.0 / 54.0); //I think the shaft is 0.5 inch diameter
   }
 
   public void setElevatorPID (double p, double i, double d) {
@@ -104,7 +113,13 @@ public class Elevator extends Subsystem {
   }
 
   public double getWristPosition () {
-    return wrist.getSelectedSensorPosition() / RobotMap.WRIST_ENCODER_TICKS_PER_REV * (Math.PI * 0.5); //Still don't know shaft diameter 
+    if (RobotMap.WRIST_USES_ABSOLUTE_ENCODER) {   
+      int offset = RobotMap.ABSOLUTE_ENCODER_OFFSET;
+      int value = encoder.getValue();
+      int offsetValue = (value + offset) % 4096;
+      double angle = (offsetValue / 4096.0) * 360.0;
+      return angle * (Math.PI * RobotMap.SHAFT_DIAMETER); //Shaft diameter.
+    } else return wrist.getSelectedSensorPosition() / RobotMap.WRIST_ENCODER_TICKS_PER_REV * (Math.PI * RobotMap.SHAFT_DIAMETER); //Still don't know shaft diameter 
   }
 
   public void setWrist (double speed) {
@@ -112,6 +127,22 @@ public class Elevator extends Subsystem {
   }
 
   public void setWristPosition (WristPosition pos) {
+    if (RobotMap.WRIST_USES_ABSOLUTE_ENCODER) {
+      switch (pos) {
+        case HIGH:
+          pidController.setSetpoint(0); //FIX POSITIONS LATER
+          break;
+        case FLAT:
+          pidController.setSetpoint(0);
+          break;
+        case INTAKE:
+          pidController.setSetpoint(0);
+          break;
+      }
+      //Avoid waviness of if/elses
+      return;
+    }
+    //Otherwise if we're using the motor's encoder
     switch (pos) {
       case HIGH:
         wrist.set(ControlMode.Position, 0.0); //FIX POSITIONS LATER
@@ -158,7 +189,6 @@ public class Elevator extends Subsystem {
   public int getClosedLoopError () {
     return leader1.getClosedLoopError();
   }
-
 
 
   @Override
