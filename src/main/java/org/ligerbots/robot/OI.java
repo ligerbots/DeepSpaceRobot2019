@@ -26,6 +26,7 @@ import org.ligerbots.robot.Commands.FieldCentricToggleCommand;
 import org.ligerbots.robot.Commands.GrabberKickerToggleCommand;
 import org.ligerbots.robot.Commands.GrabberToggleCommand;
 import org.ligerbots.robot.Commands.IntakeToggleCommand;
+import org.ligerbots.robot.Commands.MoveWristCommand;
 import org.ligerbots.robot.Subsystems.Elevator.ElevatorPosition;
 
 /**

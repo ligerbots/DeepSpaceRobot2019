@@ -55,7 +55,6 @@ public class Grabber extends Subsystem {
     }
     else{
       kickerSolenoid.set(Value.kForward);
-      Timer.delay(0.1);
       armSolenoid.set(Value.kReverse);
       open = true;
     }

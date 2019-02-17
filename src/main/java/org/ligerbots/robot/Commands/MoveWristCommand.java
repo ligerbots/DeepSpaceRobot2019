@@ -10,9 +10,11 @@ package org.ligerbots.robot.Commands;
 import org.ligerbots.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class IntakeRunCommand extends Command {
-  public IntakeRunCommand() {
+public class MoveWristCommand extends Command {
+  double time;
+  public MoveWristCommand() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
@@ -20,17 +22,21 @@ public class IntakeRunCommand extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    time = System.currentTimeMillis();
+    System.out.println("initialize move wrist command");
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.intake.setIntakeMotor(Robot.oi.getIntakeIn() - Robot.oi.getIntakeOut());
+    SmartDashboard.putNumber("wrist speed", Robot.oi.getIntakeIn());
+    Robot.elevator.moveWristUp(Robot.oi.getIntakeIn());
   }
-  
+
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
+    System.out.println("finished command cycle");
     return false;
   }
 
