@@ -81,7 +81,7 @@ public class Elevator extends Subsystem {
 
     if (RobotMap.WRIST_USES_ABSOLUTE_ENCODER) {
       encoder = new AnalogInput(RobotMap.ABSOLUTE_ENCODER_CHANNEL);
-      pidController = new PIDController(0, 0, 0, 0, encoder, wrist);
+      pidController = new PIDController(0.005, 0, 0, 0, encoder, wrist);
 
       leader1.set(ControlMode.PercentOutput, 0);
     }
@@ -98,29 +98,32 @@ public class Elevator extends Subsystem {
     return leader1.getSelectedSensorPosition() / RobotMap.ELEVATOR_ENCODER_TICKS_PER_REV * (Math.PI * RobotMap.SHAFT_DIAMETER) * (18.0 / 54.0); //I think the shaft is 0.5 inch diameter
   }
 
-  public void setElevatorPID (double p, double i, double d) {
-    leader1.config_kP(0, p);
-    leader1.config_kI(0, i);
-    leader1.config_kD(0, d);
-  }
+  // This shouldn't be necessary since we're already setting kP above.
+  // public void setElevatorPID (double p, double i, double d) {
+  //   leader1.config_kP(0, p);
+  //   leader1.config_kI(0, i);
+  //   leader1.config_kD(0, d);
+  // }
 
   public void set (double speed) {
     leader1.set(ControlMode.PercentOutput, speed);
   }
 
-  public void setWristPID (double p, double i, double d) {
-    wrist.config_kP(0, p);
-    wrist.config_kI(0, i);
-    wrist.config_kD(0, d);
-  }
+  // This won't work. The wrist Talon can't do it's own PID since the encoder is connecte tot he Rio
+  // public void setWristPID (double p, double i, double d) {
+  //   wrist.config_kP(0, p);
+  //   wrist.config_kI(0, i);
+  //   wrist.config_kD(0, d);
+  // 1230 horizontal
+  // 1550 angled up
+  // }
 
   public double getWristPosition () {
     if (RobotMap.WRIST_USES_ABSOLUTE_ENCODER) {   
-      int offset = RobotMap.ABSOLUTE_ENCODER_OFFSET;
       int value = encoder.getValue();
-      int offsetValue = (value + offset) % 4096;
+      int offsetValue = (value - RobotMap.ABSOLUTE_ENCODER_OFFSET) % 4096;
       double angle = (offsetValue / 4096.0) * 360.0;
-      return angle * (Math.PI * RobotMap.SHAFT_DIAMETER); //Shaft diameter.
+      return angle// no need to use shaft diameter * (Math.PI * RobotMap.SHAFT_DIAMETER); //Shaft diameter.
     } else return wrist.getSelectedSensorPosition() / RobotMap.WRIST_ENCODER_TICKS_PER_REV * (Math.PI * RobotMap.SHAFT_DIAMETER); //Still don't know shaft diameter 
   }
 
@@ -132,13 +135,13 @@ public class Elevator extends Subsystem {
     if (RobotMap.WRIST_USES_ABSOLUTE_ENCODER) {
       switch (pos) {
         case HIGH:
-          pidController.setSetpoint(0); //FIX POSITIONS LATER
+          pidController.setSetpoint(1550); //FIX POSITIONS LATER
           break;
         case FLAT:
           pidController.setSetpoint(0);
           break;
         case INTAKE:
-          pidController.setSetpoint(0);
+          pidController.setSetpoint(1000);
           break;
       }
       //Avoid waviness of if/elses
@@ -171,18 +174,23 @@ public class Elevator extends Subsystem {
         break;
       case BALL_CARGO:
         leader1.set(ControlMode.Position, 37.0 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
+        setWristPosition(WristPosition.HIGH)
         break;
       case BALL_INTAKE:
         leader1.set(ControlMode.Position, 0.0);
+        setWristPosition(WristPosition.FLAT);
         break;
       case BALL_HIGH:
         leader1.set(ControlMode.Position, 59.0 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
+        setWristPosition(WristPosition.HIGH)
         break;
       case BALL_MID:
         leader1.set(ControlMode.Position, 51.5 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT); //temporary!!!!!
+        setWristPosition(WristPosition.FLAT)
         break;
       case BALL_LOW:
         leader1.set(ControlMode.Position, 23.5 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
+        setWristPosition(WristPosition.FLAT)
         break;
     }
   }
