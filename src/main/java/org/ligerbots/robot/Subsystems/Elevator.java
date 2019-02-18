@@ -19,8 +19,11 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.PIDSourceType;
 
 import org.ligerbots.robot.RobotMap;
+import org.ligerbots.robot.Commands.SetWristPosition;
+
 import edu.wpi.first.wpilibj.AnalogInput;
 /**
  * Add your docs here.
@@ -41,6 +44,8 @@ public class Elevator extends Subsystem {
   public PIDController pidController;
   
   public AnalogInput encoder;
+
+  public double setPoint;
 
   public enum ElevatorPosition {
     HATCH_HIGH, HATCH_MID, HATCH_LOW, BALL_HIGH, BALL_MID, BALL_LOW, BALL_CARGO, BALL_INTAKE, INTAKE_DEPLOY, ONE
@@ -63,7 +68,7 @@ public class Elevator extends Subsystem {
     follower1.setInverted(InvertType.FollowMaster);
     follower2.setInverted(InvertType.OpposeMaster);
     follower3.setInverted(InvertType.OpposeMaster);
-    wrist.setInverted(true);
+    //wrist.setInverted(true);
 
     leader1.setSelectedSensorPosition(0);
 
@@ -83,8 +88,12 @@ public class Elevator extends Subsystem {
 
     if (RobotMap.WRIST_USES_ABSOLUTE_ENCODER) {
       encoder = new AnalogInput(RobotMap.ABSOLUTE_ENCODER_CHANNEL);
-      pidController = new PIDController(0.25, 0, 0, 0, encoder, wrist);
-      pidController.enable();;
+      pidController = new PIDController(0.3, 0, 0, 0, encoder, wrist);
+      //pidController.enable();
+      //pidController.setAbsoluteTolerance(0.1);
+      pidController.setPercentTolerance(0);
+      PIDSourceType pidSourceType = pidController.getPIDSourceType();
+      pidController.setPIDSourceType(pidSourceType.kDisplacement);
 
       leader1.set(ControlMode.PercentOutput, 0);
     }
@@ -142,7 +151,7 @@ public class Elevator extends Subsystem {
     if (RobotMap.WRIST_USES_ABSOLUTE_ENCODER) {
       System.out.println("wrist pos" + pos);
      
-      switch (pos) {
+      /*switch (pos) {
         case HIGH:
           pidController.setSetpoint(1550 / 4096.0 * 5.0); //FIX POSITIONS LATER
           break;
@@ -152,8 +161,26 @@ public class Elevator extends Subsystem {
         case INTAKE:
           pidController.setSetpoint(1000 / 4096.0 * 5.0);
           break;
-      }
+      }*/
       //Avoid waviness of if/elses
+      switch (pos) {
+        case HIGH:
+        setPoint = 1550;
+        break;
+        case FLAT:
+        setPoint = 1230;
+        break;
+        case INTAKE:
+        setPoint = 1000;
+        break;
+      }
+      if (setPoint - encoder.getValue() > 20){
+        wrist.set(ControlMode.PercentOutput, 0.25);
+      }else if (setPoint - encoder.getValue() < 20){
+        wrist.set(ControlMode.PercentOutput, -0.25);
+      }else {
+        wrist.set(ControlMode.PercentOutput, 0.1);
+      }
       return;
     }
     //Otherwise if we're using the motor's encoder
@@ -183,6 +210,7 @@ public class Elevator extends Subsystem {
       case HATCH_LOW:
         leader1.set(ControlMode.Position, 15.0 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
         setWristPosition(WristPosition.FLAT);
+        new SetWristPosition(WristPosition.FLAT);
         break;
       case BALL_CARGO:
         leader1.set(ControlMode.Position, 37.0 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
@@ -210,7 +238,7 @@ public class Elevator extends Subsystem {
         break;
       case ONE:
         leader1.set(ControlMode.Position, 2 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
-        setWristPosition(WristPosition.HIGH);
+        new SetWristPosition(WristPosition.HIGH);
         break;
     }
   }

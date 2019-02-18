@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.ligerbots.robot.Commands.DriveCommand;
 import org.ligerbots.robot.Commands.IntakeRunCommand;
+import org.ligerbots.robot.Commands.MoveWristCommand;
 import org.ligerbots.robot.Commands.SetIntakeCommand;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -47,6 +48,7 @@ public class Robot extends TimedRobot {
   //static SetIntakeCommand initialSetIntake;
   public static Boolean isSecondRobot;
   public static IntakeRunCommand intakeCommand;
+  public static MoveWristCommand wristCommand;
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -65,6 +67,7 @@ public class Robot extends TimedRobot {
     grabber = new Grabber();
     oi = new OI();
     intakeCommand = new IntakeRunCommand();
+    wristCommand = new MoveWristCommand();
     elevator.resetEncoderZero();
 
    // initialSetIntake = new SetIntakeCommand(true);
@@ -87,6 +90,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("wrist speed", elevator.wrist.get());
     SmartDashboard.putNumber("pid error", elevator.pidController.getError());
     SmartDashboard.putNumber("elevator pid get", elevator.encoder.pidGet());
+    SmartDashboard.putNumber("wrist position", elevator.getWristPosition());
   }
 
   /**
@@ -130,6 +134,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     driveCommand.start();
     intakeCommand.start();
+    wristCommand.start();
   }
   /**
    * This function is called periodically during operator control.
