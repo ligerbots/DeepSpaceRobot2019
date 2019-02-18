@@ -53,7 +53,8 @@ public class ElevatorPositionCommand extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return Robot.elevator.getPosition() > RobotMap.INTAKE_IN_HEIGHT;
+   //return Robot.elevator.getPosition() > RobotMap.INTAKE_IN_HEIGHT;
+   return true;
   }
 
   // Called once after isFinished returns true

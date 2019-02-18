@@ -86,6 +86,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("wrist error", elevator.wrist.getClosedLoopError());
     SmartDashboard.putNumber("wrist speed", elevator.wrist.get());
     SmartDashboard.putNumber("pid error", elevator.pidController.getError());
+    SmartDashboard.putNumber("elevator pid get", elevator.encoder.pidGet());
   }
 
   /**

@@ -63,6 +63,7 @@ public class Elevator extends Subsystem {
     follower1.setInverted(InvertType.FollowMaster);
     follower2.setInverted(InvertType.OpposeMaster);
     follower3.setInverted(InvertType.OpposeMaster);
+    wrist.setInverted(true);
 
     leader1.setSelectedSensorPosition(0);
 
@@ -82,7 +83,7 @@ public class Elevator extends Subsystem {
 
     if (RobotMap.WRIST_USES_ABSOLUTE_ENCODER) {
       encoder = new AnalogInput(RobotMap.ABSOLUTE_ENCODER_CHANNEL);
-      pidController = new PIDController(0.0001, 0, 0, 0, encoder, wrist);
+      pidController = new PIDController(0.25, 0, 0, 0, encoder, wrist);
       pidController.enable();;
 
       leader1.set(ControlMode.PercentOutput, 0);
@@ -143,13 +144,13 @@ public class Elevator extends Subsystem {
      
       switch (pos) {
         case HIGH:
-          pidController.setSetpoint(1550); //FIX POSITIONS LATER
+          pidController.setSetpoint(1550 / 4096.0 * 5.0); //FIX POSITIONS LATER
           break;
         case FLAT:
-          pidController.setSetpoint(1230);
+          pidController.setSetpoint(1230 / 4096.0 * 5.0);
           break;
         case INTAKE:
-          pidController.setSetpoint(1000);
+          pidController.setSetpoint(1000 / 4096.0 * 5.0);
           break;
       }
       //Avoid waviness of if/elses
@@ -209,7 +210,7 @@ public class Elevator extends Subsystem {
         break;
       case ONE:
         leader1.set(ControlMode.Position, 2 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
-        setWristPosition(WristPosition.FLAT);
+        setWristPosition(WristPosition.HIGH);
         break;
     }
   }
