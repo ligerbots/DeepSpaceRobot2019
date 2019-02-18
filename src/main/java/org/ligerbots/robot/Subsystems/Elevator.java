@@ -9,6 +9,8 @@ package org.ligerbots.robot.Subsystems;
 
 import java.util.Arrays;
 
+import javax.swing.text.StyleContext.SmallAttributeSet;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.InvertType;
@@ -18,6 +20,8 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import org.ligerbots.robot.RobotMap;
 import edu.wpi.first.wpilibj.AnalogInput;
 /**
@@ -49,14 +53,16 @@ public class Elevator extends Subsystem {
   }
 
   public Elevator () {
+    SmartDashboard.putNumber("FlatWristVal", 3);
+    SmartDashboard.putNumber("WristP", 0.1);
+    SmartDashboard.putNumber("WristI", 0);
+    SmartDashboard.putNumber("WristD", 0);
 
     leader1 = new WPI_TalonSRX(9); //It is the top left motor when looking at the back of the robot
     follower1 = new WPI_TalonSRX(8); //Same side as leader
     follower2 = new WPI_TalonSRX(7); //top right
     follower3 = new WPI_TalonSRX(6); //bottom right
     wrist = new WPI_TalonSRX(11);
-
-    encoder = new AnalogInput(1);
 
     leader1.setInverted(true);
     follower1.setInverted(InvertType.FollowMaster);
@@ -79,12 +85,11 @@ public class Elevator extends Subsystem {
     Arrays.asList(leader1, follower1, follower2, follower3, wrist)
         .forEach((WPI_TalonSRX talon) -> talon.configPeakCurrentDuration(3));
 
-    if (RobotMap.WRIST_USES_ABSOLUTE_ENCODER) {
-      encoder = new AnalogInput(RobotMap.ABSOLUTE_ENCODER_CHANNEL);
-      pidController = new PIDController(0, 0, 0, 0, encoder, wrist);
+    encoder = new AnalogInput(RobotMap.ABSOLUTE_ENCODER_CHANNEL);
+    pidController = new PIDController(0.6, 0, 0, 0, encoder, wrist);
 
-      leader1.set(ControlMode.PercentOutput, 0);
-    }
+
+    leader1.set(ControlMode.PercentOutput, 0);
     
     Arrays.asList(leader1, follower1, follower2, follower3, wrist)
         .forEach((WPI_TalonSRX talon) -> talon.setNeutralMode(NeutralMode.Brake));
@@ -109,9 +114,9 @@ public class Elevator extends Subsystem {
   }
 
   public void setWristPID (double p, double i, double d) {
-    wrist.config_kP(0, p);
-    wrist.config_kI(0, i);
-    wrist.config_kD(0, d);
+    pidController.setP(p);
+    pidController.setI(i);
+    pidController.setD(d);
   }
 
   public double getWristPosition () {
@@ -129,17 +134,21 @@ public class Elevator extends Subsystem {
   }
 
   public void setWristPosition (WristPosition pos) {
+    setWristPID(SmartDashboard.getNumber("WristP", 0.6), SmartDashboard.getNumber("WristI", 0), SmartDashboard.getNumber("WristD", 0));
     if (RobotMap.WRIST_USES_ABSOLUTE_ENCODER) {
       switch (pos) {
         case HIGH:
           pidController.setSetpoint(0); //FIX POSITIONS LATER
           break;
         case FLAT:
-          pidController.setSetpoint(0);
+          pidController.setSetpoint(SmartDashboard.getNumber("FlatWristVal", 1.8));
           break;
         case INTAKE:
           pidController.setSetpoint(0);
           break;
+      }
+      if (!pidController.isEnabled()) {
+        pidController.enable();
       }
       //Avoid waviness of if/elses
       return;

@@ -34,7 +34,7 @@ public class RobotMap {
 
     public static final int ABSOLUTE_ENCODER_OFFSET = 0;
 
-    public static final boolean WRIST_USES_ABSOLUTE_ENCODER = false;
+    public static final boolean WRIST_USES_ABSOLUTE_ENCODER = true;
 
     public static final double SHAFT_DIAMETER = 0.6;
 }

@@ -12,6 +12,7 @@ import org.ligerbots.robot.Commands.DriveCommand;
 import org.ligerbots.robot.Commands.ElevatorPositionCommand;
 import org.ligerbots.robot.Commands.IntakeRunCommand;
 import org.ligerbots.robot.Subsystems.Elevator.ElevatorPosition;
+import org.ligerbots.robot.Subsystems.Elevator.WristPosition;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
@@ -55,10 +56,9 @@ public class OI {
         xBoxA.whenPressed(new GrabberKickerToggleCommand());
 
         JoystickButton xBoxB = new JoystickButton(xbox, 2);
-        xBoxB.whenPressed(new DriveToVisionTarget());
-
+        xBoxB.whenPressed(/*new DriveToVisionTarget()*/new MoveWristCommand(WristPosition.FLAT));
         JoystickButton xBoxY = new JoystickButton(xbox, 4);
-        xBoxY.whenPressed(/*new ElevatorPositionCommand(ElevatorPosition.HATCH_MID)*/new IntakeToggleCommand());
+        xBoxY.whenPressed(new ElevatorPositionCommand(ElevatorPosition.HATCH_MID)/*new IntakeToggleCommand()*/);
 
         JoystickButton xBoxBumperLeft = new JoystickButton(xbox, 5);
         xBoxBumperLeft.whenPressed(new IntakeToggleCommand());
@@ -103,15 +103,18 @@ public class OI {
     }
 
     public double getThrottle () {
-        return  Math.abs(xbox.getY(Hand.kLeft)) > 0.05 ? xbox.getY(Hand.kLeft) : 0.0;
+        return 0;
+       // return  Math.abs(xbox.getY(Hand.kLeft)) > 0.05 ? xbox.getY(Hand.kLeft) : 0.0;
     }
 
     public double getRotate () {
-        return Math.abs(xbox.getX(Hand.kRight)) > 0.05 ? xbox.getX(Hand.kRight) : 0.0;
+        return 0;
+       // return Math.abs(xbox.getX(Hand.kRight)) > 0.05 ? xbox.getX(Hand.kRight) : 0.0;
     }
 
     public double getStrafe () {
-        return  Math.abs(xbox.getX(Hand.kLeft)) > 0.05 ? xbox.getX(Hand.kLeft) : 0.0;
+        return 0;
+        //return  Math.abs(xbox.getX(Hand.kLeft)) > 0.05 ? xbox.getX(Hand.kLeft) : 0.0;
     }
 
 
