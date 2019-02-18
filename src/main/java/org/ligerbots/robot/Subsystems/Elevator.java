@@ -7,6 +7,7 @@
 
 package org.ligerbots.robot.Subsystems;
 
+import java.awt.Robot;
 import java.util.Arrays;
 
 import javax.swing.text.StyleContext.SmallAttributeSet;
@@ -53,10 +54,11 @@ public class Elevator extends Subsystem {
   }
 
   public Elevator () {
-    SmartDashboard.putNumber("FlatWristVal", 3);
-    SmartDashboard.putNumber("WristP", 0.1);
-    SmartDashboard.putNumber("WristI", 0);
-    SmartDashboard.putNumber("WristD", 0);
+    SmartDashboard.putNumber("FlatWristVal", RobotMap.WRIST_FLAT_VAL);
+    SmartDashboard.putNumber("WristP", RobotMap.WRIST_P);
+    SmartDashboard.putNumber("WristI", RobotMap.WRIST_I);
+    SmartDashboard.putNumber("WristD", RobotMap.WRIST_D);
+    SmartDashboard.putNumber("WristF", RobotMap.WRIST_F);
 
     leader1 = new WPI_TalonSRX(9); //It is the top left motor when looking at the back of the robot
     follower1 = new WPI_TalonSRX(8); //Same side as leader
@@ -86,7 +88,9 @@ public class Elevator extends Subsystem {
         .forEach((WPI_TalonSRX talon) -> talon.configPeakCurrentDuration(3));
 
     encoder = new AnalogInput(RobotMap.ABSOLUTE_ENCODER_CHANNEL);
-    pidController = new PIDController(0.6, 0, 0, 0, encoder, wrist);
+    pidController = new PIDController(0, 0, 0, 0, encoder, wrist);
+
+    pidController.setPercentTolerance(30);
 
 
     leader1.set(ControlMode.PercentOutput, 0);
@@ -113,10 +117,11 @@ public class Elevator extends Subsystem {
     leader1.set(ControlMode.PercentOutput, speed);
   }
 
-  public void setWristPID (double p, double i, double d) {
+  public void setWristPID (double p, double i, double d, double f) {
     pidController.setP(p);
     pidController.setI(i);
     pidController.setD(d);
+    pidController.setF(f);
   }
 
   public double getWristPosition () {
@@ -128,23 +133,21 @@ public class Elevator extends Subsystem {
       return angle * (Math.PI * RobotMap.SHAFT_DIAMETER); //Shaft diameter.
     } else return wrist.getSelectedSensorPosition() / RobotMap.WRIST_ENCODER_TICKS_PER_REV * (Math.PI * RobotMap.SHAFT_DIAMETER); //Still don't know shaft diameter 
   }
-
   public void setWrist (double speed) {
     wrist.set(ControlMode.PercentOutput, speed);
   }
-
   public void setWristPosition (WristPosition pos) {
-    setWristPID(SmartDashboard.getNumber("WristP", 0.6), SmartDashboard.getNumber("WristI", 0), SmartDashboard.getNumber("WristD", 0));
+    setWristPID(SmartDashboard.getNumber("WristP", RobotMap.WRIST_P), SmartDashboard.getNumber("WristI", RobotMap.WRIST_I), SmartDashboard.getNumber("WristD", RobotMap.WRIST_D), SmartDashboard.getNumber("WristF", RobotMap.WRIST_F));
     if (RobotMap.WRIST_USES_ABSOLUTE_ENCODER) {
       switch (pos) {
         case HIGH:
-          pidController.setSetpoint(0); //FIX POSITIONS LATER
+          pidController.setSetpoint(RobotMap.WRIST_FLAT_VAL); //FIX POSITIONS LATER
           break;
         case FLAT:
-          pidController.setSetpoint(SmartDashboard.getNumber("FlatWristVal", 1.8));
+          pidController.setSetpoint(SmartDashboard.getNumber("FlatWristVal", 1.625));
           break;
         case INTAKE:
-          pidController.setSetpoint(0);
+          pidController.setSetpoint(1.5);
           break;
       }
       if (!pidController.isEnabled()) {

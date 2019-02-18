@@ -103,18 +103,15 @@ public class OI {
     }
 
     public double getThrottle () {
-        return 0;
-       // return  Math.abs(xbox.getY(Hand.kLeft)) > 0.05 ? xbox.getY(Hand.kLeft) : 0.0;
+        return  Math.abs(xbox.getY(Hand.kLeft)) > 0.05 ? xbox.getY(Hand.kLeft) : 0.0;
     }
 
     public double getRotate () {
-        return 0;
-       // return Math.abs(xbox.getX(Hand.kRight)) > 0.05 ? xbox.getX(Hand.kRight) : 0.0;
+       return Math.abs(xbox.getX(Hand.kRight)) > 0.05 ? xbox.getX(Hand.kRight) : 0.0;
     }
 
     public double getStrafe () {
-        return 0;
-        //return  Math.abs(xbox.getX(Hand.kLeft)) > 0.05 ? xbox.getX(Hand.kLeft) : 0.0;
+        return  Math.abs(xbox.getX(Hand.kLeft)) > 0.05 ? xbox.getX(Hand.kLeft) : 0.0;
     }
 
 

@@ -8,14 +8,17 @@
 package org.ligerbots.robot.Commands;
 
 import org.ligerbots.robot.Robot;
+import org.ligerbots.robot.RobotMap;
 import org.ligerbots.robot.Subsystems.Elevator.WristPosition;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class MoveWristCommand extends Command {
   double time;
   WristPosition pos;
+  WristPosition lastPos;
   public MoveWristCommand(WristPosition pos) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
@@ -32,15 +35,14 @@ public class MoveWristCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    SmartDashboard.putNumber("wrist speed", Robot.oi.getIntakeIn());
-    //Robot.elevator.moveWristUp(Robot.oi.getIntakeIn());
     Robot.elevator.setWristPosition(pos);
+    //Robot.elevator.moveWristUp(Robot.oi.getIntakeIn());
+    lastPos = pos;
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    System.out.println("finished command cycle");
     return true;
   }
 

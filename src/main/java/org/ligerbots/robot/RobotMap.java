@@ -37,4 +37,14 @@ public class RobotMap {
     public static final boolean WRIST_USES_ABSOLUTE_ENCODER = true;
 
     public static final double SHAFT_DIAMETER = 0.6;
+
+    public static final double WRIST_P = 0.85;
+
+    public static final double WRIST_I = 0.0;
+
+    public static final double WRIST_D = 0.0;
+    
+    public static final double WRIST_F = 0.0;
+
+    public static final double WRIST_FLAT_VAL = 1.625;
 }
