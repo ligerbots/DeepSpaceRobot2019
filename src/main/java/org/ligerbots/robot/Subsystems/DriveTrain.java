@@ -74,7 +74,7 @@ public class DriveTrain extends Subsystem {
     }
     else {*/
       diffDrive.arcadeDrive(throttle, -rotate);
-      centerLeader.set(strafe / 4);
+      //centerLeader.set(strafe / 4);
    // }
    // rightLeader.set(0.5);
    // leftLeader.set(0.5);

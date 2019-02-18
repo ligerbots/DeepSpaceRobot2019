@@ -18,6 +18,8 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import org.ligerbots.robot.RobotMap;
 import edu.wpi.first.wpilibj.AnalogInput;
 /**
@@ -32,11 +34,11 @@ public class Elevator extends Subsystem {
   WPI_TalonSRX follower2;
   WPI_TalonSRX follower3;
 
-  WPI_TalonSRX wrist;
+  public WPI_TalonSRX wrist;
 
   public double minHeight;
 
-  PIDController pidController;
+  public PIDController pidController;
   
   public AnalogInput encoder;
 
@@ -56,7 +58,6 @@ public class Elevator extends Subsystem {
     follower3 = new WPI_TalonSRX(6); //bottom right
     wrist = new WPI_TalonSRX(11);
 
-    encoder = new AnalogInput(1);
 
     leader1.setInverted(true);
     follower1.setInverted(InvertType.FollowMaster);
@@ -81,7 +82,8 @@ public class Elevator extends Subsystem {
 
     if (RobotMap.WRIST_USES_ABSOLUTE_ENCODER) {
       encoder = new AnalogInput(RobotMap.ABSOLUTE_ENCODER_CHANNEL);
-      pidController = new PIDController(0.005, 0, 0, 0, encoder, wrist);
+      pidController = new PIDController(0.0001, 0, 0, 0, encoder, wrist);
+      pidController.enable();;
 
       leader1.set(ControlMode.PercentOutput, 0);
     }
@@ -109,6 +111,10 @@ public class Elevator extends Subsystem {
     leader1.set(ControlMode.PercentOutput, speed);
   }
 
+  public void resetEncoderZero () {
+    leader1.setSelectedSensorPosition(0);
+  }
+
   // This won't work. The wrist Talon can't do it's own PID since the encoder is connecte tot he Rio
   // public void setWristPID (double p, double i, double d) {
   //   wrist.config_kP(0, p);
@@ -123,7 +129,7 @@ public class Elevator extends Subsystem {
       int value = encoder.getValue();
       int offsetValue = (value - RobotMap.ABSOLUTE_ENCODER_OFFSET) % 4096;
       double angle = (offsetValue / 4096.0) * 360.0;
-      return angle// no need to use shaft diameter * (Math.PI * RobotMap.SHAFT_DIAMETER); //Shaft diameter.
+      return angle;// no need to use shaft diameter * (Math.PI * RobotMap.SHAFT_DIAMETER); //Shaft diameter.
     } else return wrist.getSelectedSensorPosition() / RobotMap.WRIST_ENCODER_TICKS_PER_REV * (Math.PI * RobotMap.SHAFT_DIAMETER); //Still don't know shaft diameter 
   }
 
@@ -133,12 +139,14 @@ public class Elevator extends Subsystem {
 
   public void setWristPosition (WristPosition pos) {
     if (RobotMap.WRIST_USES_ABSOLUTE_ENCODER) {
+      System.out.println("wrist pos" + pos);
+     
       switch (pos) {
         case HIGH:
           pidController.setSetpoint(1550); //FIX POSITIONS LATER
           break;
         case FLAT:
-          pidController.setSetpoint(0);
+          pidController.setSetpoint(1230);
           break;
         case INTAKE:
           pidController.setSetpoint(1000);
@@ -165,16 +173,19 @@ public class Elevator extends Subsystem {
     switch (pos) {
       case HATCH_HIGH:
         leader1.set(ControlMode.Position, 59.0 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT); 
+        setWristPosition(WristPosition.FLAT);
         break;
       case HATCH_MID:
         leader1.set(ControlMode.Position, 43.0 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
+        setWristPosition(WristPosition.FLAT);
         break;
       case HATCH_LOW:
         leader1.set(ControlMode.Position, 15.0 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
+        setWristPosition(WristPosition.FLAT);
         break;
       case BALL_CARGO:
         leader1.set(ControlMode.Position, 37.0 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
-        setWristPosition(WristPosition.HIGH)
+        setWristPosition(WristPosition.HIGH);
         break;
       case BALL_INTAKE:
         leader1.set(ControlMode.Position, 0.0);
@@ -182,21 +193,24 @@ public class Elevator extends Subsystem {
         break;
       case BALL_HIGH:
         leader1.set(ControlMode.Position, 59.0 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
-        setWristPosition(WristPosition.HIGH)
+        setWristPosition(WristPosition.HIGH);
         break;
       case BALL_MID:
         leader1.set(ControlMode.Position, 51.5 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT); //temporary!!!!!
-        setWristPosition(WristPosition.FLAT)
+        setWristPosition(WristPosition.FLAT);
         break;
       case BALL_LOW:
         leader1.set(ControlMode.Position, 23.5 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
-        setWristPosition(WristPosition.FLAT)
+        setWristPosition(WristPosition.FLAT);
         break;
       case INTAKE_DEPLOY:
         leader1.set(ControlMode.Position, 27 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
+        setWristPosition(WristPosition.FLAT);
         break;
       case ONE:
         leader1.set(ControlMode.Position, 2 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
+        setWristPosition(WristPosition.FLAT);
+        break;
     }
   }
 

@@ -65,6 +65,7 @@ public class Robot extends TimedRobot {
     grabber = new Grabber();
     oi = new OI();
     intakeCommand = new IntakeRunCommand();
+    elevator.resetEncoderZero();
 
    // initialSetIntake = new SetIntakeCommand(true);
    // initialSetIntake.start();
@@ -82,6 +83,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    SmartDashboard.putNumber("wrist error", elevator.wrist.getClosedLoopError());
+    SmartDashboard.putNumber("wrist speed", elevator.wrist.get());
+    SmartDashboard.putNumber("pid error", elevator.pidController.getError());
   }
 
   /**
