@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import org.ligerbots.robot.Commands.DriveToVisionTarget;
 import org.ligerbots.robot.Commands.ElevatorPositionCommand;
 import org.ligerbots.robot.Commands.FieldCentricToggleCommand;
+import org.ligerbots.robot.Commands.GoToIntakePositionCommandGroup;
 import org.ligerbots.robot.Commands.GrabberKickerToggleCommand;
 import org.ligerbots.robot.Commands.GrabberToggleCommand;
 import org.ligerbots.robot.Commands.IntakeToggleCommand;
@@ -58,7 +59,7 @@ public class OI {
         xBoxB.whenPressed(new DriveToVisionTarget());
 
         JoystickButton xBoxY = new JoystickButton(xbox, 4);
-        xBoxY.whenPressed(/*new ElevatorPositionCommand(ElevatorPosition.HATCH_MID)*/new IntakeToggleCommand());
+        xBoxY.whenPressed(new ElevatorPositionCommand(ElevatorPosition.HATCH_MID));
 
         JoystickButton xBoxBumperLeft = new JoystickButton(xbox, 5);
         xBoxBumperLeft.whenPressed(new IntakeToggleCommand());
@@ -82,7 +83,7 @@ public class OI {
         farmFive.whenPressed(new ElevatorPositionCommand(ElevatorPosition.HATCH_HIGH));
 
         JoystickButton farmSix = new JoystickButton(farm, 6);
-        farmSix.whenPressed(new ElevatorPositionCommand(ElevatorPosition.BALL_INTAKE));
+        farmSix.whenPressed(new GoToIntakePositionCommandGroup());
 
         JoystickButton farmSeven = new JoystickButton(farm, 7);
         farmSeven.whenPressed(new ElevatorPositionCommand(ElevatorPosition.BALL_LOW));

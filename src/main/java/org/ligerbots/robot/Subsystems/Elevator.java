@@ -41,7 +41,7 @@ public class Elevator extends Subsystem {
   public AnalogInput encoder;
 
   public enum ElevatorPosition {
-    HATCH_HIGH, HATCH_MID, HATCH_LOW, BALL_HIGH, BALL_MID, BALL_LOW, BALL_CARGO, BALL_INTAKE
+    HATCH_HIGH, HATCH_MID, HATCH_LOW, BALL_HIGH, BALL_MID, BALL_LOW, BALL_CARGO, BALL_INTAKE, INTAKE_DEPLOY
   }
 
   public enum WristPosition {
@@ -192,6 +192,8 @@ public class Elevator extends Subsystem {
         leader1.set(ControlMode.Position, 23.5 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
         setWristPosition(WristPosition.FLAT)
         break;
+      case INTAKE_DEPLOY:
+        leader1.set(ControlMode.Position, 27 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
     }
   }
 
