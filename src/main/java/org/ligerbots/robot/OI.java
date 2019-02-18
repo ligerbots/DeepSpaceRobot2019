@@ -55,11 +55,14 @@ public class OI {
         JoystickButton xBoxA = new JoystickButton(xbox, 1);
         xBoxA.whenPressed(new GrabberKickerToggleCommand());
 
+        JoystickButton xBoxX = new JoystickButton(xbox, 3);
+        xBoxX.whenPressed(new ElevatorPositionCommand(ElevatorPosition.ONE));
+
         JoystickButton xBoxB = new JoystickButton(xbox, 2);
         xBoxB.whenPressed(new DriveToVisionTarget());
 
         JoystickButton xBoxY = new JoystickButton(xbox, 4);
-        xBoxY.whenPressed(new ElevatorPositionCommand(ElevatorPosition.HATCH_MID));
+        xBoxY.whenPressed(new /*ElevatorPositionCommand(ElevatorPosition.HATCH_MID)*/ MoveWristCommand());
 
         JoystickButton xBoxBumperLeft = new JoystickButton(xbox, 5);
         xBoxBumperLeft.whenPressed(new IntakeToggleCommand());
