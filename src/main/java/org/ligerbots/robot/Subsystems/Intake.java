@@ -51,8 +51,10 @@ public class Intake extends Subsystem {
   }
 
   public void deployIntake (boolean deploy) {
-    intakeSolenoid.set(deploy ? Value.kForward : Value.kReverse);
-    isDeployed = deploy;
+    if (Robot.elevator.getPosition() > RobotMap.INTAKE_IN_HEIGHT) {
+      intakeSolenoid.set(deploy ? Value.kForward : Value.kReverse);
+      isDeployed = deploy;
+    }
   }
   
   public void setIntakeMotor(double value){

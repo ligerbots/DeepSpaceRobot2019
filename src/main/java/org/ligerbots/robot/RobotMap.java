@@ -46,5 +46,5 @@ public class RobotMap {
     
     public static final double WRIST_F = 0.0;
 
-    public static final double WRIST_FLAT_VAL = 1.625;
+    public static final double WRIST_FLAT_VAL = 1.72;
 }

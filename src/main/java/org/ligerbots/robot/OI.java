@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import org.ligerbots.robot.Commands.DriveToVisionTarget;
 import org.ligerbots.robot.Commands.ElevatorPositionCommand;
 import org.ligerbots.robot.Commands.FieldCentricToggleCommand;
+import org.ligerbots.robot.Commands.GoToIntake;
 import org.ligerbots.robot.Commands.GrabberKickerToggleCommand;
 import org.ligerbots.robot.Commands.GrabberToggleCommand;
 import org.ligerbots.robot.Commands.IntakeToggleCommand;
@@ -106,7 +107,7 @@ public class OI {
         JoystickButton farmEighteen = new JoystickButton(farm, 18); //also switch camera
 
         JoystickButton xbox2A = new JoystickButton(xbox2, 1);
-        xbox2A.whenPressed(new ElevatorPositionCommand(ElevatorPosition.BALL_INTAKE));
+        xbox2A.whenPressed(new GoToIntake());
 
         JoystickButton xbox2B = new JoystickButton(xbox2, 2);
         xbox2B.whenPressed(new ElevatorPositionCommand(ElevatorPosition.BALL_CARGO));
