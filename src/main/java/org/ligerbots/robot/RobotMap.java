@@ -20,7 +20,7 @@ public class RobotMap {
 
     public static final double WRIST_ENCODER_TICKS_PER_REV = 4096;
 
-    public static final double INTAKE_IN_HEIGHT = 16; //ACTUALLY CHECK (UNITS IN WEIRD ELEVATOR HEIGHT)
+    public static final double INTAKE_IN_HEIGHT = 27; //ACTUALLY CHECK (UNITS IN WEIRD ELEVATOR HEIGHT)
   
     public static final int CT_INTAKE = 10; 
 
@@ -34,7 +34,17 @@ public class RobotMap {
 
     public static final int ABSOLUTE_ENCODER_OFFSET = 0;
 
-    public static final boolean WRIST_USES_ABSOLUTE_ENCODER = false;
+    public static final boolean WRIST_USES_ABSOLUTE_ENCODER = true;
 
     public static final double SHAFT_DIAMETER = 0.6;
+
+    public static final double WRIST_P = 0.85;
+
+    public static final double WRIST_I = 0.0;
+
+    public static final double WRIST_D = 0.0;
+    
+    public static final double WRIST_F = 0.0;
+
+    public static final double WRIST_FLAT_VAL = 1.72;
 }

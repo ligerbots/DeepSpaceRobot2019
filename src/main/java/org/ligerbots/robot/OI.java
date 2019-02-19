@@ -12,6 +12,7 @@ import org.ligerbots.robot.Commands.DriveCommand;
 import org.ligerbots.robot.Commands.ElevatorPositionCommand;
 import org.ligerbots.robot.Commands.IntakeRunCommand;
 import org.ligerbots.robot.Subsystems.Elevator.ElevatorPosition;
+import org.ligerbots.robot.Subsystems.Elevator.WristPosition;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
@@ -23,6 +24,7 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import org.ligerbots.robot.Commands.DriveToVisionTarget;
 import org.ligerbots.robot.Commands.ElevatorPositionCommand;
 import org.ligerbots.robot.Commands.FieldCentricToggleCommand;
+import org.ligerbots.robot.Commands.GoToIntake;
 import org.ligerbots.robot.Commands.GrabberKickerToggleCommand;
 import org.ligerbots.robot.Commands.GrabberToggleCommand;
 import org.ligerbots.robot.Commands.IntakeToggleCommand;
@@ -35,11 +37,13 @@ import org.ligerbots.robot.Subsystems.Elevator.ElevatorPosition;
 public class OI {
 
     XboxController xbox;
+    XboxController xbox2;
     Joystick farm;
 
 
     public OI () {
         xbox = new XboxController(0);
+
         farm = new Joystick(1);
 
         JoystickButton compressorOff = new JoystickButton (xbox, 7);
@@ -55,10 +59,9 @@ public class OI {
         xBoxA.whenPressed(new GrabberKickerToggleCommand());
 
         JoystickButton xBoxB = new JoystickButton(xbox, 2);
-        xBoxB.whenPressed(new DriveToVisionTarget());
-
+        xBoxB.whenPressed(/*new DriveToVisionTarget()*/new MoveWristCommand(WristPosition.FLAT));
         JoystickButton xBoxY = new JoystickButton(xbox, 4);
-        xBoxY.whenPressed(/*new ElevatorPositionCommand(ElevatorPosition.HATCH_MID)*/new IntakeToggleCommand());
+        xBoxY.whenPressed(new ElevatorPositionCommand(ElevatorPosition.HATCH_MID)/*new IntakeToggleCommand()*/);
 
         JoystickButton xBoxBumperLeft = new JoystickButton(xbox, 5);
         xBoxBumperLeft.whenPressed(new IntakeToggleCommand());
@@ -82,7 +85,7 @@ public class OI {
         farmFive.whenPressed(new ElevatorPositionCommand(ElevatorPosition.HATCH_HIGH));
 
         JoystickButton farmSix = new JoystickButton(farm, 6);
-        farmSix.whenPressed(new ElevatorPositionCommand(ElevatorPosition.BALL_INTAKE));
+        farmSix.whenPressed(new GoToIntake());
 
         JoystickButton farmSeven = new JoystickButton(farm, 7);
         farmSeven.whenPressed(new ElevatorPositionCommand(ElevatorPosition.BALL_LOW));
@@ -96,18 +99,19 @@ public class OI {
         JoystickButton farmTen = new JoystickButton(farm, 10);
         farmTen.whenPressed(new ElevatorPositionCommand(ElevatorPosition.BALL_HIGH));
 
+
         JoystickButton farmSeventeen = new JoystickButton(farm, 17); //switch camera
 
         
         JoystickButton farmEighteen = new JoystickButton(farm, 18); //also switch camera
-    }
 
+    }
     public double getThrottle () {
         return  Math.abs(xbox.getY(Hand.kLeft)) > 0.05 ? xbox.getY(Hand.kLeft) : 0.0;
     }
 
     public double getRotate () {
-        return Math.abs(xbox.getX(Hand.kRight)) > 0.05 ? xbox.getX(Hand.kRight) : 0.0;
+       return Math.abs(xbox.getX(Hand.kRight)) > 0.05 ? xbox.getX(Hand.kRight) : 0.0;
     }
 
     public double getStrafe () {

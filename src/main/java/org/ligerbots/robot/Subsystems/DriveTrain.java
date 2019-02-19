@@ -7,6 +7,8 @@
 
 package org.ligerbots.robot.Subsystems;
 
+import java.util.Arrays;
+
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -51,8 +53,8 @@ public class DriveTrain extends Subsystem {
     centerLeader = new CANSparkMax(4, MotorType.kBrushless);
     centerFollower = new CANSparkMax(5, MotorType.kBrushless);
 
-    leftLeader.setInverted(true);
-    leftFollower.follow(leftLeader, true);
+    leftLeader.setInverted(false);
+    leftFollower.follow(leftLeader, false);
     rightFollower.follow(rightLeader);
     centerFollower.follow(centerLeader); //MIGHT NEED TO BE INVERTED
 
@@ -61,8 +63,10 @@ public class DriveTrain extends Subsystem {
     navX = new AHRS(Port.kMXP, (byte) 200);
 
     centerLeader.setOpenLoopRampRate(0.005);
-    centerLeader.setSmartCurrentLimit(20);
+ //centerLeader.setSmartCurrentLimit(20);
 
+    Arrays.asList(leftLeader, leftFollower, rightLeader, rightFollower, centerLeader, centerFollower)
+         .forEach((CANSparkMax spark) -> spark.setSmartCurrentLimit(25));
    // turningController = new PIDController(0.045, 0.004, 0.06, navX, output -> this.turnOutput = output);
 
   }

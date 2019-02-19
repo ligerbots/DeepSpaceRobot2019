@@ -28,9 +28,11 @@ public class ElevatorPositionCommand extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    
+    SmartDashboard.putString("Elevator Place", pos.name());
 
 
-    Robot.intake.deployIntake(true);
+   // Robot.intake.deployIntake(true);
 
     Robot.elevator.setElevatorPosition(pos);
 
@@ -53,7 +55,7 @@ public class ElevatorPositionCommand extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return Robot.elevator.getPosition() > RobotMap.INTAKE_IN_HEIGHT;
+    return true;
   }
 
   // Called once after isFinished returns true
