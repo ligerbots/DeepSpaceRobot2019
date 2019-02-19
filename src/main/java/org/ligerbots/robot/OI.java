@@ -44,9 +44,7 @@ public class OI {
     public OI () {
         xbox = new XboxController(0);
 
-        xbox2 = new XboxController(1);
-
-        farm = new Joystick(2); //FIX LATER
+        farm = new Joystick(1);
 
         JoystickButton compressorOff = new JoystickButton (xbox, 7);
         compressorOff.whenPressed(new CompressorCommand(false));
@@ -87,7 +85,7 @@ public class OI {
         farmFive.whenPressed(new ElevatorPositionCommand(ElevatorPosition.HATCH_HIGH));
 
         JoystickButton farmSix = new JoystickButton(farm, 6);
-        farmSix.whenPressed(new ElevatorPositionCommand(ElevatorPosition.BALL_INTAKE));
+        farmSix.whenPressed(new GoToIntake());
 
         JoystickButton farmSeven = new JoystickButton(farm, 7);
         farmSeven.whenPressed(new ElevatorPositionCommand(ElevatorPosition.BALL_LOW));
@@ -101,36 +99,13 @@ public class OI {
         JoystickButton farmTen = new JoystickButton(farm, 10);
         farmTen.whenPressed(new ElevatorPositionCommand(ElevatorPosition.BALL_HIGH));
 
+
         JoystickButton farmSeventeen = new JoystickButton(farm, 17); //switch camera
 
         
         JoystickButton farmEighteen = new JoystickButton(farm, 18); //also switch camera
 
-        JoystickButton xbox2A = new JoystickButton(xbox2, 1);
-        xbox2A.whenPressed(new GoToIntake());
-
-        JoystickButton xbox2B = new JoystickButton(xbox2, 2);
-        xbox2B.whenPressed(new ElevatorPositionCommand(ElevatorPosition.BALL_CARGO));
-
-        JoystickButton xbox2X = new JoystickButton(xbox2, 3);
-        xbox2X.whenPressed(new ElevatorPositionCommand(ElevatorPosition.BALL_LOW));
-
-        JoystickButton xbox2Y = new JoystickButton(xbox2, 4);
-        xbox2Y.whenPressed(new ElevatorPositionCommand(ElevatorPosition.BALL_MID));
-
-        JoystickButton xbox2BumperLeft = new JoystickButton(xbox2, 5);
-        xbox2BumperLeft.whenPressed(new ElevatorPositionCommand(ElevatorPosition.BALL_HIGH));
-
-        JoystickButton xbox2BumperRight = new JoystickButton(xbox2, 6);
-        xbox2BumperRight.whenPressed(new ElevatorPositionCommand(ElevatorPosition.HATCH_LOW));
-
-        JoystickButton xbox2Back = new JoystickButton(xbox2, 7);
-        xbox2Back.whenPressed(new ElevatorPositionCommand(ElevatorPosition.HATCH_MID));
-
-        JoystickButton xbox2Start = new JoystickButton(xbox2, 8);
-        xbox2Start.whenPressed(new ElevatorPositionCommand(ElevatorPosition.HATCH_HIGH));
     }
-
     public double getThrottle () {
         return  Math.abs(xbox.getY(Hand.kLeft)) > 0.05 ? xbox.getY(Hand.kLeft) : 0.0;
     }

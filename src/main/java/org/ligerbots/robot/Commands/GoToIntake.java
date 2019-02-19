@@ -39,7 +39,7 @@ public class GoToIntake extends CommandGroup {
       addSequential(new ElevatorPositionCommand(ElevatorPosition.INTAKE_CLEARANCE));
     }
     addSequential(new SetIntakeCommand(true));
-    addSequential(new WaitCommand(1_000_000_000));
+    addSequential(new WaitCommand(2_000_000_000));
     addSequential(new ElevatorPositionCommand(ElevatorPosition.BALL_INTAKE));
     addSequential(new GrabberToggleCommand(true));
     }

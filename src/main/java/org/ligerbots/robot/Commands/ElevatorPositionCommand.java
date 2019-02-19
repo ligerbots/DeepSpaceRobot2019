@@ -28,6 +28,8 @@ public class ElevatorPositionCommand extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    
+    SmartDashboard.putString("Elevator Place", pos.name());
 
 
    // Robot.intake.deployIntake(true);

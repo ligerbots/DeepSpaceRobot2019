@@ -159,7 +159,7 @@ public class Elevator extends Subsystem {
     //Otherwise if we're using the motor's encoder
     switch (pos) {
       case HIGH:
-        wrist.set(ControlMode.Position, 2.0); //FIX POSITIONS LATER
+        wrist.set(ControlMode.Position, 3.0); //FIX POSITIONS LATER
         break;
       case FLAT:
         wrist.set(ControlMode.Position, RobotMap.WRIST_FLAT_VAL);
