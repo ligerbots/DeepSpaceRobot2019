@@ -36,12 +36,16 @@ import org.ligerbots.robot.Subsystems.Elevator.ElevatorPosition;
 public class OI {
 
     XboxController xbox;
+    XboxController xbox2;
     Joystick farm;
 
 
     public OI () {
         xbox = new XboxController(0);
-        farm = new Joystick(1);
+
+        xbox2 = new XboxController(1);
+
+        farm = new Joystick(2); //FIX LATER
 
         JoystickButton compressorOff = new JoystickButton (xbox, 7);
         compressorOff.whenPressed(new CompressorCommand(false));
@@ -100,6 +104,30 @@ public class OI {
 
         
         JoystickButton farmEighteen = new JoystickButton(farm, 18); //also switch camera
+
+        JoystickButton xbox2A = new JoystickButton(xbox2, 1);
+        xbox2A.whenPressed(new ElevatorPositionCommand(ElevatorPosition.BALL_INTAKE));
+
+        JoystickButton xbox2B = new JoystickButton(xbox2, 2);
+        xbox2B.whenPressed(new ElevatorPositionCommand(ElevatorPosition.BALL_CARGO));
+
+        JoystickButton xbox2X = new JoystickButton(xbox2, 3);
+        xbox2X.whenPressed(new ElevatorPositionCommand(ElevatorPosition.BALL_LOW));
+
+        JoystickButton xbox2Y = new JoystickButton(xbox2, 4);
+        xbox2Y.whenPressed(new ElevatorPositionCommand(ElevatorPosition.BALL_MID));
+
+        JoystickButton xbox2BumperLeft = new JoystickButton(xbox2, 5);
+        xbox2BumperLeft.whenPressed(new ElevatorPositionCommand(ElevatorPosition.BALL_HIGH));
+
+        JoystickButton xbox2BumperRight = new JoystickButton(xbox2, 6);
+        xbox2BumperRight.whenPressed(new ElevatorPositionCommand(ElevatorPosition.HATCH_LOW));
+
+        JoystickButton xbox2Back = new JoystickButton(xbox2, 7);
+        xbox2Back.whenPressed(new ElevatorPositionCommand(ElevatorPosition.HATCH_MID));
+
+        JoystickButton xbox2Start = new JoystickButton(xbox2, 8);
+        xbox2Start.whenPressed(new ElevatorPositionCommand(ElevatorPosition.HATCH_HIGH));
     }
 
     public double getThrottle () {

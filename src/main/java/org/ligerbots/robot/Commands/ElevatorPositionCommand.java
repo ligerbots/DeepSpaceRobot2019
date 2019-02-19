@@ -30,7 +30,7 @@ public class ElevatorPositionCommand extends Command {
   protected void initialize() {
 
 
-    Robot.intake.deployIntake(true);
+   // Robot.intake.deployIntake(true);
 
     Robot.elevator.setElevatorPosition(pos);
 

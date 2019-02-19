@@ -159,10 +159,10 @@ public class Elevator extends Subsystem {
     //Otherwise if we're using the motor's encoder
     switch (pos) {
       case HIGH:
-        wrist.set(ControlMode.Position, 0.0); //FIX POSITIONS LATER
+        wrist.set(ControlMode.Position, 2.0); //FIX POSITIONS LATER
         break;
       case FLAT:
-        wrist.set(ControlMode.Position, 0.0);
+        wrist.set(ControlMode.Position, RobotMap.WRIST_FLAT_VAL);
         break;
       case INTAKE:
         wrist.set(ControlMode.Position, 0.0);
@@ -174,27 +174,35 @@ public class Elevator extends Subsystem {
     switch (pos) {
       case HATCH_HIGH:
         leader1.set(ControlMode.Position, 59.0 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT); 
+        setWristPosition(WristPosition.FLAT);
         break;
       case HATCH_MID:
         leader1.set(ControlMode.Position, 43.0 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
+        setWristPosition(WristPosition.FLAT);
         break;
       case HATCH_LOW:
         leader1.set(ControlMode.Position, 15.0 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
+        setWristPosition(WristPosition.FLAT);
         break;
       case BALL_CARGO:
         leader1.set(ControlMode.Position, 37.0 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
+        setWristPosition(WristPosition.FLAT);
         break;
       case BALL_INTAKE:
-        leader1.set(ControlMode.Position, 0.0);
+        leader1.set(ControlMode.Position, 10.0);
+        setWristPosition(WristPosition.FLAT);
         break;
       case BALL_HIGH:
         leader1.set(ControlMode.Position, 59.0 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
+        setWristPosition(WristPosition.HIGH);
         break;
       case BALL_MID:
         leader1.set(ControlMode.Position, 51.5 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT); //temporary!!!!!
+        setWristPosition(WristPosition.FLAT);
         break;
       case BALL_LOW:
         leader1.set(ControlMode.Position, 23.5 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
+        setWristPosition(WristPosition.FLAT); 
         break;
     }
   }
