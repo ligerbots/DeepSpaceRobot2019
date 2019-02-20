@@ -11,6 +11,7 @@ import java.util.Arrays;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.PIDController;
@@ -73,7 +74,10 @@ public class DriveTrain extends Subsystem {
 
     Arrays.asList(leftLeader, leftFollower, rightLeader, rightFollower, centerLeader, centerFollower)
          .forEach((CANSparkMax spark) -> spark.setSmartCurrentLimit(25));
-   // turningController = new PIDController(0.045, 0.004, 0.06, navX, output -> this.turnOutput = output);
+
+         Arrays.asList(leftLeader, leftFollower, rightLeader, rightFollower, centerLeader, centerFollower)
+         .forEach((CANSparkMax spark) -> spark.setIdleMode(IdleMode.kBrake));
+   // turningController = new PIDController(0.045, 0.004, 0.06, navX, output -> this.tur]\nOutput = output);
 
   }
   
@@ -86,7 +90,7 @@ public class DriveTrain extends Subsystem {
     }
     else {
       diffDrive.arcadeDrive(throttle, -rotate);
-      centerLeader.set(squaredStrafe / 2.2);
+      centerLeader.set(squaredStrafe);
     }
    // rightLeader.set(0.5);
    // leftLeader.set(0.5);
@@ -115,8 +119,8 @@ public class DriveTrain extends Subsystem {
 
   public double turnSpeedCalc(double error) {
     //if (error <= 5.0 && error >= -5.0) {return 0.0;}
-    if (error / 90.0 <= 0.4) return 0.4 * Math.signum(error);  //have 30 degrees be the cutoff point
-    return error / 90.0 * Math.signum(error);
+    if (error / 90.0 <= 0.4) return 0.25 * Math.signum(error);  //have 30 degrees be the cutoff point
+    return error / 110.0 * Math.signum(error);
   }
 
   public double driveSpeedCalc(double error) {
@@ -127,8 +131,8 @@ public class DriveTrain extends Subsystem {
 
   public double strafeSpeedCalc (double error) {
     //if (error <= 5.0 && error >= -5.0) {return 0.0;}
-    if (error > 25) {return 0.9 * Math.signum(error);}
-    else if (error > 15) {return 0.45 * Math.signum(error);}
+    if (error > 25) {return 0.6 * Math.signum(error);}
+    else if (error > 15) {return 0.5 * Math.signum(error);}
     return 0.4 * Math.signum(error);
   }
 

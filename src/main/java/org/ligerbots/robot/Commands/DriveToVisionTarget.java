@@ -44,7 +44,7 @@ public class DriveToVisionTarget extends Command {
     angle = visionInfo[4] * (180/Math.PI);
     deltaAngle = angle + (visionInfo[5] * (180/Math.PI));
 
-    Robot.driveTrain.allDrive(Robot.driveTrain.driveSpeedCalc(distance), Robot.driveTrain.turnSpeedCalc(deltaAngle), Robot.driveTrain.strafeSpeedCalc(angle));
+    Robot.driveTrain.allDrive(-Robot.driveTrain.driveSpeedCalc(distance), Robot.driveTrain.turnSpeedCalc(deltaAngle), Robot.driveTrain.strafeSpeedCalc(angle));
   }
 
   // Make this return true when this Command no longer needs to run execute()
