@@ -18,6 +18,7 @@ public class DriveCommand extends Command {
   double correctedYaw;
 
   public DriveCommand() {
+    requires(Robot.driveTrain);
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }

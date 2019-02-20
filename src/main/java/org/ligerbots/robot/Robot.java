@@ -128,7 +128,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     driveTrain.setLEDRing(true);
-    driveCommand.start();
+    //driveCommand.start();
     intakeCommand.start();
   }
   /**
