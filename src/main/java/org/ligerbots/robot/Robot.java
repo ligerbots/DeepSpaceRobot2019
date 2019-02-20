@@ -131,6 +131,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    SmartDashboard.putNumber("yaw", driveTrain.getYaw());
+    SmartDashboard.putNumber("wrist encoder", elevator.getWristPosition());
     //driveTrain.allDrive(0.5, 0.5, 0.5);
     SmartDashboard.putNumber("wrist encoder", elevator.encoder.getValue());
     SmartDashboard.putNumber("wrist encoder raw", elevator.encoder.getVoltage());

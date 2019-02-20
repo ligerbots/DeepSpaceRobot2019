@@ -48,14 +48,16 @@ public class ElevatorPositionCommand extends Command {
     SmartDashboard.putNumber("Elevator Error", Robot.elevator.getClosedLoopError());
 
     //Robot.elevator.setElevatorPosition(pos);
-
+    if (pos != ElevatorPosition.BALL_INTAKE) {
+      Robot.intake.deployIntake(false);
+    }
     //if (Robot.elevator.getPosition() > RobotMap.INTAKE_IN_HEIGHT) Robot.intake.deployIntake(false);
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return true;
+    return !Robot.intake.isIntakeDeployed() || pos == ElevatorPosition.BALL_INTAKE;
   }
 
   // Called once after isFinished returns true

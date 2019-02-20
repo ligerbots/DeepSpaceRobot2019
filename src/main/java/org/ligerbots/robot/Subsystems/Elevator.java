@@ -90,7 +90,7 @@ public class Elevator extends Subsystem {
     encoder = new AnalogInput(RobotMap.ABSOLUTE_ENCODER_CHANNEL);
     pidController = new PIDController(0, 0, 0, 0, encoder, wrist);
 
-    pidController.setPercentTolerance(30);
+    pidController.setPercentTolerance(0);
 
 
     leader1.set(ControlMode.PercentOutput, 0);
@@ -137,14 +137,14 @@ public class Elevator extends Subsystem {
     wrist.set(ControlMode.PercentOutput, speed);
   }
   public void setWristPosition (WristPosition pos) {
-    setWristPID(SmartDashboard.getNumber("WristP", RobotMap.WRIST_P), SmartDashboard.getNumber("WristI", RobotMap.WRIST_I), SmartDashboard.getNumber("WristD", RobotMap.WRIST_D), SmartDashboard.getNumber("WristF", RobotMap.WRIST_F));
+    setWristPID(RobotMap.WRIST_P, SmartDashboard.getNumber("WristI", RobotMap.WRIST_I), SmartDashboard.getNumber("WristD", RobotMap.WRIST_D), SmartDashboard.getNumber("WristF", RobotMap.WRIST_F));
     if (RobotMap.WRIST_USES_ABSOLUTE_ENCODER) {
       switch (pos) {
         case HIGH:
-          pidController.setSetpoint(RobotMap.WRIST_FLAT_VAL); //FIX POSITIONS LATER
+          pidController.setSetpoint(1.9); //FIX POSITIONS LATER
           break;
         case FLAT:
-          pidController.setSetpoint(SmartDashboard.getNumber("FlatWristVal", 1.625));
+          pidController.setSetpoint(1.665);
           break;
         case INTAKE:
           pidController.setSetpoint(1.5);
@@ -159,7 +159,7 @@ public class Elevator extends Subsystem {
     //Otherwise if we're using the motor's encoder
     switch (pos) {
       case HIGH:
-        wrist.set(ControlMode.Position, 3.0); //FIX POSITIONS LATER
+        wrist.set(ControlMode.Position, 2.0); //FIX POSITIONS LATER
         break;
       case FLAT:
         wrist.set(ControlMode.Position, RobotMap.WRIST_FLAT_VAL);
@@ -173,39 +173,39 @@ public class Elevator extends Subsystem {
   public void setElevatorPosition (ElevatorPosition pos) {
     switch (pos) {
       case HATCH_HIGH:
-        leader1.set(ControlMode.Position, 59.0 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT); 
+        leader1.set(ControlMode.Position, 56.5 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT); 
         setWristPosition(WristPosition.FLAT);
         break;
       case HATCH_MID:
-        leader1.set(ControlMode.Position, 43.0 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
+        leader1.set(ControlMode.Position, 32.0 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
         setWristPosition(WristPosition.FLAT);
         break;
       case HATCH_LOW:
-        leader1.set(ControlMode.Position, 15.0 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
+        leader1.set(ControlMode.Position, 6.5 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
         setWristPosition(WristPosition.FLAT);
         break;
       case BALL_CARGO:
-        leader1.set(ControlMode.Position, 37.0 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
+        leader1.set(ControlMode.Position, 36.0 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
         setWristPosition(WristPosition.FLAT);
         break;
       case BALL_INTAKE:
-        leader1.set(ControlMode.Position, 2.0 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
+        leader1.set(ControlMode.Position, 2.5 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
         setWristPosition(WristPosition.FLAT);
         break;
       case BALL_HIGH:
-        leader1.set(ControlMode.Position, 59.0 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
+        leader1.set(ControlMode.Position, 57.0 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
         setWristPosition(WristPosition.HIGH);
         break;
       case BALL_MID:
-        leader1.set(ControlMode.Position, 51.5 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT); //temporary!!!!!
-        setWristPosition(WristPosition.FLAT);
+        leader1.set(ControlMode.Position, 34.2 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT); //temporary!!!!!
+        setWristPosition(WristPosition.HIGH);
         break;
       case BALL_LOW:
-        leader1.set(ControlMode.Position, 23.5 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
-        setWristPosition(WristPosition.FLAT); 
+        leader1.set(ControlMode.Position, 11.2 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
+        setWristPosition(WristPosition.HIGH); 
         break;
       case INTAKE_CLEARANCE:
-        leader1.set(ControlMode.Position, RobotMap.INTAKE_IN_HEIGHT * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
+        leader1.set(ControlMode.Position, (RobotMap.INTAKE_IN_HEIGHT + 1.2) * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
         setWristPosition(WristPosition.FLAT);
         break;
     }
