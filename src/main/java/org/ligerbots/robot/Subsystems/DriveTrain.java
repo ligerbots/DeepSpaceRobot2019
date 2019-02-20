@@ -220,7 +220,7 @@ public void setLEDRing (boolean on) {
 }
 
 public String leftLeaderInfo() {
-  return "CenterFollower: " + rightFollowerSpark.getOutputCurrent();//I guess this is what it should be?
+  return "CenterFollower: "; //+ rightFollowerSpark.getOutputCurrent();//I guess this is what it should be?
 }
 
   @Override
