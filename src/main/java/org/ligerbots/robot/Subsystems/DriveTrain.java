@@ -9,6 +9,8 @@ package org.ligerbots.robot.Subsystems;
 
 import java.util.Arrays;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -19,6 +21,8 @@ import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+
+import org.ligerbots.robot.Robot;
 import org.ligerbots.robot.RobotMap;
 
 
@@ -32,12 +36,18 @@ public class DriveTrain extends Subsystem {
     LEFT, RIGHT, CENTER
   }
 
-  CANSparkMax leftLeader;
-  CANSparkMax leftFollower;
-  CANSparkMax rightLeader;
-  CANSparkMax rightFollower;
-  CANSparkMax centerLeader;
-  CANSparkMax centerFollower;
+  WPI_TalonSRX leftLeaderTalon;
+  WPI_TalonSRX leftFollowerTalon;
+  WPI_TalonSRX rightLeaderTalon;
+  WPI_TalonSRX rightFollowerTalon;
+  WPI_TalonSRX centerLeaderTalon;
+  WPI_TalonSRX centerFollowerTalon;
+  CANSparkMax leftLeaderSpark;
+  CANSparkMax leftFollowerSpark;
+  CANSparkMax rightLeaderSpark;
+  CANSparkMax rightFollowerSpark;
+  CANSparkMax centerLeaderSpark;
+  CANSparkMax centerFollowerSpark;
   DifferentialDrive diffDrive;
   Boolean fieldCentric = false;
   PIDController turningController;
@@ -49,30 +59,58 @@ public class DriveTrain extends Subsystem {
 
 
   public DriveTrain () {
-
-    leftLeader = new CANSparkMax(14, MotorType.kBrushless);
-    leftFollower = new CANSparkMax(1, MotorType.kBrushless);
-    rightLeader = new CANSparkMax(2, MotorType.kBrushless);
-    rightFollower = new CANSparkMax(3, MotorType.kBrushless);
-    centerLeader = new CANSparkMax(4, MotorType.kBrushless);
-    centerFollower = new CANSparkMax(5, MotorType.kBrushless);
-
-    leftLeader.setInverted(false);
-    leftFollower.follow(leftLeader, false);
-    rightFollower.follow(rightLeader);
-    centerFollower.follow(centerLeader); //MIGHT NEED TO BE INVERTED
-
-    diffDrive = new DifferentialDrive(leftLeader, rightLeader); //fix l8r
-
+    if (!Robot.isSecondRobot) {
+      leftLeaderSpark = new CANSparkMax(14, MotorType.kBrushless);
+      leftFollowerSpark = new CANSparkMax(1, MotorType.kBrushless);
+      rightLeaderSpark = new CANSparkMax(2, MotorType.kBrushless);
+      rightFollowerSpark = new CANSparkMax(3, MotorType.kBrushless);
+      centerLeaderSpark = new CANSparkMax(4, MotorType.kBrushless);
+      centerFollowerSpark = new CANSparkMax(5, MotorType.kBrushless);
+    }
+    else {
+      leftLeaderTalon = new WPI_TalonSRX(14);
+      leftFollowerTalon = new WPI_TalonSRX(1);
+      rightLeaderTalon = new WPI_TalonSRX(2);
+      rightFollowerTalon = new WPI_TalonSRX(3);
+      centerLeaderTalon = new WPI_TalonSRX(4);
+      centerFollowerTalon = new WPI_TalonSRX(5);
+    }
+    if (!Robot.isSecondRobot) {
+      leftLeaderSpark.setInverted(false);
+      leftFollowerSpark.follow(leftLeaderSpark, false);
+      rightFollowerSpark.follow(rightLeaderSpark);
+      centerFollowerSpark.follow(centerLeaderSpark);
+    }
+    else {
+      leftLeaderTalon.setInverted(false);
+      leftFollowerTalon.set(ControlMode.Follower, 14);
+      rightFollowerTalon.set(ControlMode.Follower, 2);
+      centerFollowerTalon.set(ControlMode.Follower, 4); //MIGHT NEED TO BE INVERTED
+    }
+    if (!Robot.isSecondRobot) {
+      diffDrive = new DifferentialDrive(leftLeaderSpark, rightLeaderSpark); //fix l8r
+    }
+    else {
+      diffDrive = new DifferentialDrive(leftLeaderSpark, rightLeaderTalon); //fix l8r
+    }
     navX = new AHRS(Port.kMXP, (byte) 200);
 
     spike = new Relay(1);
 
-    centerLeader.setOpenLoopRampRate(0.005);
- //centerLeader.setSmartCurrentLimit(20);
-
-    Arrays.asList(leftLeader, leftFollower, rightLeader, rightFollower, centerLeader, centerFollower)
+    if (!Robot.isSecondRobot) {
+      centerLeaderSpark.setOpenLoopRampRate(0.005);
+      centerLeaderSpark.setSmartCurrentLimit(20);
+      Arrays.asList(leftLeaderSpark, leftFollowerSpark, rightLeaderSpark, rightFollowerSpark, centerLeaderSpark, centerFollowerSpark)
          .forEach((CANSparkMax spark) -> spark.setSmartCurrentLimit(25));
+    }
+ //
+    else {
+      centerLeaderTalon.configPeakCurrentLimit(20);
+      Arrays.asList(leftLeaderTalon, leftFollowerTalon, rightLeaderTalon, rightFollowerTalon, centerLeaderTalon, centerFollowerTalon)
+      .forEach((WPI_TalonSRX talon) -> talon.configPeakCurrentLimit(25));
+    }
+    //STILL NEED TO SET CURRENT LIMITS!!!!
+    
    // turningController = new PIDController(0.045, 0.004, 0.06, navX, output -> this.turnOutput = output);
 
   }
@@ -82,11 +120,22 @@ public class DriveTrain extends Subsystem {
     squaredStrafe = strafe * strafe * Math.signum(strafe);
     if (fieldCentric) {
       diffDrive.arcadeDrive(throttle * Math.cos(getYaw() + squaredStrafe * Math.sin(getYaw())), rotate);
-      centerLeader.set(-throttle * Math.sin(getYaw()) + squaredStrafe * Math.cos(getYaw()));
+      if (!Robot.isSecondRobot) {
+        centerLeaderSpark.set(-throttle * Math.sin(getYaw()) + squaredStrafe * Math.cos(getYaw()));
+      }
+      else {
+        centerLeaderTalon.set(-throttle * Math.sin(getYaw()) + squaredStrafe * Math.cos(getYaw()));
+      }
     }
     else {
       diffDrive.arcadeDrive(throttle, -rotate);
-      centerLeader.set(squaredStrafe / 2.2);
+      if (!Robot.isSecondRobot) {
+        centerLeaderSpark.set(squaredStrafe / 2.2);
+      }
+      else {
+        centerLeaderTalon.set(squaredStrafe / 2.2);
+      }
+      
     }
    // rightLeader.set(0.5);
    // leftLeader.set(0.5);
@@ -171,7 +220,7 @@ public void setLEDRing (boolean on) {
 }
 
 public String leftLeaderInfo() {
-  return "CenterFollower: " + rightFollower.isFollower();
+  return "CenterFollower: " + rightFollowerSpark.getOutputCurrent();//I guess this is what it should be?
 }
 
   @Override
