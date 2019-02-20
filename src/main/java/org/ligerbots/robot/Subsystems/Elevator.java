@@ -144,7 +144,7 @@ public class Elevator extends Subsystem {
           pidController.setSetpoint(1.9); //FIX POSITIONS LATER
           break;
         case FLAT:
-          pidController.setSetpoint(1.665);
+          pidController.setSetpoint(RobotMap.WRIST_FLAT_VAL);
           break;
         case INTAKE:
           pidController.setSetpoint(1.5);
