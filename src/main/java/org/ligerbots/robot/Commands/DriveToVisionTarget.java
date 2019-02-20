@@ -31,6 +31,8 @@ public class DriveToVisionTarget extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    System.out.println("STARTED DRIVETOVISIONTARGET COMMAND");
+    Robot.driveTrain.setLEDRing(true);
     SmartDashboard.putString("vision/active_mode", "rrtarget");
   }
 
@@ -48,12 +50,15 @@ public class DriveToVisionTarget extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return distance <= 40 && Math.abs(angle) <= 1; //This isn't totally done...
+    return /*distance <= 40 && Math.abs(angle) <= 1*/false; //This isn't totally done...
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    System.out.println("COMMAND ENDED");
+    //Robot.driveTrain.setLEDRing(false);
+    SmartDashboard.putString("vision/active_mode", "driver_front");
   }
 
   // Called when another command which requires one or more of the same

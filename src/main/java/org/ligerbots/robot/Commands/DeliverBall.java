@@ -35,6 +35,7 @@ public class DeliverBall extends CommandGroup {
     addParallel(new ElevatorPositionCommand(pos));
     addSequential(new DriveToVisionTarget());
     addSequential(new GrabberKickerToggleCommand());
+    addSequential(new WaitCommand(500_000_000));
     addSequential(new GrabberKickerToggleCommand());
   }
 }

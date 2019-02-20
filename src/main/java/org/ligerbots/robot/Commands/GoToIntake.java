@@ -17,7 +17,7 @@ public class GoToIntake extends CommandGroup {
   /**
    * Add your docs here.
    */
-  public GoToIntake() {
+  public GoToIntake(ElevatorPosition pos) {
     // Add Commands here:
     // e.g. addSequential(new Command1());
     // addSequential(new Command2());
@@ -38,9 +38,11 @@ public class GoToIntake extends CommandGroup {
     if (Robot.elevator.getPosition() < RobotMap.INTAKE_IN_HEIGHT) {
       addSequential(new ElevatorPositionCommand(ElevatorPosition.INTAKE_CLEARANCE));
     }
-    addSequential(new SetIntakeCommand(true));
-    addSequential(new WaitCommand(2_000_000_000));
-    addSequential(new ElevatorPositionCommand(ElevatorPosition.BALL_INTAKE));
-    addSequential(new GrabberToggleCommand(true));
+    addSequential(new SetIntakeCommand(pos == ElevatorPosition.BALL_INTAKE));
+    addSequential(new WaitCommand(1_000_000_000));
+    addSequential(new ElevatorPositionCommand(pos));
+    if (pos == ElevatorPosition.BALL_INTAKE) {
+      addSequential(new GrabberToggleCommand(true));
     }
+  }
 }

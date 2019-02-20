@@ -49,6 +49,9 @@ public class OI {
         JoystickButton compressorOff = new JoystickButton (xbox, 7);
         compressorOff.whenPressed(new CompressorCommand(false));
 
+        JoystickButton xboxB = new JoystickButton(xbox, 2);
+        xboxB.whenPressed(new DriveToVisionTarget());
+
         JoystickButton compressorOn = new JoystickButton (xbox, 8);
         compressorOn.whenPressed(new CompressorCommand(true));
 
@@ -58,8 +61,8 @@ public class OI {
         JoystickButton xBoxA = new JoystickButton(xbox, 1);
         xBoxA.whenPressed(new GrabberKickerToggleCommand());
 
-        JoystickButton xBoxB = new JoystickButton(xbox, 2);
-        xBoxB.whenPressed(/*new DriveToVisionTarget()*/new MoveWristCommand(WristPosition.FLAT));
+        /*JoystickButton xBoxB = new JoystickButton(xbox, 2);
+        xBoxB.whenPressed(new MoveWristCommand(WristPosition.FLAT));*/
         JoystickButton xBoxY = new JoystickButton(xbox, 4);
         xBoxY.whenPressed(new ElevatorPositionCommand(ElevatorPosition.HATCH_MID)/*new IntakeToggleCommand()*/);
 
@@ -73,7 +76,7 @@ public class OI {
         xBoxLeftJoystick.whenPressed(new GrabberToggleCommand(false));
 
         JoystickButton farmTwo = new JoystickButton(farm, 2);
-        farmTwo.whenPressed(new ElevatorPositionCommand(ElevatorPosition.HATCH_LOW));
+        farmTwo.whenPressed(new GoToIntake(ElevatorPosition.HATCH_LOW));
 
         JoystickButton farmThree = new JoystickButton(farm, 3);
         farmThree.whenPressed(new ElevatorPositionCommand(ElevatorPosition.HATCH_LOW));
@@ -85,10 +88,10 @@ public class OI {
         farmFive.whenPressed(new ElevatorPositionCommand(ElevatorPosition.HATCH_HIGH));
 
         JoystickButton farmSix = new JoystickButton(farm, 6);
-        farmSix.whenPressed(new GoToIntake());
+        farmSix.whenPressed(new GoToIntake(ElevatorPosition.BALL_INTAKE));
 
         JoystickButton farmSeven = new JoystickButton(farm, 7);
-        farmSeven.whenPressed(new ElevatorPositionCommand(ElevatorPosition.BALL_LOW));
+        farmSeven.whenPressed(new GoToIntake(ElevatorPosition.BALL_LOW));
 
         JoystickButton farmEight = new JoystickButton(farm, 8);
         farmEight.whenPressed(new ElevatorPositionCommand(ElevatorPosition.BALL_CARGO));
@@ -115,7 +118,7 @@ public class OI {
     }
 
     public double getStrafe () {
-        return  Math.abs(xbox.getX(Hand.kLeft)) > 0.05 ? xbox.getX(Hand.kLeft) : 0.0;
+        return  Math.abs(xbox.getX(Hand.kLeft)) > 0.15 ? xbox.getX(Hand.kLeft) : 0.0;
     }
 
 

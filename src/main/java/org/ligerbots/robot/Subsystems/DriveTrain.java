@@ -14,6 +14,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.Relay;
+import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -43,6 +45,8 @@ public class DriveTrain extends Subsystem {
 
   double turnOutput;
 
+  Relay spike;
+
 
   public DriveTrain () {
 
@@ -62,6 +66,8 @@ public class DriveTrain extends Subsystem {
 
     navX = new AHRS(Port.kMXP, (byte) 200);
 
+    spike = new Relay(1);
+
     centerLeader.setOpenLoopRampRate(0.005);
  //centerLeader.setSmartCurrentLimit(20);
 
@@ -70,16 +76,18 @@ public class DriveTrain extends Subsystem {
    // turningController = new PIDController(0.045, 0.004, 0.06, navX, output -> this.turnOutput = output);
 
   }
-
+  
+  double squaredStrafe;
   public void allDrive (double throttle, double rotate, double strafe) {
-   /* if (fieldCentric) {
-      diffDrive.arcadeDrive(throttle * Math.cos(getYaw() + strafe * Math.sin(getYaw())), rotate);
-      centerLeader.set(-throttle * Math.sin(getYaw()) + strafe * Math.cos(getYaw()));
+    squaredStrafe = strafe * strafe * Math.signum(strafe);
+    if (fieldCentric) {
+      diffDrive.arcadeDrive(throttle * Math.cos(getYaw() + squaredStrafe * Math.sin(getYaw())), rotate);
+      centerLeader.set(-throttle * Math.sin(getYaw()) + squaredStrafe * Math.cos(getYaw()));
     }
-    else {*/
+    else {
       diffDrive.arcadeDrive(throttle, -rotate);
-      centerLeader.set(strafe / 4);
-   // }
+      centerLeader.set(squaredStrafe / 2.2);
+    }
    // rightLeader.set(0.5);
    // leftLeader.set(0.5);
    // centerLeader.set(0.5);
@@ -156,6 +164,10 @@ public class DriveTrain extends Subsystem {
     if (input > 180) {return input - 360;}
     else if (input < -180){return input + 360;}
     else {return input;}
+}
+
+public void setLEDRing (boolean on) {
+  spike.set(on ? Value.kForward : Value.kReverse);
 }
 
 public String leftLeaderInfo() {
