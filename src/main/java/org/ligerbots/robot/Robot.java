@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.ligerbots.robot.Commands.DriveCommand;
 import org.ligerbots.robot.Commands.IntakeRunCommand;
 import org.ligerbots.robot.Commands.SetIntakeCommand;
+import org.ligerbots.robot.Commands.StartingCommandGroup;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
@@ -47,6 +48,7 @@ public class Robot extends TimedRobot {
   //static SetIntakeCommand initialSetIntake;
   public static Boolean isSecondRobot;
   public static IntakeRunCommand intakeCommand;
+  public static StartingCommandGroup start;
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -65,7 +67,7 @@ public class Robot extends TimedRobot {
     grabber = new Grabber();
     oi = new OI();
     intakeCommand = new IntakeRunCommand();
-
+    start = new StartingCommandGroup();
    // initialSetIntake = new SetIntakeCommand(true);
    // initialSetIntake.start();
     // Detect the motor controllers we're using
@@ -97,6 +99,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    start.start();
+
     m_autoSelected = m_chooser.getSelected();
     // autoSelected = SmartDashboard.getString("Auto Selector",
     // defaultAuto);
@@ -123,7 +127,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    driveCommand.start();
+    driveTrain.setLEDRing(true);
+    //driveCommand.start();
     intakeCommand.start();
   }
   /**

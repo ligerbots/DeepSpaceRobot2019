@@ -23,7 +23,10 @@ public class DriveToVisionTarget extends Command {
   double angle;                              //angle from robot to target in degrees (NT is initially in radians)
   double deltaAngle;
 
+  boolean quit;
+
   public DriveToVisionTarget() {
+    requires(Robot.driveTrain);
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
@@ -34,6 +37,7 @@ public class DriveToVisionTarget extends Command {
     System.out.println("STARTED DRIVETOVISIONTARGET COMMAND");
     Robot.driveTrain.setLEDRing(true);
     SmartDashboard.putString("vision/active_mode", "rrtarget");
+    quit = false;
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -44,13 +48,18 @@ public class DriveToVisionTarget extends Command {
     angle = visionInfo[4] * (180/Math.PI);
     deltaAngle = angle + (visionInfo[5] * (180/Math.PI));
 
-    Robot.driveTrain.allDrive(Robot.driveTrain.driveSpeedCalc(distance), Robot.driveTrain.turnSpeedCalc(deltaAngle), Robot.driveTrain.strafeSpeedCalc(angle));
+    System.out.println(Robot.driveTrain.strafeSpeedCalc(angle));
+
+    Robot.driveTrain.allDrive(/*-Robot.driveTrain.driveSpeedCalc(distance)*/0, /*Robot.driveTrain.turnSpeedCalc(deltaAngle)*/0, Robot.driveTrain.strafeSpeedCalc(angle));
+    if (Math.abs(Robot.oi.getThrottle()) > 0.2) {
+      quit = true;
+    }
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return /*distance <= 40 && Math.abs(angle) <= 1*/false; //This isn't totally done...
+    return /*distance <= 40 && Math.abs(angle) <= 1*/quit; //This isn't totally done...
   }
 
   // Called once after isFinished returns true
@@ -58,7 +67,7 @@ public class DriveToVisionTarget extends Command {
   protected void end() {
     System.out.println("COMMAND ENDED");
     //Robot.driveTrain.setLEDRing(false);
-    SmartDashboard.putString("vision/active_mode", "driver_front");
+    //SmartDashboard.putString("vision/active_mode", "driver_front");   FIX LATER
   }
 
   // Called when another command which requires one or more of the same

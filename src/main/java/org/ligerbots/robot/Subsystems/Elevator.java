@@ -185,7 +185,7 @@ public class Elevator extends Subsystem {
         setWristPosition(WristPosition.FLAT);
         break;
       case BALL_CARGO:
-        leader1.set(ControlMode.Position, 36.0 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
+        leader1.set(ControlMode.Position, 34.5 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
         setWristPosition(WristPosition.FLAT);
         break;
       case BALL_INTAKE:
@@ -197,7 +197,7 @@ public class Elevator extends Subsystem {
         setWristPosition(WristPosition.HIGH);
         break;
       case BALL_MID:
-        leader1.set(ControlMode.Position, 34.2 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT); //temporary!!!!!
+        leader1.set(ControlMode.Position, 35.3 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT); //temporary!!!!!
         setWristPosition(WristPosition.HIGH);
         break;
       case BALL_LOW:
