@@ -7,18 +7,14 @@
 
 package org.ligerbots.robot.Commands;
 
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import org.ligerbots.robot.Robot;
-import org.ligerbots.robot.RobotMap;
 
-public class DriveCommand extends Command {
-  private double savedYaw;
-  double correctedYaw;
+import edu.wpi.first.wpilibj.command.Command;
 
-  public DriveCommand() {
-    requires(Robot.driveTrain);
+
+
+public class TuneElevator extends Command {
+  public TuneElevator() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
@@ -26,30 +22,41 @@ public class DriveCommand extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    SmartDashboard.putString("running", "yes");
   }
-
-  // Called repeatedly when this Command is scheduled to run
+  
+  //goes up an inch a second at max speed
   @Override
   protected void execute() {
-
-    /*if (Robot.oi.getStrafe() > 0) {//robot is strafing
-      if (Math.abs(Robot.oi.getRotate()) > 0.04) {
-        savedYaw = Robot.driveTrain.getYaw();
-      }
-
-      if (Math.abs(correctedYaw) > RobotMap.YAW_ERROR_THRESHOLD) {
-        Robot.driveTrain.enableTurningControl(savedYaw - Robot.driveTrain.getYaw(), 0.3);
-
-        correctedYaw = Robot.driveTrain.getTurnOutput();
-      }
-    } else {
-      correctedYaw = Robot.oi.getRotate();
-    }*/
-
-    SmartDashboard.putString("LeftLeaderInfo", Robot.driveTrain.leftLeaderInfo());
-    Robot.driveTrain.allDrive(Robot.oi.getThrottle(), /*correctedYaw*/Robot.oi.getRotate(), Robot.oi.getStrafe());
-   // System.out.printf("Throttle: %5.2f, Rotate: %5.2f, Strafe: %5.2f", Robot.oi.getThrottle(), Robot.oi.getRotate(), Robot.oi.getStrafe());
+    switch (Robot.elevator.currentPosition) {
+      case HATCH_HIGH:
+        Robot.elevator.hatchHigh += Robot.oi.tuneElevator() / 50.0;
+        break;
+      case HATCH_MID:
+        Robot.elevator.hatchMid += Robot.oi.tuneElevator() / 50.0;
+        break;
+      case HATCH_LOW:
+        Robot.elevator.hatchLow += Robot.oi.tuneElevator() / 50.0;
+        break;
+      case BALL_CARGO:
+        Robot.elevator.ballCargo += Robot.oi.tuneElevator() / 50.0;
+        break;
+      case BALL_INTAKE:
+        Robot.elevator.ballIntake += Robot.oi.tuneElevator() / 50.0;
+        break;
+      case BALL_HIGH:
+        Robot.elevator.ballHigh += Robot.oi.tuneElevator() / 50.0;
+        break;
+      case BALL_MID:
+        Robot.elevator.ballMid += Robot.oi.tuneElevator() / 50.0;
+        break;
+      case BALL_LOW:
+        Robot.elevator.ballLow += Robot.oi.tuneElevator() / 50.0;
+        break;
+      case INTAKE_CLEARANCE:
+      case START:
+      default:
+        break;
+    }
   }
 
   // Make this return true when this Command no longer needs to run execute()

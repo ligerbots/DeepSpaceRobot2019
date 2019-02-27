@@ -46,12 +46,23 @@ public class Elevator extends Subsystem {
   public AnalogInput encoder;
 
   public enum ElevatorPosition {
-    HATCH_HIGH, HATCH_MID, HATCH_LOW, BALL_HIGH, BALL_MID, BALL_LOW, BALL_CARGO, BALL_INTAKE, INTAKE_CLEARANCE
+    HATCH_HIGH, HATCH_MID, HATCH_LOW, BALL_HIGH, BALL_MID, BALL_LOW, BALL_CARGO, BALL_INTAKE, INTAKE_CLEARANCE, START
   }
 
   public enum WristPosition {
     HIGH, FLAT, INTAKE
   }
+
+  public ElevatorPosition currentPosition = ElevatorPosition.START;
+
+  public double hatchHigh = 56.5;
+  public double hatchMid = 32.0;
+  public double hatchLow = 6.5;
+  public double ballHigh = 57.0;
+  public double ballMid = 35.3;
+  public double ballLow = 11.2;
+  public double ballCargo = 34.5;
+  public double ballIntake = 2.5;
 
   public Elevator () {
     SmartDashboard.putNumber("FlatWristVal", RobotMap.WRIST_FLAT_VAL);
@@ -173,40 +184,53 @@ public class Elevator extends Subsystem {
   public void setElevatorPosition (ElevatorPosition pos) {
     switch (pos) {
       case HATCH_HIGH:
-        leader1.set(ControlMode.Position, 56.5 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT); 
+        currentPosition = ElevatorPosition.HATCH_HIGH;
+        leader1.set(ControlMode.Position, hatchHigh * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT); 
         setWristPosition(WristPosition.FLAT);
         break;
       case HATCH_MID:
-        leader1.set(ControlMode.Position, 32.0 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
+        currentPosition = ElevatorPosition.HATCH_MID;
+        leader1.set(ControlMode.Position, hatchMid * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
         setWristPosition(WristPosition.FLAT);
         break;
       case HATCH_LOW:
-        leader1.set(ControlMode.Position, 6.5 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
+        currentPosition = ElevatorPosition.HATCH_LOW;
+        leader1.set(ControlMode.Position, hatchLow * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
         setWristPosition(WristPosition.FLAT);
         break;
       case BALL_CARGO:
-        leader1.set(ControlMode.Position, 34.5 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
+        currentPosition = ElevatorPosition.BALL_CARGO;      
+        leader1.set(ControlMode.Position, ballCargo * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
         setWristPosition(WristPosition.FLAT);
         break;
       case BALL_INTAKE:
-        leader1.set(ControlMode.Position, 2.5 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
+        currentPosition = ElevatorPosition.BALL_INTAKE;
+        leader1.set(ControlMode.Position, ballIntake * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
         setWristPosition(WristPosition.FLAT);
         break;
       case BALL_HIGH:
-        leader1.set(ControlMode.Position, 57.0 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
+        currentPosition = ElevatorPosition.BALL_HIGH;
+        leader1.set(ControlMode.Position, ballHigh * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
         setWristPosition(WristPosition.HIGH);
         break;
       case BALL_MID:
-        leader1.set(ControlMode.Position, 35.3 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT); //temporary!!!!!
+        currentPosition = ElevatorPosition.BALL_MID;
+        leader1.set(ControlMode.Position, ballMid * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT); //temporary!!!!!
         setWristPosition(WristPosition.HIGH);
         break;
       case BALL_LOW:
-        leader1.set(ControlMode.Position, 11.2 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
+        currentPosition = ElevatorPosition.BALL_LOW;
+        leader1.set(ControlMode.Position, ballLow * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
         setWristPosition(WristPosition.HIGH); 
         break;
       case INTAKE_CLEARANCE:
+        currentPosition = ElevatorPosition.INTAKE_CLEARANCE;
         leader1.set(ControlMode.Position, (RobotMap.INTAKE_IN_HEIGHT + 1.2) * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
         setWristPosition(WristPosition.FLAT);
+        break;
+      case START:
+      default:
+        System.out.println("Huh?");
         break;
     }
   }

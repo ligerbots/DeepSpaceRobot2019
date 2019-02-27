@@ -16,6 +16,7 @@ import org.ligerbots.robot.Commands.DriveCommand;
 import org.ligerbots.robot.Commands.IntakeRunCommand;
 import org.ligerbots.robot.Commands.SetIntakeCommand;
 import org.ligerbots.robot.Commands.StartingCommandGroup;
+import org.ligerbots.robot.Commands.TuneElevator;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
@@ -49,6 +50,7 @@ public class Robot extends TimedRobot {
   public static Boolean isSecondRobot;
   public static IntakeRunCommand intakeCommand;
   public static StartingCommandGroup start;
+  public static TuneElevator tuneElevator;
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -68,10 +70,12 @@ public class Robot extends TimedRobot {
     oi = new OI();
     intakeCommand = new IntakeRunCommand();
     start = new StartingCommandGroup();
+    tuneElevator = new TuneElevator();
    // initialSetIntake = new SetIntakeCommand(true);
    // initialSetIntake.start();
     // Detect the motor controllers we're using
     isSecondRobot = (new TalonSRX(RobotMap.DETERMINE_WHICH_ROBOT).getFirmwareVersion() != -1);
+    System.out.println("This is " + (isSecondRobot ? "" : "not") + "the second robot!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
   }
 
   /**
@@ -128,8 +132,9 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     driveTrain.setLEDRing(true);
-    //driveCommand.start();
+    driveCommand.start();
     intakeCommand.start();
+    tuneElevator.start();
   }
   /**
    * This function is called periodically during operator control.

@@ -58,9 +58,9 @@ public class Intake extends Subsystem {
       isStart = false;
     }
   }
-  
+  //FIXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
   public void setIntakeMotor(double value){
-    if (isDeployed) intakeMotor.set(ControlMode.PercentOutput, value);
+    /*if (isDeployed)*/ intakeMotor.set(ControlMode.PercentOutput, value);
   }
   public boolean isIntakeDeployed(){
     return isDeployed;

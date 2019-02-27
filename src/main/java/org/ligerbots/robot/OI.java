@@ -129,4 +129,8 @@ public class OI {
     public double getIntakeOut() {
         return xbox.getTriggerAxis(Hand.kLeft);
     }
+
+    public double tuneElevator() {
+        return farm.getY();
+    }
 }

@@ -10,6 +10,7 @@ package org.ligerbots.robot.Commands;
 import org.ligerbots.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class IntakeRunCommand extends Command {
   public IntakeRunCommand() {
@@ -20,12 +21,14 @@ public class IntakeRunCommand extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    SmartDashboard.putNumber("Intake Speed", 0.0);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.intake.setIntakeMotor(Robot.oi.getIntakeIn() - Robot.oi.getIntakeOut());
+    System.out.printf("In: %5.2f, Out: %5.2f", Robot.oi.getIntakeIn(), Robot.oi.getIntakeOut());
+    Robot.intake.setIntakeMotor(/*Robot.oi.getIntakeIn() - Robot.oi.getIntakeOut()*/SmartDashboard.getNumber("Intake Speed", 0.0));
   }
   
   // Make this return true when this Command no longer needs to run execute()
