@@ -7,6 +7,7 @@
 
 package org.ligerbots.robot;
 
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -16,6 +17,8 @@ import org.ligerbots.robot.Commands.DriveCommand;
 import org.ligerbots.robot.Commands.IntakeRunCommand;
 import org.ligerbots.robot.Commands.SetIntakeCommand;
 import org.ligerbots.robot.Commands.StartingCommandGroup;
+
+import java.io.File;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
@@ -70,8 +73,11 @@ public class Robot extends TimedRobot {
     start = new StartingCommandGroup();
    // initialSetIntake = new SetIntakeCommand(true);
    // initialSetIntake.start();
-    // Detect the motor controllers we're using
-    isSecondRobot = (new TalonSRX(RobotMap.DETERMINE_WHICH_ROBOT).getFirmwareVersion() != -1);
+    // Detect the second robot
+    File f = new File("/home/lvuser/secondrobot");
+    if (f.exists()) {
+      isSecondRobot = true;
+    }
   }
 
   /**
