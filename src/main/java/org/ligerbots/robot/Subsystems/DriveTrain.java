@@ -85,18 +85,17 @@ public class DriveTrain extends Subsystem {
   double currentRampedStrafe = 0;
   double lastStrafe = 0;
   public void allDrive (double throttle, double rotate, double strafe) {
-    squaredStrafe = strafe * strafe * Math.signum(strafe);
     if (fieldCentric) {
-      diffDrive.arcadeDrive(throttle * Math.cos(getYaw() + squaredStrafe * Math.sin(getYaw())), rotate);
-      centerLeader.set(-throttle * Math.sin(getYaw()) + squaredStrafe * Math.cos(getYaw()));
+      diffDrive.arcadeDrive(throttle * Math.cos(getYaw() + strafe * Math.sin(getYaw())), rotate);
+      centerLeader.set(-throttle * Math.sin(getYaw()) + strafe * Math.cos(getYaw()));
     }
     else {
       diffDrive.arcadeDrive(throttle, -rotate);
-      if (Math.abs(squaredStrafe) >= Math.abs(lastStrafe)) {
+      if (Math.abs(strafe) >= Math.abs(lastStrafe)) {
         currentRampedStrafe = (lastStrafe + 0.05 > squaredStrafe ? squaredStrafe : lastStrafe + 0.05);
       }
       else {
-        currentRampedStrafe = squaredStrafe;
+        currentRampedStrafe = strafe;
       }
       centerLeader.set(currentRampedStrafe);
       System.out.println("Ramp: " + currentRampedStrafe);

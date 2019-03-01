@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.ligerbots.robot.Robot;
+import org.ligerbots.robot.RobotMap;
 
 
 public class DriveToVisionTarget extends Command {
@@ -40,17 +41,22 @@ public class DriveToVisionTarget extends Command {
     quit = false;
   }
 
+  protected double calculateStrafe(double angle, double distance) {
+    double throttle = Math.abs(distance * Math.sin(angle)); //Gets the Y component of the distance
+    return Math.min(throttle/RobotMap.MAX_DISTANCE_OFFSET, 1.0) * Math.signum(angle); //negative throttle vs positive;
+  }
+
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
     visionInfo = SmartDashboard.getNumberArray("vision/target_info", empty);  //refetch value
     distance = visionInfo[3];                                                 //reset distance and angle
-    angle = visionInfo[4] * (180/Math.PI);
+    angle = visionInfo[4] * (180/Math.PI); //converts to radians
     deltaAngle = angle + (visionInfo[5] * (180/Math.PI));
 
-    System.out.println(Robot.driveTrain.strafeSpeedCalc(angle));
+    System.out.println(calculateStrafe(angle, distance));
 
-    Robot.driveTrain.allDrive(/*-Robot.driveTrain.driveSpeedCalc(distance)*/0, /*Robot.driveTrain.turnSpeedCalc(deltaAngle)*/0, Robot.driveTrain.strafeSpeedCalc(angle));
+    Robot.driveTrain.allDrive(/*-Robot.driveTrain.driveSpeedCalc(distance)*/0, /*Robot.driveTrain.turnSpeedCalc(deltaAngle)*/0, calculateStrafe(angle, distance));
     if (Math.abs(Robot.oi.getThrottle()) > 0.2) {
       quit = true;
     }
