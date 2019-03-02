@@ -22,6 +22,7 @@ public class DriveToVisionTarget extends Command {
   double distance;                           //total distance (raw from NT) from robot to target
   double angle;                              //angle from robot to target in degrees (NT is initially in radians)
   double deltaAngle;
+  double distanceToStrafe;
 
   boolean quit;
 
@@ -46,11 +47,13 @@ public class DriveToVisionTarget extends Command {
     visionInfo = SmartDashboard.getNumberArray("vision/target_info", empty);  //refetch value
     distance = visionInfo[3];                                                 //reset distance and angle
     angle = visionInfo[4] * (180/Math.PI);
-    deltaAngle = angle + (visionInfo[5] * (180/Math.PI));
+    deltaAngle = angle + (visionInfo[5] * (
+      180/Math.PI));
+    distanceToStrafe = Math.sin(visionInfo[5]) * distance;
 
-    System.out.println(Robot.driveTrain.strafeSpeedCalc(angle));
+    System.out.println("Angle 4: " + visionInfo[4] * 180 / Math.PI + ", Angle 5: " + visionInfo[5] * 180 / Math.PI);
 
-    Robot.driveTrain.allDrive(/*-Robot.driveTrain.driveSpeedCalc(distance)*/0, /*Robot.driveTrain.turnSpeedCalc(deltaAngle)*/0, Robot.driveTrain.strafeSpeedCalc(angle));
+    //Robot.driveTrain.allDrive(-Robot.driveTrain.driveSpeedCalc(distance), /*Robot.driveTrain.turnSpeedCalc(deltaAngle)*/0, Robot.driveTrain.strafeSpeedCalc(angle));
     if (Math.abs(Robot.oi.getThrottle()) > 0.2) {
       quit = true;
     }

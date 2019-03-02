@@ -27,8 +27,8 @@ public class IntakeRunCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    System.out.printf("In: %5.2f, Out: %5.2f", Robot.oi.getIntakeIn(), Robot.oi.getIntakeOut());
-    Robot.intake.setIntakeMotor(/*Robot.oi.getIntakeIn() - Robot.oi.getIntakeOut()*/SmartDashboard.getNumber("Intake Speed", 0.0));
+   // System.out.printf("In: %5.2f, Out: %5.2f", Robot.oi.getIntakeIn(), Robot.oi.getIntakeOut());
+    Robot.intake.setIntakeMotor(Robot.oi.getIntakeIn() - Robot.oi.getIntakeOut()/*SmartDashboard.getNumber("Intake Speed", 0.0)*/);
   }
   
   // Make this return true when this Command no longer needs to run execute()

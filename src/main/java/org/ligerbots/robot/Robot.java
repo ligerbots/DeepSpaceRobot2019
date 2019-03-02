@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.ligerbots.robot.Commands.DriveCommand;
 import org.ligerbots.robot.Commands.IntakeRunCommand;
+import org.ligerbots.robot.Commands.ManualWristCommand;
 import org.ligerbots.robot.Commands.SetIntakeCommand;
 import org.ligerbots.robot.Commands.StartingCommandGroup;
 import org.ligerbots.robot.Commands.TuneElevator;
@@ -51,6 +52,7 @@ public class Robot extends TimedRobot {
   public static IntakeRunCommand intakeCommand;
   public static StartingCommandGroup start;
   public static TuneElevator tuneElevator;
+  public static ManualWristCommand wristCommand;
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -71,6 +73,8 @@ public class Robot extends TimedRobot {
     intakeCommand = new IntakeRunCommand();
     start = new StartingCommandGroup();
     tuneElevator = new TuneElevator();
+    wristCommand = new ManualWristCommand();
+
    // initialSetIntake = new SetIntakeCommand(true);
    // initialSetIntake.start();
     // Detect the motor controllers we're using
@@ -131,10 +135,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    driveTrain.setLEDRing(true);
     driveCommand.start();
     intakeCommand.start();
     tuneElevator.start();
+    wristCommand.start();
   }
   /**
    * This function is called periodically during operator control.
@@ -148,6 +152,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("wrist encoder raw", elevator.encoder.getVoltage());
     Scheduler.getInstance().run();
     SmartDashboard.putNumber("Pressure", compressor.getPressure());
+    SmartDashboard.putNumber("Elevator Position", Robot.elevator.getPosition());
   }
 
   /**

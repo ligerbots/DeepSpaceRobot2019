@@ -28,7 +28,7 @@ public class SetIntakeCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.intake.deployIntake(deploy);
+    Robot.intake.deployIntake(!deploy); //should be just deploy
   }
 
   // Make this return true when this Command no longer needs to run execute()

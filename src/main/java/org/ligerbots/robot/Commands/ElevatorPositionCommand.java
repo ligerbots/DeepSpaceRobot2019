@@ -33,6 +33,7 @@ public class ElevatorPositionCommand extends Command {
 
 
    // Robot.intake.deployIntake(true);
+    Robot.elevator.setElevatorPID(0.075, 0.0, 0.0);
 
     Robot.elevator.setElevatorPosition(pos);
 
@@ -46,6 +47,7 @@ public class ElevatorPositionCommand extends Command {
   protected void execute () {
     SmartDashboard.putNumber("Elevator Height", Robot.elevator.getPosition());
     SmartDashboard.putNumber("Elevator Error", Robot.elevator.getClosedLoopError());
+
 
     //Robot.elevator.setElevatorPosition(pos);
     if (pos != ElevatorPosition.BALL_INTAKE) {

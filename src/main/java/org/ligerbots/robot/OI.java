@@ -7,6 +7,7 @@
 
 package org.ligerbots.robot;
 
+import org.ligerbots.robot.Commands.ActualPistonKick;
 import org.ligerbots.robot.Commands.CompressorCommand;
 import org.ligerbots.robot.Commands.DriveCommand;
 import org.ligerbots.robot.Commands.ElevatorPositionCommand;
@@ -59,7 +60,7 @@ public class OI {
         rightBumper.whileHeld(new IntakeRunCommand());
 
         JoystickButton xBoxA = new JoystickButton(xbox, 1);
-        xBoxA.whenPressed(new GrabberKickerToggleCommand());
+        xBoxA.whenPressed(new ActualPistonKick());
 
         /*JoystickButton xBoxB = new JoystickButton(xbox, 2);
         xBoxB.whenPressed(new MoveWristCommand(WristPosition.FLAT));*/
@@ -131,6 +132,10 @@ public class OI {
     }
 
     public double tuneElevator() {
-        return farm.getY();
+        return -farm.getY();
+    }
+
+    public double manualWrist() {
+        return farm.getX();
     }
 }

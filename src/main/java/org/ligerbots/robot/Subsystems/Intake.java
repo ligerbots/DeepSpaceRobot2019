@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Intake extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-  boolean isDeployed = false;
+  boolean isDeployed = true;
   boolean isStart = true;
   WPI_TalonSRX intakeMotor;
   DoubleSolenoid intakeSolenoid;
@@ -38,6 +38,10 @@ public class Intake extends Subsystem {
   public Intake(){
     intakeMotor = new WPI_TalonSRX(RobotMap.CT_INTAKE);
     intakeSolenoid = new DoubleSolenoid(RobotMap.PCM_ID, 1, 0); //placeholder channel numbers
+
+    intakeMotor.configContinuousCurrentLimit(30);
+    intakeMotor.configPeakCurrentLimit(35);
+    intakeMotor.configPeakCurrentDuration(3);
   }
 
   public void toggleIntake(){

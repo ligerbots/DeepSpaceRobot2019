@@ -55,13 +55,15 @@ public class Elevator extends Subsystem {
 
   public ElevatorPosition currentPosition = ElevatorPosition.START;
 
+  public WristPosition currentWrist = WristPosition.FLAT;
+
   public double hatchHigh = 56.5;
   public double hatchMid = 32.0;
   public double hatchLow = 6.5;
-  public double ballHigh = 57.0;
-  public double ballMid = 35.3;
-  public double ballLow = 11.2;
-  public double ballCargo = 34.5;
+  public double ballHigh = 58.5; //more like 57
+  public double ballMid = 46.0; //more like 33-35
+  public double ballLow = 16.0; //more like 11.2
+  public double ballCargo = 37.5; //more like 34.5
   public double ballIntake = 2.5;
 
   public Elevator () {
@@ -72,19 +74,20 @@ public class Elevator extends Subsystem {
     SmartDashboard.putNumber("WristF", RobotMap.WRIST_F);
 
     leader1 = new WPI_TalonSRX(9); //It is the top left motor when looking at the back of the robot
-    follower1 = new WPI_TalonSRX(8); //Same side as leader
+    follower1 = new WPI_TalonSRX(13); //Same side as leader
     follower2 = new WPI_TalonSRX(7); //top right
     follower3 = new WPI_TalonSRX(6); //bottom right
     wrist = new WPI_TalonSRX(11);
 
-    leader1.setInverted(true);
-    follower1.setInverted(InvertType.FollowMaster);
-    follower2.setInverted(InvertType.OpposeMaster);
-    follower3.setInverted(InvertType.OpposeMaster);
+    leader1.setInverted(true); //should be inverted
+    follower1.setInverted(InvertType.OpposeMaster); //should follow
+    follower2.setInverted(InvertType.OpposeMaster); //Should oppose on first
+    follower3.setInverted(InvertType.FollowMaster); //should oppose
 
     leader1.setSelectedSensorPosition(0);
+    leader1.setSensorPhase(false);
 
-    leader1.config_kP(0, 0.075);
+    leader1.config_kP(0, 0.000001); //0.075 for main robot one
 
     Arrays.asList(leader1, follower1, follower2, follower3, wrist)
         .forEach((WPI_TalonSRX talon) -> talon.enableCurrentLimit(true));
@@ -111,6 +114,8 @@ public class Elevator extends Subsystem {
 
     Arrays.asList(follower1, follower2, follower3)
         .forEach((WPI_TalonSRX talon) -> talon.set(ControlMode.Follower, leader1.getDeviceID()));
+
+
   }
 
 
@@ -126,6 +131,10 @@ public class Elevator extends Subsystem {
 
   public void set (double speed) {
     leader1.set(ControlMode.PercentOutput, speed);
+  }
+
+  public double getRawPosition() {
+    return leader1.getSelectedSensorPosition();
   }
 
   public void setWristPID (double p, double i, double d, double f) {
@@ -170,7 +179,7 @@ public class Elevator extends Subsystem {
     //Otherwise if we're using the motor's encoder
     switch (pos) {
       case HIGH:
-        wrist.set(ControlMode.Position, 2.0); //FIX POSITIONS LATER
+        wrist.set(ControlMode.Position, 4.049); //FIX POSITIONS LATER 2.0 on FIRST ROBOT
         break;
       case FLAT:
         wrist.set(ControlMode.Position, RobotMap.WRIST_FLAT_VAL);
@@ -236,8 +245,8 @@ public class Elevator extends Subsystem {
   }
 
 
-  public int getClosedLoopError () {
-    return leader1.getClosedLoopError();
+  public double getClosedLoopError () {
+    return leader1.getClosedLoopError() / RobotMap.ELEVATOR_ENCODER_TICKS_PER_REV * (Math.PI * RobotMap.SHAFT_DIAMETER) * (18.0 / 54.0);
   }
 
 

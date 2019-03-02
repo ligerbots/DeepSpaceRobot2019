@@ -11,10 +11,8 @@ import org.ligerbots.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-
-
-public class TuneElevator extends Command {
-  public TuneElevator() {
+public class ManualWristCommand extends Command {
+  public ManualWristCommand() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
@@ -23,42 +21,11 @@ public class TuneElevator extends Command {
   @Override
   protected void initialize() {
   }
-  
-  //goes up an inch a second at max speed
+
+  // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    switch (Robot.elevator.currentPosition) {
-      case HATCH_HIGH:
-        Robot.elevator.hatchHigh += Robot.oi.tuneElevator() / 50.0;
-        break;
-      case HATCH_MID:
-        Robot.elevator.hatchMid += Robot.oi.tuneElevator() / 50.0;
-        break;
-      case HATCH_LOW:
-        Robot.elevator.hatchLow += Robot.oi.tuneElevator() / 50.0;
-        break;
-      case BALL_CARGO:
-        Robot.elevator.ballCargo += Robot.oi.tuneElevator() / 50.0;
-        break;
-      case BALL_INTAKE:
-        Robot.elevator.ballIntake += Robot.oi.tuneElevator() / 50.0;
-        break;
-      case BALL_HIGH:
-        Robot.elevator.ballHigh += Robot.oi.tuneElevator() / 50.0;
-        break;
-      case BALL_MID:
-        Robot.elevator.ballMid += Robot.oi.tuneElevator() / 50.0;
-        break;
-      case BALL_LOW:
-        Robot.elevator.ballLow += Robot.oi.tuneElevator() / 50.0;
-        break;
-      case INTAKE_CLEARANCE:
-        break;
-      case START:
-        Robot.elevator.set(Robot.oi.tuneElevator() / 2);
-      default:
-        break;
-    }
+    Robot.elevator.setWrist(Robot.oi.manualWrist());
   }
 
   // Make this return true when this Command no longer needs to run execute()

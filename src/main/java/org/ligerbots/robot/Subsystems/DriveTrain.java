@@ -67,7 +67,7 @@ public class DriveTrain extends Subsystem {
 
     navX = new AHRS(Port.kMXP, (byte) 200);
 
-    spike = new Relay(1);
+    spike = new Relay(0); //is 1 on first robot
 
     centerLeader.setOpenLoopRampRate(0.005);
  //centerLeader.setSmartCurrentLimit(20);
@@ -79,13 +79,14 @@ public class DriveTrain extends Subsystem {
          .forEach((CANSparkMax spark) -> spark.setIdleMode(IdleMode.kBrake));
    // turningController = new PIDController(0.045, 0.004, 0.06, navX, output -> this.tur]\nOutput = output);
 
+    //centerLeader.setOpenLoopRampRate(0.3);
   }
   
   double squaredStrafe;
   double currentRampedStrafe = 0;
   double lastStrafe = 0;
   public void allDrive (double throttle, double rotate, double strafe) {
-    squaredStrafe = strafe * strafe * Math.signum(strafe);
+    squaredStrafe = strafe/* * strafe * Math.signum(strafe)*/;
     if (fieldCentric) {
       diffDrive.arcadeDrive(throttle * Math.cos(getYaw() + squaredStrafe * Math.sin(getYaw())), rotate);
       centerLeader.set(-throttle * Math.sin(getYaw()) + squaredStrafe * Math.cos(getYaw()));
@@ -93,13 +94,13 @@ public class DriveTrain extends Subsystem {
     else {
       diffDrive.arcadeDrive(throttle, -rotate);
       if (Math.abs(squaredStrafe) >= Math.abs(lastStrafe)) {
-        currentRampedStrafe = (lastStrafe + 0.05 > squaredStrafe ? squaredStrafe : lastStrafe + 0.05);
+        currentRampedStrafe = (lastStrafe + 0.02 > squaredStrafe ? squaredStrafe : lastStrafe + 0.02);
       }
       else {
         currentRampedStrafe = squaredStrafe;
       }
       centerLeader.set(currentRampedStrafe);
-      System.out.println("Ramp: " + currentRampedStrafe);
+      //centerLeader.set(squaredStrafe);
     }
    // rightLeader.set(0.5);
    // leftLeader.set(0.5);
@@ -140,7 +141,7 @@ public class DriveTrain extends Subsystem {
 
   public double strafeSpeedCalc (double error) {
     //if (error <= 5.0 && error >= -5.0) {return 0.0;}
-    return 0.15 * Math.signum(error) * error;
+    return 0.18 * error;
   }
 
   public void enableTurningControl(double angle, double tolerance) {
@@ -179,6 +180,7 @@ public class DriveTrain extends Subsystem {
 
 public void setLEDRing (boolean on) {
   spike.set(on ? Value.kForward : Value.kReverse);
+  System.out.println("it's on");
 }
 
 public String leftLeaderInfo() {
