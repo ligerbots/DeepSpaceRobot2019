@@ -8,11 +8,13 @@
 package org.ligerbots.robot.Commands;
 
 import org.ligerbots.robot.Robot;
+import org.ligerbots.robot.RobotMap;
+import org.ligerbots.robot.Subsystems.Elevator.WristPosition;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class ManualWristCommand extends Command {
-  public ManualWristCommand() {
+public class WristStupid extends Command {
+  public WristStupid() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
@@ -20,30 +22,19 @@ public class ManualWristCommand extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    Robot.elevator.setWristPID(RobotMap.WRIST_P, 0, 0, 0);
+    Robot.elevator.setWristPosition(WristPosition.FLAT);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    switch (Robot.elevator.currentWrist) {
-      case HIGH:
-       Robot.elevator.wristHigh += Robot.oi.manualWrist() / 5090.0;
-       break;
-      case FLAT:
-       Robot.elevator.wristFlat += Robot.oi.manualWrist() / 500.0;
-       break;
-      case INTAKE:
-       Robot.elevator.wristFlat += Robot.oi.manualWrist() / 500.0;
-       break;
-      default:
-        break;
-    }
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return true;
   }
 
   // Called once after isFinished returns true

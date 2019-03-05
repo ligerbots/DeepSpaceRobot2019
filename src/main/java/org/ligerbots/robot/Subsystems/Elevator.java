@@ -60,11 +60,14 @@ public class Elevator extends Subsystem {
   public double hatchHigh = 56.5;
   public double hatchMid = 32.0;
   public double hatchLow = 6.5;
-  public double ballHigh = 58.5; //more like 57
-  public double ballMid = 46.0; //more like 33-35
+  public double ballHigh = 60.0; //more like 57
+  public double ballMid = 42.0; //more like 33-35
   public double ballLow = 16.0; //more like 11.2
   public double ballCargo = 37.5; //more like 34.5
   public double ballIntake = 2.5;
+
+  public double wristFlat = 1.92; //1.74 for first robot
+  public double wristHigh = 1.7; // 2 or something
 
   public Elevator () {
     SmartDashboard.putNumber("FlatWristVal", RobotMap.WRIST_FLAT_VAL);
@@ -157,16 +160,26 @@ public class Elevator extends Subsystem {
     wrist.set(ControlMode.PercentOutput, speed);
   }
   public void setWristPosition (WristPosition pos) {
+    //Should be positive P!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     setWristPID(RobotMap.WRIST_P, SmartDashboard.getNumber("WristI", RobotMap.WRIST_I), SmartDashboard.getNumber("WristD", RobotMap.WRIST_D), SmartDashboard.getNumber("WristF", RobotMap.WRIST_F));
     if (RobotMap.WRIST_USES_ABSOLUTE_ENCODER) {
       switch (pos) {
         case HIGH:
-          pidController.setSetpoint(1.9); //FIX POSITIONS LATER
+          pidController.enable();
+          wrist.setNeutralMode(NeutralMode.Brake);
+          currentWrist = WristPosition.HIGH;
+          pidController.setSetpoint(wristHigh); //FIX POSITIONS LATER prob like 2 or something for first robot
           break;
         case FLAT:
-          pidController.setSetpoint(RobotMap.WRIST_FLAT_VAL);
+          System.out.println("going to 2.06");
+          pidController.disable();
+          currentWrist= WristPosition.FLAT;
+         // pidController.setSetpoint(wristFlat); //should be FLAT VAL in robot map
+          wrist.set(ControlMode.PercentOutput, 0);
+          wrist.setNeutralMode(NeutralMode.Coast);
           break;
         case INTAKE:
+          currentWrist = WristPosition.INTAKE;
           pidController.setSetpoint(1.5);
           break;
       }
@@ -182,7 +195,7 @@ public class Elevator extends Subsystem {
         wrist.set(ControlMode.Position, 4.049); //FIX POSITIONS LATER 2.0 on FIRST ROBOT
         break;
       case FLAT:
-        wrist.set(ControlMode.Position, RobotMap.WRIST_FLAT_VAL);
+        wrist.set(ControlMode.Position, RobotMap.WRIST_FLAT_VAL); //SHOULD BE FLAT VALLLLLL
         break;
       case INTAKE:
         wrist.set(ControlMode.Position, 0.0);
