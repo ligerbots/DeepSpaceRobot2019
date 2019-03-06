@@ -7,13 +7,11 @@
 
 package org.ligerbots.robot.Commands;
 
-import org.ligerbots.robot.Robot;
-
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class IntakeRunCommand extends Command {
-  public IntakeRunCommand() {
+public class ToggleCamera extends Command {
+  public ToggleCamera() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
@@ -21,20 +19,24 @@ public class IntakeRunCommand extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    SmartDashboard.putNumber("Intake Speed", 0.0);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-   // System.out.printf("In: %5.2f, Out: %5.2f", Robot.oi.getIntakeIn(), Robot.oi.getIntakeOut());
-    Robot.intake.setIntakeMotor(Robot.oi.getIntakeIn() - Robot.oi.getIntakeOut()/*SmartDashboard.getNumber("Intake Speed", 0.0)*/);
+    String currentCamera = SmartDashboard.getString("vision/active_mode", "rrtarget");
+    if (currentCamera.equals("driver_intake")) {
+      SmartDashboard.putString("vision/active_mode", "driver_target");
+    }
+    else {
+      SmartDashboard.putString("vision/active_mode", "driver_intake");
+    }
   }
-  
+
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return true;
   }
 
   // Called once after isFinished returns true

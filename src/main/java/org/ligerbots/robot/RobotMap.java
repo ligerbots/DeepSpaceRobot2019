@@ -30,7 +30,8 @@ public class RobotMap {
 
     public static final int DETERMINE_WHICH_ROBOT = 8; //Whether this deviceId is a talon will determine if we're controlling the second robot
 
-    public static final int ABSOLUTE_ENCODER_CHANNEL = 1; //Not actually, fix later
+    
+    public static final int ABSOLUTE_ENCODER_CHANNEL = 0; //Not actually, fix later (should be 1)
 
     public static final int ABSOLUTE_ENCODER_OFFSET = 0;
 
@@ -38,7 +39,7 @@ public class RobotMap {
 
     public static final double SHAFT_DIAMETER = 0.6;
 
-    public static final double WRIST_P = 1.0;
+    public static final double WRIST_P = 1.1; //positive in first robot should b 1
 
     public static final double WRIST_I = 0.0;
 
@@ -46,5 +47,5 @@ public class RobotMap {
     
     public static final double WRIST_F = 0.0;
 
-    public static final double WRIST_FLAT_VAL = 1.74;
+    public static final double WRIST_FLAT_VAL = 1.74; //1.74 for first robot
 }

@@ -46,12 +46,28 @@ public class Elevator extends Subsystem {
   public AnalogInput encoder;
 
   public enum ElevatorPosition {
-    HATCH_HIGH, HATCH_MID, HATCH_LOW, BALL_HIGH, BALL_MID, BALL_LOW, BALL_CARGO, BALL_INTAKE, INTAKE_CLEARANCE
+    HATCH_HIGH, HATCH_MID, HATCH_LOW, BALL_HIGH, BALL_MID, BALL_LOW, BALL_CARGO, BALL_INTAKE, INTAKE_CLEARANCE, START
   }
 
   public enum WristPosition {
     HIGH, FLAT, INTAKE
   }
+
+  public ElevatorPosition currentPosition = ElevatorPosition.START;
+
+  public WristPosition currentWrist = WristPosition.FLAT;
+
+  public double hatchHigh = 56.5;
+  public double hatchMid = 32.0;
+  public double hatchLow = 6.5;
+  public double ballHigh = 60.0; //more like 57
+  public double ballMid = 42.0; //more like 33-35
+  public double ballLow = 16.0; //more like 11.2
+  public double ballCargo = 37.5; //more like 34.5
+  public double ballIntake = 2.5;
+
+  public double wristFlat = 1.92; //1.74 for first robot
+  public double wristHigh = 1.7; // 2 or something
 
   public Elevator () {
     SmartDashboard.putNumber("FlatWristVal", RobotMap.WRIST_FLAT_VAL);
@@ -61,19 +77,20 @@ public class Elevator extends Subsystem {
     SmartDashboard.putNumber("WristF", RobotMap.WRIST_F);
 
     leader1 = new WPI_TalonSRX(9); //It is the top left motor when looking at the back of the robot
-    follower1 = new WPI_TalonSRX(8); //Same side as leader
+    follower1 = new WPI_TalonSRX(13); //Same side as leader
     follower2 = new WPI_TalonSRX(7); //top right
     follower3 = new WPI_TalonSRX(6); //bottom right
     wrist = new WPI_TalonSRX(11);
 
-    leader1.setInverted(true);
-    follower1.setInverted(InvertType.FollowMaster);
-    follower2.setInverted(InvertType.OpposeMaster);
-    follower3.setInverted(InvertType.OpposeMaster);
+    leader1.setInverted(true); //should be inverted
+    follower1.setInverted(InvertType.OpposeMaster); //should follow
+    follower2.setInverted(InvertType.OpposeMaster); //Should oppose on first
+    follower3.setInverted(InvertType.FollowMaster); //should oppose
 
     leader1.setSelectedSensorPosition(0);
+    leader1.setSensorPhase(false);
 
-    leader1.config_kP(0, 0.075);
+    leader1.config_kP(0, 0.000001); //0.075 for main robot one
 
     Arrays.asList(leader1, follower1, follower2, follower3, wrist)
         .forEach((WPI_TalonSRX talon) -> talon.enableCurrentLimit(true));
@@ -100,6 +117,8 @@ public class Elevator extends Subsystem {
 
     Arrays.asList(follower1, follower2, follower3)
         .forEach((WPI_TalonSRX talon) -> talon.set(ControlMode.Follower, leader1.getDeviceID()));
+
+
   }
 
 
@@ -115,6 +134,10 @@ public class Elevator extends Subsystem {
 
   public void set (double speed) {
     leader1.set(ControlMode.PercentOutput, speed);
+  }
+
+  public double getRawPosition() {
+    return leader1.getSelectedSensorPosition();
   }
 
   public void setWristPID (double p, double i, double d, double f) {
@@ -137,16 +160,26 @@ public class Elevator extends Subsystem {
     wrist.set(ControlMode.PercentOutput, speed);
   }
   public void setWristPosition (WristPosition pos) {
+    //Should be positive P!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     setWristPID(RobotMap.WRIST_P, SmartDashboard.getNumber("WristI", RobotMap.WRIST_I), SmartDashboard.getNumber("WristD", RobotMap.WRIST_D), SmartDashboard.getNumber("WristF", RobotMap.WRIST_F));
     if (RobotMap.WRIST_USES_ABSOLUTE_ENCODER) {
       switch (pos) {
         case HIGH:
-          pidController.setSetpoint(1.9); //FIX POSITIONS LATER
+          pidController.enable();
+          wrist.setNeutralMode(NeutralMode.Brake);
+          currentWrist = WristPosition.HIGH;
+          pidController.setSetpoint(wristHigh); //FIX POSITIONS LATER prob like 2 or something for first robot
           break;
         case FLAT:
-          pidController.setSetpoint(RobotMap.WRIST_FLAT_VAL);
+          System.out.println("going to 2.06");
+          pidController.disable();
+          currentWrist= WristPosition.FLAT;
+         // pidController.setSetpoint(wristFlat); //should be FLAT VAL in robot map
+          wrist.set(ControlMode.PercentOutput, 0);
+          wrist.setNeutralMode(NeutralMode.Coast);
           break;
         case INTAKE:
+          currentWrist = WristPosition.INTAKE;
           pidController.setSetpoint(1.5);
           break;
       }
@@ -159,10 +192,10 @@ public class Elevator extends Subsystem {
     //Otherwise if we're using the motor's encoder
     switch (pos) {
       case HIGH:
-        wrist.set(ControlMode.Position, 2.0); //FIX POSITIONS LATER
+        wrist.set(ControlMode.Position, 4.049); //FIX POSITIONS LATER 2.0 on FIRST ROBOT
         break;
       case FLAT:
-        wrist.set(ControlMode.Position, RobotMap.WRIST_FLAT_VAL);
+        wrist.set(ControlMode.Position, RobotMap.WRIST_FLAT_VAL); //SHOULD BE FLAT VALLLLLL
         break;
       case INTAKE:
         wrist.set(ControlMode.Position, 0.0);
@@ -173,47 +206,60 @@ public class Elevator extends Subsystem {
   public void setElevatorPosition (ElevatorPosition pos) {
     switch (pos) {
       case HATCH_HIGH:
-        leader1.set(ControlMode.Position, 56.5 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT); 
+        currentPosition = ElevatorPosition.HATCH_HIGH;
+        leader1.set(ControlMode.Position, hatchHigh * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT); 
         setWristPosition(WristPosition.FLAT);
         break;
       case HATCH_MID:
-        leader1.set(ControlMode.Position, 32.0 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
+        currentPosition = ElevatorPosition.HATCH_MID;
+        leader1.set(ControlMode.Position, hatchMid * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
         setWristPosition(WristPosition.FLAT);
         break;
       case HATCH_LOW:
-        leader1.set(ControlMode.Position, 6.5 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
+        currentPosition = ElevatorPosition.HATCH_LOW;
+        leader1.set(ControlMode.Position, hatchLow * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
         setWristPosition(WristPosition.FLAT);
         break;
       case BALL_CARGO:
-        leader1.set(ControlMode.Position, 34.5 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
+        currentPosition = ElevatorPosition.BALL_CARGO;      
+        leader1.set(ControlMode.Position, ballCargo * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
         setWristPosition(WristPosition.FLAT);
         break;
       case BALL_INTAKE:
-        leader1.set(ControlMode.Position, 2.5 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
+        currentPosition = ElevatorPosition.BALL_INTAKE;
+        leader1.set(ControlMode.Position, ballIntake * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
         setWristPosition(WristPosition.FLAT);
         break;
       case BALL_HIGH:
-        leader1.set(ControlMode.Position, 57.0 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
+        currentPosition = ElevatorPosition.BALL_HIGH;
+        leader1.set(ControlMode.Position, ballHigh * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
         setWristPosition(WristPosition.HIGH);
         break;
       case BALL_MID:
-        leader1.set(ControlMode.Position, 35.3 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT); //temporary!!!!!
+        currentPosition = ElevatorPosition.BALL_MID;
+        leader1.set(ControlMode.Position, ballMid * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT); //temporary!!!!!
         setWristPosition(WristPosition.HIGH);
         break;
       case BALL_LOW:
-        leader1.set(ControlMode.Position, 11.2 * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
+        currentPosition = ElevatorPosition.BALL_LOW;
+        leader1.set(ControlMode.Position, ballLow * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
         setWristPosition(WristPosition.HIGH); 
         break;
       case INTAKE_CLEARANCE:
+        currentPosition = ElevatorPosition.INTAKE_CLEARANCE;
         leader1.set(ControlMode.Position, (RobotMap.INTAKE_IN_HEIGHT + 1.2) * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
         setWristPosition(WristPosition.FLAT);
+        break;
+      case START:
+      default:
+        System.out.println("Huh?");
         break;
     }
   }
 
 
-  public int getClosedLoopError () {
-    return leader1.getClosedLoopError();
+  public double getClosedLoopError () {
+    return leader1.getClosedLoopError() / RobotMap.ELEVATOR_ENCODER_TICKS_PER_REV * (Math.PI * RobotMap.SHAFT_DIAMETER) * (18.0 / 54.0);
   }
 
 

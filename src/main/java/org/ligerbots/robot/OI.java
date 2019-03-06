@@ -7,6 +7,7 @@
 
 package org.ligerbots.robot;
 
+import org.ligerbots.robot.Commands.ActualPistonKick;
 import org.ligerbots.robot.Commands.CompressorCommand;
 import org.ligerbots.robot.Commands.DriveCommand;
 import org.ligerbots.robot.Commands.ElevatorPositionCommand;
@@ -29,6 +30,8 @@ import org.ligerbots.robot.Commands.GrabberKickerToggleCommand;
 import org.ligerbots.robot.Commands.GrabberToggleCommand;
 import org.ligerbots.robot.Commands.IntakeToggleCommand;
 import org.ligerbots.robot.Commands.MoveWristCommand;
+import org.ligerbots.robot.Commands.WristStupid;
+import org.ligerbots.robot.Commands.ToggleCamera;
 import org.ligerbots.robot.Subsystems.Elevator.ElevatorPosition;
 
 /**
@@ -56,15 +59,16 @@ public class OI {
         compressorOn.whenPressed(new CompressorCommand(true));
 
         JoystickButton rightBumper = new JoystickButton (xbox, 6);
-        rightBumper.whileHeld(new IntakeRunCommand());
+        rightBumper.whileHeld(new FieldCentricToggleCommand());
 
         JoystickButton xBoxA = new JoystickButton(xbox, 1);
-        xBoxA.whenPressed(new GrabberKickerToggleCommand());
+        xBoxA.whenPressed(new ActualPistonKick());
 
         /*JoystickButton xBoxB = new JoystickButton(xbox, 2);
         xBoxB.whenPressed(new MoveWristCommand(WristPosition.FLAT));*/
+        
         JoystickButton xBoxY = new JoystickButton(xbox, 4);
-        xBoxY.whenPressed(new ElevatorPositionCommand(ElevatorPosition.HATCH_MID)/*new IntakeToggleCommand()*/);
+        xBoxY.whenPressed(new WristStupid()/*new IntakeToggleCommand()*/);
 
         JoystickButton xBoxBumperLeft = new JoystickButton(xbox, 5);
         xBoxBumperLeft.whenPressed(new IntakeToggleCommand());
@@ -102,8 +106,11 @@ public class OI {
         JoystickButton farmTen = new JoystickButton(farm, 10);
         farmTen.whenPressed(new ElevatorPositionCommand(ElevatorPosition.BALL_HIGH));
 
+        JoystickButton farmEleven = new JoystickButton(farm, 11); //switch camera
+        farmEleven.whenPressed(new ToggleCamera());
 
         JoystickButton farmSeventeen = new JoystickButton(farm, 17); //switch camera
+        farmSeventeen.whenPressed(new WristStupid());
 
         
         JoystickButton farmEighteen = new JoystickButton(farm, 18); //also switch camera
@@ -128,5 +135,13 @@ public class OI {
 
     public double getIntakeOut() {
         return xbox.getTriggerAxis(Hand.kLeft);
+    }
+
+    public double tuneElevator() {
+        return -farm.getY();
+    }
+
+    public double manualWrist() {
+        return farm.getX();
     }
 }

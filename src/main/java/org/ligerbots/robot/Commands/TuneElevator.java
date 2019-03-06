@@ -10,10 +10,11 @@ package org.ligerbots.robot.Commands;
 import org.ligerbots.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class IntakeRunCommand extends Command {
-  public IntakeRunCommand() {
+
+
+public class TuneElevator extends Command {
+  public TuneElevator() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
@@ -21,16 +22,45 @@ public class IntakeRunCommand extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    SmartDashboard.putNumber("Intake Speed", 0.0);
-  }
-
-  // Called repeatedly when this Command is scheduled to run
-  @Override
-  protected void execute() {
-   // System.out.printf("In: %5.2f, Out: %5.2f", Robot.oi.getIntakeIn(), Robot.oi.getIntakeOut());
-    Robot.intake.setIntakeMotor(Robot.oi.getIntakeIn() - Robot.oi.getIntakeOut()/*SmartDashboard.getNumber("Intake Speed", 0.0)*/);
   }
   
+  //goes up an inch a second at max speed
+  @Override
+  protected void execute() {
+    switch (Robot.elevator.currentPosition) {
+      case HATCH_HIGH:
+        Robot.elevator.hatchHigh += Robot.oi.tuneElevator() / 50.0;
+        break;
+      case HATCH_MID:
+        Robot.elevator.hatchMid += Robot.oi.tuneElevator() / 50.0;
+        break;
+      case HATCH_LOW:
+        Robot.elevator.hatchLow += Robot.oi.tuneElevator() / 50.0;
+        break;
+      case BALL_CARGO:
+        Robot.elevator.ballCargo += Robot.oi.tuneElevator() / 50.0;
+        break;
+      case BALL_INTAKE:
+        Robot.elevator.ballIntake += Robot.oi.tuneElevator() / 50.0;
+        break;
+      case BALL_HIGH:
+        Robot.elevator.ballHigh += Robot.oi.tuneElevator() / 50.0;
+        break;
+      case BALL_MID:
+        Robot.elevator.ballMid += Robot.oi.tuneElevator() / 50.0;
+        break;
+      case BALL_LOW:
+        Robot.elevator.ballLow += Robot.oi.tuneElevator() / 50.0;
+        break;
+      case INTAKE_CLEARANCE:
+        break;
+      case START:
+        Robot.elevator.set(Robot.oi.tuneElevator() / 2);
+      default:
+        break;
+    }
+  }
+
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {

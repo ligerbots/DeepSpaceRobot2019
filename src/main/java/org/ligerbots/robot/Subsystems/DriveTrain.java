@@ -20,6 +20,8 @@ import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import org.ligerbots.robot.RobotMap;
 
 
@@ -67,25 +69,26 @@ public class DriveTrain extends Subsystem {
 
     navX = new AHRS(Port.kMXP, (byte) 200);
 
-    spike = new Relay(1);
+    spike = new Relay(0); //is 1 on first robot
 
     centerLeader.setOpenLoopRampRate(0.005);
  //centerLeader.setSmartCurrentLimit(20);
 
     Arrays.asList(leftLeader, leftFollower, rightLeader, rightFollower, centerLeader, centerFollower)
-         .forEach((CANSparkMax spark) -> spark.setSmartCurrentLimit(25));
+         .forEach((CANSparkMax spark) -> spark.setSmartCurrentLimit(40));
 
          Arrays.asList(leftLeader, leftFollower, rightLeader, rightFollower, centerLeader, centerFollower)
          .forEach((CANSparkMax spark) -> spark.setIdleMode(IdleMode.kBrake));
-   // turningController = new PIDController(0.045, 0.004, 0.06, navX, output -> this.tur]\nOutput = output);
+    turningController = new PIDController(0.013, 0.0013, 0.0, navX, output -> this.turnOutput = output);
 
+    //centerLeader.setOpenLoopRampRate(0.3);
   }
   
   double squaredStrafe;
   double currentRampedStrafe = 0;
   double lastStrafe = 0;
   public void allDrive (double throttle, double rotate, double strafe) {
-    squaredStrafe = strafe * strafe * Math.signum(strafe);
+    squaredStrafe = strafe/2/* * strafe * Math.signum(strafe)*/;
     if (fieldCentric) {
       diffDrive.arcadeDrive(throttle * Math.cos(getYaw() + squaredStrafe * Math.sin(getYaw())), rotate);
       centerLeader.set(-throttle * Math.sin(getYaw()) + squaredStrafe * Math.cos(getYaw()));
@@ -93,13 +96,14 @@ public class DriveTrain extends Subsystem {
     else {
       diffDrive.arcadeDrive(throttle, -rotate);
       if (Math.abs(squaredStrafe) >= Math.abs(lastStrafe)) {
-        currentRampedStrafe = (lastStrafe + 0.05 > squaredStrafe ? squaredStrafe : lastStrafe + 0.05);
+        currentRampedStrafe = (lastStrafe + 0.01 > squaredStrafe ? squaredStrafe : lastStrafe + 0.01);
       }
       else {
         currentRampedStrafe = squaredStrafe;
       }
+     // System.out.println("Strafe Speed: " + currentRampedStrafe);
       centerLeader.set(currentRampedStrafe);
-      System.out.println("Ramp: " + currentRampedStrafe);
+      //centerLeader.set(squaredStrafe);
     }
    // rightLeader.set(0.5);
    // leftLeader.set(0.5);
@@ -130,7 +134,7 @@ public class DriveTrain extends Subsystem {
   public double turnSpeedCalc(double error) {
     //if (error <= 5.0 && error >= -5.0) {return 0.0;}
    // if (error / 110.0 <= 0.4) return 0.25 * Math.signum(error);  //have 30 degrees be the cutoff point
-    return error / 100.0 * Math.signum(error);
+    return error / 30.0;
   }
 
   public double driveSpeedCalc(double error) {
@@ -140,15 +144,16 @@ public class DriveTrain extends Subsystem {
 
   public double strafeSpeedCalc (double error) {
     //if (error <= 5.0 && error >= -5.0) {return 0.0;}
-    return 0.15 * Math.signum(error) * error;
+    return 0.04 * error;
+  }
+
+  public double alignSpeedCalc (double error) {
+    return 0.02 * error;
   }
 
   public void enableTurningControl(double angle, double tolerance) {
     double startAngle = this.getYaw();
     double temp = startAngle + angle;
-   // RobotMap.TURN_P = turningController.getP();
-   // RobotMap.TURN_D = turningController.getD();
-   // RobotMap.TURN_I = turningController.getI();
     temp = temporaryFixDegrees(temp);
     turningController.setSetpoint(temp);
     turningController.enable();
@@ -179,6 +184,7 @@ public class DriveTrain extends Subsystem {
 
 public void setLEDRing (boolean on) {
   spike.set(on ? Value.kForward : Value.kReverse);
+  System.out.println("it's on");
 }
 
 public String leftLeaderInfo() {
