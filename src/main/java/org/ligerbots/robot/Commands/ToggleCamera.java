@@ -7,12 +7,11 @@
 
 package org.ligerbots.robot.Commands;
 
-import org.ligerbots.robot.Robot;
-
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class FieldCentricToggleCommand extends Command {
-  public FieldCentricToggleCommand() {
+public class ToggleCamera extends Command {
+  public ToggleCamera() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
@@ -25,10 +24,12 @@ public class FieldCentricToggleCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if (Robot.driveTrain.isFieldCentric()) {
-      Robot.driveTrain.setFieldCentric(false);
-    }else{
-      Robot.driveTrain.setFieldCentric(true);
+    String currentCamera = SmartDashboard.getString("vision/active_mode", "rrtarget");
+    if (currentCamera.equals("driver_intake")) {
+      SmartDashboard.putString("vision/active_mode", "driver_target");
+    }
+    else {
+      SmartDashboard.putString("vision/active_mode", "driver_intake");
     }
   }
 

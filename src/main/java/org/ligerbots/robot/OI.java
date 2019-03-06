@@ -31,6 +31,7 @@ import org.ligerbots.robot.Commands.GrabberToggleCommand;
 import org.ligerbots.robot.Commands.IntakeToggleCommand;
 import org.ligerbots.robot.Commands.MoveWristCommand;
 import org.ligerbots.robot.Commands.WristStupid;
+import org.ligerbots.robot.Commands.ToggleCamera;
 import org.ligerbots.robot.Subsystems.Elevator.ElevatorPosition;
 
 /**
@@ -58,7 +59,7 @@ public class OI {
         compressorOn.whenPressed(new CompressorCommand(true));
 
         JoystickButton rightBumper = new JoystickButton (xbox, 6);
-        rightBumper.whileHeld(new IntakeRunCommand());
+        rightBumper.whileHeld(new FieldCentricToggleCommand());
 
         JoystickButton xBoxA = new JoystickButton(xbox, 1);
         xBoxA.whenPressed(new ActualPistonKick());
@@ -105,6 +106,8 @@ public class OI {
         JoystickButton farmTen = new JoystickButton(farm, 10);
         farmTen.whenPressed(new ElevatorPositionCommand(ElevatorPosition.BALL_HIGH));
 
+        JoystickButton farmEleven = new JoystickButton(farm, 11); //switch camera
+        farmEleven.whenPressed(new ToggleCamera());
 
         JoystickButton farmSeventeen = new JoystickButton(farm, 17); //switch camera
         farmSeventeen.whenPressed(new WristStupid());

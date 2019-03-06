@@ -135,6 +135,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    //Robot.driveTrain.setLEDRing(true);
     driveCommand.start();
     intakeCommand.start();
     tuneElevator.start();

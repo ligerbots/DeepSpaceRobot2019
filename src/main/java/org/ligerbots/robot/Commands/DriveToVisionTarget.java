@@ -26,12 +26,12 @@ public class DriveToVisionTarget extends Command {
   double distanceToStrafe;
 
   boolean quit;
-  boolean parallel = false;
-  boolean angleFound = false;
+  boolean parallel;
+  boolean angleFound;
 
   double parallelAngle;
 
-  boolean setTurnControl = false;
+  boolean setTurnControl;
 
   public DriveToVisionTarget() {
     requires(Robot.driveTrain);
@@ -46,6 +46,10 @@ public class DriveToVisionTarget extends Command {
     Robot.driveTrain.setLEDRing(true);
     SmartDashboard.putString("vision/active_mode", "rrtarget");
     quit = false;
+    parallel = false;
+    angleFound = false;
+
+    setTurnControl = false;
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -65,7 +69,7 @@ public class DriveToVisionTarget extends Command {
       }
     }
     else {
-      if (!setTurnControl) {
+      /*if (!setTurnControl) {
         Robot.driveTrain.enableTurningControl(0, 0.5);
         setTurnControl = true;
       }
@@ -79,19 +83,14 @@ public class DriveToVisionTarget extends Command {
       System.out.println("Yaw: " + Robot.driveTrain.getYaw());
 
       System.out.println("Dist: " + distance);
-      /*if (distance > 60.0) {
-        //Robot.driveTrain.allDrive(-0.5, Robot.driveTrain.turnSpeedCalc(angle), 0); 
-      }
-      else {*/
-        Robot.driveTrain.allDrive(-Robot.driveTrain.driveSpeedCalc(distance), Robot.driveTrain.getTurnOutput(), Robot.driveTrain.strafeSpeedCalc(distanceToStrafe));
-    // }
-      //System.out.println("Angle 4: " + visionInfo[4] * 180 / Math.PI + ", Angle 5: " + visionInfo[5] * 180 / Math.PI);
-
-      //Robot.driveTrain.allDrive(-Robot.driveTrain.driveSpeedCalc(distance), /*Robot.driveTrain.turnSpeedCalc(deltaAngle)*/0, Robot.driveTrain.strafeSpeedCalc(angle));
+      
+      Robot.driveTrain.allDrive(-Robot.driveTrain.driveSpeedCalc(distance), Robot.driveTrain.getTurnOutput(), Robot.driveTrain.strafeSpeedCalc(distanceToStrafe));
+    */
     }
     if (Math.abs(Robot.oi.getThrottle()) > 0.2) {
       quit = true;
     }
+    System.out.println("Parallel Angle: " + parallelAngle);
   }
 
   protected void findAngle () {
@@ -128,5 +127,6 @@ public class DriveToVisionTarget extends Command {
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    end();
   }
 }

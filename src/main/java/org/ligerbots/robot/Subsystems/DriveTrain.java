@@ -79,7 +79,7 @@ public class DriveTrain extends Subsystem {
 
          Arrays.asList(leftLeader, leftFollower, rightLeader, rightFollower, centerLeader, centerFollower)
          .forEach((CANSparkMax spark) -> spark.setIdleMode(IdleMode.kBrake));
-    turningController = new PIDController(0.04, 0.0, 0.0, navX, output -> this.turnOutput = output);
+    turningController = new PIDController(0.013, 0.0013, 0.0, navX, output -> this.turnOutput = output);
 
     //centerLeader.setOpenLoopRampRate(0.3);
   }
