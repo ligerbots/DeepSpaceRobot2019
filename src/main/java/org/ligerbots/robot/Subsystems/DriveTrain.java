@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import org.ligerbots.robot.Robot;
 import org.ligerbots.robot.RobotMap;
 
 
@@ -44,6 +45,7 @@ public class DriveTrain extends Subsystem {
   DifferentialDrive diffDrive;
   Boolean fieldCentric = false;
   PIDController turningController;
+  double limitedThrottle;
   AHRS navX;
 
   double turnOutput;
@@ -94,7 +96,13 @@ public class DriveTrain extends Subsystem {
       centerLeader.set(-throttle * Math.sin(getYaw()) + squaredStrafe * Math.cos(getYaw()));
     }
     else {
-      diffDrive.arcadeDrive(throttle, -rotate);
+      if (Robot.elevator.getPosition() > 40) {
+        limitedThrottle = throttle * (1 - (Robot.elevator.getPosition() - 40) / 60.0);
+      }
+      else {
+        limitedThrottle = throttle;
+      }
+      diffDrive.arcadeDrive(limitedThrottle, -rotate);
       if (Math.abs(squaredStrafe) >= Math.abs(lastStrafe)) {
         currentRampedStrafe = (lastStrafe + 0.01 > squaredStrafe ? squaredStrafe : lastStrafe + 0.01);
       }

@@ -25,7 +25,7 @@ public class Pneumatics extends Subsystem {
   public Pneumatics () {
     compressor = new Compressor(RobotMap.PCM_ID);
     compressor.setClosedLoopControl(false);
-    //pressureGauge = new AnalogInput(0);
+    pressureGauge = new AnalogInput(0);
   }
 
   public void setCompressor(boolean on) {
@@ -33,7 +33,7 @@ public class Pneumatics extends Subsystem {
   }
 
   public double getPressure() {
-    return 250.0 ;//* (pressureGauge.getVoltage() / 5.2) - 25.0;
+    return (pressureGauge.getVoltage() / 5.2) - 25.0;
   }
 
   @Override
