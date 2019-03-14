@@ -71,7 +71,7 @@ public class DriveTrain extends Subsystem {
 
     navX = new AHRS(Port.kMXP, (byte) 200);
 
-    spike = new Relay(0); //is 1 on first robot
+    spike = new Relay(1); //is 1 on first robot
 
     centerLeader.setOpenLoopRampRate(0.005);
  //centerLeader.setSmartCurrentLimit(20);
@@ -84,6 +84,9 @@ public class DriveTrain extends Subsystem {
     turningController = new PIDController(0.013, 0.0013, 0.0, navX, output -> this.turnOutput = output);
 
     //centerLeader.setOpenLoopRampRate(0.3);
+
+  //  rightLeader.setOpenLoopRampRate(0.0065);
+  //6  leftLeader.setOpenLoopRampRate(0.0065);
   }
   
   double squaredStrafe;
@@ -152,12 +155,14 @@ public class DriveTrain extends Subsystem {
 
   public double strafeSpeedCalc (double error) {
     //if (error <= 5.0 && error >= -5.0) {return 0.0;}
-    return 0.04 * error;
+    return 0.045 * error;
   }
 
   public double alignSpeedCalc (double error) {
     return 0.02 * error;
   }
+
+
 
   public void enableTurningControl(double angle, double tolerance) {
     double startAngle = this.getYaw();
@@ -173,18 +178,26 @@ public class DriveTrain extends Subsystem {
     turningController.setSetpoint(temp);
 }
 
-  public double getTurnOutput() {
+public double getTurnError() {
+  return turningController.getError();
+}
+
+public void resetTurningPID() {
+  turningController.setI(0.0013);
+}
+
+public double getTurnOutput() {
     return this.turnOutput;
-  }
-  public boolean isFieldCentric(){
+}
+public boolean isFieldCentric(){
     return fieldCentric;
-  }
+}
 
-  public void setFieldCentric(boolean set){
+public void setFieldCentric(boolean set){
     fieldCentric = set;
-  }
+}
 
-  double temporaryFixDegrees(double input) {
+double temporaryFixDegrees(double input) {
     if (input > 180) {return input - 360;}
     else if (input < -180){return input + 360;}
     else {return input;}

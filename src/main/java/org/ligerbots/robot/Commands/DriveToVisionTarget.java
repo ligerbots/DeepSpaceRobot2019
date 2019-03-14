@@ -48,7 +48,7 @@ public class DriveToVisionTarget extends Command {
     quit = false;
     parallel = false;
     angleFound = false;
-
+    Robot.driveTrain.resetTurningPID();
     setTurnControl = false;
   }
 
@@ -64,12 +64,12 @@ public class DriveToVisionTarget extends Command {
       }
       Robot.driveTrain.allDrive(0, Robot.driveTrain.getTurnOutput(), 0);
 
-      if (Math.abs(Robot.driveTrain.getYaw() - parallelAngle) < 0.5) {
+      if (Math.abs(Robot.driveTrain.getYaw() - parallelAngle) < 1.5) {
         parallel = true;
       }
     }
     else {
-      /*if (!setTurnControl) {
+      if (!setTurnControl) {
         Robot.driveTrain.enableTurningControl(0, 0.5);
         setTurnControl = true;
       }
@@ -82,15 +82,15 @@ public class DriveToVisionTarget extends Command {
       System.out.println(("Strafe Dist: " + distanceToStrafe + ", Angle 1: " + angle + ", Angle 2: " + visionInfo[5] * (180.0/Math.PI)));
       System.out.println("Yaw: " + Robot.driveTrain.getYaw());
 
-      System.out.println("Dist: " + distance);
+      System.out.println("Parallel: " + parallel + ", Dist: " + distance);
       
       Robot.driveTrain.allDrive(-Robot.driveTrain.driveSpeedCalc(distance), Robot.driveTrain.getTurnOutput(), Robot.driveTrain.strafeSpeedCalc(distanceToStrafe));
-    */
+    
     }
     if (Math.abs(Robot.oi.getThrottle()) > 0.2) {
       quit = true;
     }
-    System.out.println("Parallel Angle: " + parallelAngle);
+    System.out.println("Parallel Angle: " + parallelAngle + ", Error: " + Robot.driveTrain.getTurnError());
   }
 
   protected void findAngle () {

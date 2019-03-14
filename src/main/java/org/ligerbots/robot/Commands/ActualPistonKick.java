@@ -31,7 +31,7 @@ public class ActualPistonKick extends CommandGroup {
     // a CommandGroup containing them would require both the chassis and the
     // arm.
     addSequential(new GrabberKickerToggleCommand());
-    addSequential(new WaitCommand(1_000_000_000));
-    addSequential(new GrabberKickerToggleCommand());
+    //addSequential(new WaitCommand(1_000_000_000));
+    //addSequential(new GrabberKickerToggleCommand());
   }
 }

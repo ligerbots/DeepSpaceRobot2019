@@ -36,7 +36,7 @@ public class RobotMap {
 
     public static final double SHAFT_DIAMETER = 0.6;
 
-    public static final double WRIST_P = 1.0; 
+    public static final double WRIST_P = 3.0; 
 
     public static final double WRIST_I = 0.0;
 

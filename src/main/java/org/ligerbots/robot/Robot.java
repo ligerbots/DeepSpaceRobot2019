@@ -18,6 +18,7 @@ import org.ligerbots.robot.Commands.ManualWristCommand;
 import org.ligerbots.robot.Commands.SetIntakeCommand;
 import org.ligerbots.robot.Commands.StartingCommandGroup;
 import org.ligerbots.robot.Commands.TuneElevator;
+import org.ligerbots.robot.Commands.WristStupid;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
@@ -53,6 +54,7 @@ public class Robot extends TimedRobot {
   public static StartingCommandGroup start;
   public static TuneElevator tuneElevator;
   public static ManualWristCommand wristCommand;
+  //public static WristStupid wristStupid;
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -74,6 +76,7 @@ public class Robot extends TimedRobot {
     start = new StartingCommandGroup();
     tuneElevator = new TuneElevator();
     wristCommand = new ManualWristCommand();
+    //wristStupid = new WristStupid();
 
    // initialSetIntake = new SetIntakeCommand(true);
    // initialSetIntake.start();
@@ -108,7 +111,10 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     start.start();
-
+    driveCommand.start();
+    intakeCommand.start();
+    tuneElevator.start();
+    wristCommand.start();
     m_autoSelected = m_chooser.getSelected();
     // autoSelected = SmartDashboard.getString("Auto Selector",
     // defaultAuto);
@@ -135,25 +141,29 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    //Robot.driveTrain.setLEDRing(true);
     driveCommand.start();
     intakeCommand.start();
     tuneElevator.start();
     wristCommand.start();
+    //Robot.driveTrain.setLEDRing(true);
+    
+    //wristCommand.start();
+    //wristStupid.start();
   }
   /**
    * This function is called periodically during operator control.
    */
   @Override
   public void teleopPeriodic() {
-    SmartDashboard.putNumber("yaw", driveTrain.getYaw());
-    SmartDashboard.putNumber("wrist encoder", elevator.getWristPosition());
-    //driveTrain.allDrive(0.5, 0.5, 0.5);
-    SmartDashboard.putNumber("wrist encoder", elevator.encoder.getValue());
-    SmartDashboard.putNumber("wrist encoder raw", elevator.encoder.getVoltage());
-    Scheduler.getInstance().run();
-    SmartDashboard.putNumber("Pressure", compressor.getPressure());
-    SmartDashboard.putNumber("Elevator Position", Robot.elevator.getPosition());
+    
+    // SmartDashboard.putNumber("yaw", driveTrain.getYaw());
+    // SmartDashboard.putNumber("wrist encoder", elevator.getWristPosition());
+    // //driveTrain.allDrive(0.5, 0.5, 0.5);
+    // SmartDashboard.putNumber("wrist encoder", elevator.encoder.getValue());
+    // SmartDashboard.putNumber("wrist encoder raw", elevator.encoder.getVoltage());
+     Scheduler.getInstance().run();
+    // SmartDashboard.putNumber("Pressure", compressor.getPressure());
+    // SmartDashboard.putNumber("Elevator Position", Robot.elevator.getPosition());
   }
 
   /**

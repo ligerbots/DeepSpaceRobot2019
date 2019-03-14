@@ -27,13 +27,13 @@ public class ManualWristCommand extends Command {
   protected void execute() {
     switch (Robot.elevator.currentWrist) {
       case HIGH:
-       Robot.elevator.wristHigh += Robot.oi.manualWrist() / 5090.0;
+       Robot.elevator.wristHigh += Robot.oi.manualWrist() / 1000.0;
        break;
       case FLAT:
-       Robot.elevator.wristFlat += Robot.oi.manualWrist() / 500.0;
+       Robot.elevator.wristFlat += Robot.oi.manualWrist() / 1000.0;
        break;
       case INTAKE:
-       Robot.elevator.wristFlat += Robot.oi.manualWrist() / 500.0;
+       Robot.elevator.wristFlat += Robot.oi.manualWrist() / 1000.0;
        break;
       default:
         break;
