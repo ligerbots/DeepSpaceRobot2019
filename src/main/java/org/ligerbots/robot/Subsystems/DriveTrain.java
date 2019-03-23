@@ -69,7 +69,7 @@ public class DriveTrain extends Subsystem {
 
     navX = new AHRS(Port.kMXP, (byte) 200);
 
-    spike = new Relay(0); //is 1 on first robot
+    spike = new Relay(1); //is 1 on first robot
 
     centerLeader.setOpenLoopRampRate(0.005);
  //centerLeader.setSmartCurrentLimit(20);
@@ -79,7 +79,7 @@ public class DriveTrain extends Subsystem {
 
          Arrays.asList(leftLeader, leftFollower, rightLeader, rightFollower, centerLeader, centerFollower)
          .forEach((CANSparkMax spark) -> spark.setIdleMode(IdleMode.kBrake));
-    turningController = new PIDController(0.013, 0.0013, 0.0, navX, output -> this.turnOutput = output);
+    turningController = new PIDController(0.037, 0.000, 0.0, navX, output -> this.turnOutput = output);
 
     //centerLeader.setOpenLoopRampRate(0.3);
   }
@@ -115,6 +115,10 @@ public class DriveTrain extends Subsystem {
     return navX.getYaw();
   }
 
+  public void zeroYaw() {
+    navX.zeroYaw();
+  }
+
  /* public double getEncoderDistance (DriveSide driveSide) {
     switch (driveSide) {
       case LEFT:
@@ -131,6 +135,11 @@ public class DriveTrain extends Subsystem {
     }
   }*/
 
+  public void resetTurnI () {
+    turningController.setF(0.2);
+    turningController.reset();
+  }
+
   public double turnSpeedCalc(double error) {
     //if (error <= 5.0 && error >= -5.0) {return 0.0;}
    // if (error / 110.0 <= 0.4) return 0.25 * Math.signum(error);  //have 30 degrees be the cutoff point
@@ -138,13 +147,13 @@ public class DriveTrain extends Subsystem {
   }
 
   public double driveSpeedCalc(double error) {
-    if (error <= 40) {return 0.0;}
-    else return error / 85.0 * Math.signum(error); //shouldn't need signum, but just in case we do ever use (-) numbers...
+    /*if (error <= 40) {return 0.0;}
+    else*/ return error / 85.0 * Math.signum(error); //shouldn't need signum, but just in case we do ever use (-) numbers...
   }
 
   public double strafeSpeedCalc (double error) {
     //if (error <= 5.0 && error >= -5.0) {return 0.0;}
-    return 0.04 * error;
+    return 0.055 * error;
   }
 
   public double alignSpeedCalc (double error) {
@@ -167,6 +176,10 @@ public class DriveTrain extends Subsystem {
 
   public double getTurnOutput() {
     return this.turnOutput;
+  }
+
+  public double turnError() {
+    return turningController.getError();
   }
   public boolean isFieldCentric(){
     return fieldCentric;

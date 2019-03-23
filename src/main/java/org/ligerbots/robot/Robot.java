@@ -9,6 +9,7 @@ package org.ligerbots.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -74,6 +75,7 @@ public class Robot extends TimedRobot {
     start = new StartingCommandGroup();
     tuneElevator = new TuneElevator();
     wristCommand = new ManualWristCommand();
+    LiveWindow.disableAllTelemetry();
 
    // initialSetIntake = new SetIntakeCommand(true);
    // initialSetIntake.start();
@@ -107,8 +109,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    start.start();
 
+    //start.start();
+    Robot.driveTrain.zeroYaw();
     m_autoSelected = m_chooser.getSelected();
     // autoSelected = SmartDashboard.getString("Auto Selector",
     // defaultAuto);
@@ -135,7 +138,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    //Robot.driveTrain.setLEDRing(true);
+    Robot.driveTrain.setLEDRing(true);
     driveCommand.start();
     intakeCommand.start();
     tuneElevator.start();
@@ -154,6 +157,7 @@ public class Robot extends TimedRobot {
     Scheduler.getInstance().run();
     SmartDashboard.putNumber("Pressure", compressor.getPressure());
     SmartDashboard.putNumber("Elevator Position", Robot.elevator.getPosition());
+    //System.out.println("turn error: " + driveTrain.turnError());
   }
 
   /**

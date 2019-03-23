@@ -60,7 +60,7 @@ public class Elevator extends Subsystem {
   public double hatchHigh = 56.5;
   public double hatchMid = 32.0;
   public double hatchLow = 6.5;
-  public double ballHigh = 60.0; //more like 57
+  public double ballHigh = 60.5; //more like 57
   public double ballMid = 42.0; //more like 33-35
   public double ballLow = 16.0; //more like 11.2
   public double ballCargo = 37.5; //more like 34.5
