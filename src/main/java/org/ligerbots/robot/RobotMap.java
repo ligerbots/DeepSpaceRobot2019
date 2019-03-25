@@ -4,15 +4,13 @@ package org.ligerbots.robot;
 public class RobotMap {
     public static final double YAW_ERROR_THRESHOLD = 0.5;
 
-    public static final double ELEVATOR_ENCODER_TICKS_PER_REV = 1024; //Might be different. Change when u find out
+    public static final double ELEVATOR_ENCODER_TICKS_PER_REV = 1024;
 
     public static final double AUTO_TURN_ACCURACY_THRESHOLD = 1; //in degrees
 
     public static final double AUTO_DRIVE_DISTANCE_THRESHOLD = 24; //in inches
 
     public static final double SIDE_GEAR_RATIO = 12 / 72 * 44 / 72;
-
-    public static final double CENTER_GEAR_RATIO = 1 / 12; //Not actually. Fix later
 
     public static final double SIDE_WHEEL_DIAMETER = 6.0;
 
@@ -30,8 +28,7 @@ public class RobotMap {
 
     public static final int DETERMINE_WHICH_ROBOT = 8; //Whether this deviceId is a talon will determine if we're controlling the second robot
 
-    
-    public static final int ABSOLUTE_ENCODER_CHANNEL = 0; //Not actually, fix later (should be 1)
+    public static final int ABSOLUTE_ENCODER_CHANNEL = 1; 
 
     public static final int ABSOLUTE_ENCODER_OFFSET = 0;
 
@@ -39,7 +36,7 @@ public class RobotMap {
 
     public static final double SHAFT_DIAMETER = 0.6;
 
-    public static final double WRIST_P = 1.1; //positive in first robot should b 1
+    public static final double WRIST_P = 3.0; 
 
     public static final double WRIST_I = 0.0;
 
@@ -47,5 +44,5 @@ public class RobotMap {
     
     public static final double WRIST_F = 0.0;
 
-    public static final double WRIST_FLAT_VAL = 1.74; //1.74 for first robot
+    public static final double WRIST_FLAT_VAL = 1.74; 
 }

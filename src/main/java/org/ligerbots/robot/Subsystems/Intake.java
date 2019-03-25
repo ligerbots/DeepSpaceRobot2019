@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Intake extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-  boolean isDeployed = true;
+  boolean isDeployed = false;
   boolean isStart = true;
   WPI_TalonSRX intakeMotor;
   DoubleSolenoid intakeSolenoid;

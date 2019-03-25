@@ -59,15 +59,15 @@ public class Elevator extends Subsystem {
 
   public double hatchHigh = 56.5;
   public double hatchMid = 32.0;
-  public double hatchLow = 6.5;
-  public double ballHigh = 60.0; //more like 57
-  public double ballMid = 42.0; //more like 33-35
-  public double ballLow = 16.0; //more like 11.2
-  public double ballCargo = 37.5; //more like 34.5
-  public double ballIntake = 2.5;
+  public double hatchLow = 7.25;
+  public double ballHigh = 57.0; //more like 57
+  public double ballMid = 40.0; //more like 33-35
+  public double ballLow = 15.0; //more like 11.2
+  public double ballCargo = 33.0; //more like 34.5
+  public double ballIntake = 0.75;
 
-  public double wristFlat = 1.92; //1.74 for first robot
-  public double wristHigh = 1.7; // 2 or something
+  public double wristFlat = 1.74; //1.74 for first robot
+  public double wristHigh = 0.68; // 2 or something
 
   public Elevator () {
     SmartDashboard.putNumber("FlatWristVal", RobotMap.WRIST_FLAT_VAL);
@@ -77,18 +77,18 @@ public class Elevator extends Subsystem {
     SmartDashboard.putNumber("WristF", RobotMap.WRIST_F);
 
     leader1 = new WPI_TalonSRX(9); //It is the top left motor when looking at the back of the robot
-    follower1 = new WPI_TalonSRX(13); //Same side as leader
+    follower1 = new WPI_TalonSRX(8); //Same side as leader should be 8 on first robot
     follower2 = new WPI_TalonSRX(7); //top right
     follower3 = new WPI_TalonSRX(6); //bottom right
     wrist = new WPI_TalonSRX(11);
 
     leader1.setInverted(true); //should be inverted
-    follower1.setInverted(InvertType.OpposeMaster); //should follow
+    follower1.setInverted(InvertType.FollowMaster); //should follow
     follower2.setInverted(InvertType.OpposeMaster); //Should oppose on first
-    follower3.setInverted(InvertType.FollowMaster); //should oppose
+    follower3.setInverted(InvertType.OpposeMaster); //should oppose
 
     leader1.setSelectedSensorPosition(0);
-    leader1.setSensorPhase(false);
+    leader1.setSensorPhase(false); //might need to change?
 
     leader1.config_kP(0, 0.000001); //0.075 for main robot one
 
@@ -161,20 +161,19 @@ public class Elevator extends Subsystem {
   }
   public void setWristPosition (WristPosition pos) {
     //Should be positive P!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    setWristPID(RobotMap.WRIST_P, SmartDashboard.getNumber("WristI", RobotMap.WRIST_I), SmartDashboard.getNumber("WristD", RobotMap.WRIST_D), SmartDashboard.getNumber("WristF", RobotMap.WRIST_F));
+    setWristPID(RobotMap.WRIST_P, 0, 0, 0);
     if (RobotMap.WRIST_USES_ABSOLUTE_ENCODER) {
       switch (pos) {
         case HIGH:
+          pidController.setSetpoint(wristHigh); 
           pidController.enable();
           wrist.setNeutralMode(NeutralMode.Brake);
           currentWrist = WristPosition.HIGH;
-          pidController.setSetpoint(wristHigh); //FIX POSITIONS LATER prob like 2 or something for first robot
           break;
         case FLAT:
           System.out.println("going to 2.06");
           pidController.disable();
           currentWrist= WristPosition.FLAT;
-         // pidController.setSetpoint(wristFlat); //should be FLAT VAL in robot map
           wrist.set(ControlMode.PercentOutput, 0);
           wrist.setNeutralMode(NeutralMode.Coast);
           break;
@@ -182,9 +181,6 @@ public class Elevator extends Subsystem {
           currentWrist = WristPosition.INTAKE;
           pidController.setSetpoint(1.5);
           break;
-      }
-      if (!pidController.isEnabled()) {
-        pidController.enable();
       }
       //Avoid waviness of if/elses
       return;
@@ -238,12 +234,12 @@ public class Elevator extends Subsystem {
       case BALL_MID:
         currentPosition = ElevatorPosition.BALL_MID;
         leader1.set(ControlMode.Position, ballMid * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT); //temporary!!!!!
-        setWristPosition(WristPosition.HIGH);
+        setWristPosition(WristPosition.FLAT);
         break;
       case BALL_LOW:
         currentPosition = ElevatorPosition.BALL_LOW;
         leader1.set(ControlMode.Position, ballLow * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
-        setWristPosition(WristPosition.HIGH); 
+        setWristPosition(WristPosition.FLAT); 
         break;
       case INTAKE_CLEARANCE:
         currentPosition = ElevatorPosition.INTAKE_CLEARANCE;
