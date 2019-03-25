@@ -142,6 +142,8 @@ public class DriveToVisionTarget extends Command {
     //SmartDashboard.putString("vision/active_mode", "driver_front");   FIX LATER
     Robot.grabber.setPistons(true);
     Robot.driveCommand.start();
+    SmartDashboard.putString("vision/active_mode", "driver_target");
+
   }
 
   // Called when another command which requires one or more of the same
