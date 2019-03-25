@@ -35,7 +35,7 @@ public class MoveWristCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.elevator.setWristPosition(pos);
+    //Robot.elevator.setWristPosition(pos);
     //Robot.elevator.moveWristUp(Robot.oi.getIntakeIn());
     lastPos = pos;
   }
