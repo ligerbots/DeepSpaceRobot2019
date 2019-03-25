@@ -37,7 +37,7 @@ public class Elevator extends Subsystem {
   WPI_TalonSRX follower2;
   WPI_TalonSRX follower3;
 
-  WPI_TalonSRX wrist;
+  //WPI_TalonSRX wrist;
 
   public double minHeight;
 
@@ -80,7 +80,7 @@ public class Elevator extends Subsystem {
     follower1 = new WPI_TalonSRX(8); //Same side as leader should be 8 on first robot
     follower2 = new WPI_TalonSRX(7); //top right
     follower3 = new WPI_TalonSRX(6); //bottom right
-    wrist = new WPI_TalonSRX(11);
+    //wrist = new WPI_TalonSRX(11);
 
     leader1.setInverted(true); //should be inverted
     follower1.setInverted(InvertType.FollowMaster); //should follow
@@ -92,27 +92,27 @@ public class Elevator extends Subsystem {
 
     leader1.config_kP(0, 0.000001); //0.075 for main robot one
 
-    Arrays.asList(leader1, follower1, follower2, follower3, wrist)
+    Arrays.asList(leader1, follower1, follower2, follower3/*, wrist*/)
         .forEach((WPI_TalonSRX talon) -> talon.enableCurrentLimit(true));
 
-    Arrays.asList(leader1, follower1, follower2, follower3, wrist)
+    Arrays.asList(leader1, follower1, follower2, follower3/*, wrist*/)
         .forEach((WPI_TalonSRX talon) -> talon.configContinuousCurrentLimit(8));
     
-    Arrays.asList(leader1, follower1, follower2, follower3, wrist)
+    Arrays.asList(leader1, follower1, follower2, follower3/*, wrist*/)
         .forEach((WPI_TalonSRX talon) -> talon.configPeakCurrentLimit(10));
 
-    Arrays.asList(leader1, follower1, follower2, follower3, wrist)
+    Arrays.asList(leader1, follower1, follower2, follower3/*, wrist*/)
         .forEach((WPI_TalonSRX talon) -> talon.configPeakCurrentDuration(3));
 
     encoder = new AnalogInput(RobotMap.ABSOLUTE_ENCODER_CHANNEL);
-    pidController = new PIDController(0, 0, 0, 0, encoder, wrist);
+    //pidController = new PIDController(0, 0, 0, 0, encoder, wrist);
 
     pidController.setPercentTolerance(0);
 
 
     leader1.set(ControlMode.PercentOutput, 0);
     
-    Arrays.asList(leader1, follower1, follower2, follower3, wrist)
+    Arrays.asList(leader1, follower1, follower2, follower3/*, wrist*/)
         .forEach((WPI_TalonSRX talon) -> talon.setNeutralMode(NeutralMode.Brake));
 
     Arrays.asList(follower1, follower2, follower3)
@@ -140,7 +140,7 @@ public class Elevator extends Subsystem {
     return leader1.getSelectedSensorPosition();
   }
 
-  public void setWristPID (double p, double i, double d, double f) {
+ /* public void setWristPID (double p, double i, double d, double f) {
     pidController.setP(p);
     pidController.setI(i);
     pidController.setD(d);
@@ -197,54 +197,54 @@ public class Elevator extends Subsystem {
         wrist.set(ControlMode.Position, 0.0);
         break;
     }
-  }
+  }*/
 
   public void setElevatorPosition (ElevatorPosition pos) {
     switch (pos) {
       case HATCH_HIGH:
         currentPosition = ElevatorPosition.HATCH_HIGH;
         leader1.set(ControlMode.Position, hatchHigh * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT); 
-        setWristPosition(WristPosition.FLAT);
+        //setWristPosition(WristPosition.FLAT);
         break;
       case HATCH_MID:
         currentPosition = ElevatorPosition.HATCH_MID;
         leader1.set(ControlMode.Position, hatchMid * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
-        setWristPosition(WristPosition.FLAT);
+        //setWristPosition(WristPosition.FLAT);
         break;
       case HATCH_LOW:
         currentPosition = ElevatorPosition.HATCH_LOW;
         leader1.set(ControlMode.Position, hatchLow * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
-        setWristPosition(WristPosition.FLAT);
+        //setWristPosition(WristPosition.FLAT);
         break;
       case BALL_CARGO:
         currentPosition = ElevatorPosition.BALL_CARGO;      
         leader1.set(ControlMode.Position, ballCargo * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
-        setWristPosition(WristPosition.FLAT);
+        //setWristPosition(WristPosition.FLAT);
         break;
       case BALL_INTAKE:
         currentPosition = ElevatorPosition.BALL_INTAKE;
         leader1.set(ControlMode.Position, ballIntake * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
-        setWristPosition(WristPosition.FLAT);
+        //setWristPosition(WristPosition.FLAT);
         break;
       case BALL_HIGH:
         currentPosition = ElevatorPosition.BALL_HIGH;
         leader1.set(ControlMode.Position, ballHigh * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
-        setWristPosition(WristPosition.HIGH);
+        //setWristPosition(WristPosition.HIGH);
         break;
       case BALL_MID:
         currentPosition = ElevatorPosition.BALL_MID;
         leader1.set(ControlMode.Position, ballMid * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT); //temporary!!!!!
-        setWristPosition(WristPosition.FLAT);
+        //setWristPosition(WristPosition.FLAT);
         break;
       case BALL_LOW:
         currentPosition = ElevatorPosition.BALL_LOW;
         leader1.set(ControlMode.Position, ballLow * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
-        setWristPosition(WristPosition.FLAT); 
+        //setWristPosition(WristPosition.FLAT); 
         break;
       case INTAKE_CLEARANCE:
         currentPosition = ElevatorPosition.INTAKE_CLEARANCE;
         leader1.set(ControlMode.Position, (RobotMap.INTAKE_IN_HEIGHT + 1.2) * RobotMap.TICKS_TO_HEIGHT_COEFFICIENT);
-        setWristPosition(WristPosition.FLAT);
+        //setWristPosition(WristPosition.FLAT);
         break;
       case START:
       default:
@@ -265,7 +265,7 @@ public class Elevator extends Subsystem {
     // setDefaultCommand(new MySpecialCommand());
   }
 
-  public void moveWristUp(double speed){
+  /*public void moveWristUp(double speed){
     wrist.set(ControlMode.PercentOutput, speed);
-  }
+  }*/
 }
