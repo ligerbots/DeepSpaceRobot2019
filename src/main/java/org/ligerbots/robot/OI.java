@@ -30,7 +30,6 @@ import org.ligerbots.robot.Commands.GrabberKickerToggleCommand;
 import org.ligerbots.robot.Commands.GrabberToggleCommand;
 import org.ligerbots.robot.Commands.IntakeToggleCommand;
 import org.ligerbots.robot.Commands.MoveWristCommand;
-import org.ligerbots.robot.Commands.WristStupid;
 import org.ligerbots.robot.Commands.ToggleCamera;
 import org.ligerbots.robot.Subsystems.Elevator.ElevatorPosition;
 
@@ -67,8 +66,8 @@ public class OI {
         /*JoystickButton xBoxB = new JoystickButton(xbox, 2);
         xBoxB.whenPressed(new MoveWristCommand(WristPosition.FLAT));*/
         
-        JoystickButton xBoxY = new JoystickButton(xbox, 4);
-        xBoxY.whenPressed(new WristStupid()/*new IntakeToggleCommand()*/);
+        // JoystickButton xBoxY = new JoystickButton(xbox, 4);
+        // xBoxY.whenPressed(new WristStupid()/*new IntakeToggleCommand()*/);
 
         JoystickButton xBoxBumperLeft = new JoystickButton(xbox, 5);
         xBoxBumperLeft.whenPressed(new IntakeToggleCommand());
@@ -109,8 +108,8 @@ public class OI {
         JoystickButton farmEleven = new JoystickButton(farm, 11); //switch camera
         farmEleven.whenPressed(new ToggleCamera());
 
-        JoystickButton farmSeventeen = new JoystickButton(farm, 17); //switch camera
-        farmSeventeen.whenPressed(new WristStupid());
+        // JoystickButton farmSeventeen = new JoystickButton(farm, 17); //switch camera
+        // farmSeventeen.whenPressed(new WristStupid());
 
         
         JoystickButton farmEighteen = new JoystickButton(farm, 18); //also switch camera
