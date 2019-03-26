@@ -126,6 +126,10 @@ public class DriveTrain extends Subsystem {
     return navX.getYaw();
   }
 
+  public void zeroYaw() {
+    navX.zeroYaw();
+  }
+
  /* public double getEncoderDistance (DriveSide driveSide) {
     switch (driveSide) {
       case LEFT:
@@ -194,8 +198,12 @@ public void resetTurningPID() {
 
 public double getTurnOutput() {
     return this.turnOutput;
-}
-public boolean isFieldCentric(){
+  }
+
+  public double turnError() {
+    return turningController.getError();
+  }
+  public boolean isFieldCentric(){
     return fieldCentric;
 }
 

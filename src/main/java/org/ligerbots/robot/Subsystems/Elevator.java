@@ -59,12 +59,12 @@ public class Elevator extends Subsystem {
 
   public double hatchHigh = 56.5;
   public double hatchMid = 32.0;
-  public double hatchLow = 7.25;
-  public double ballHigh = 57.0; //more like 57
-  public double ballMid = 40.0; //more like 33-35
-  public double ballLow = 15.0; //more like 11.2
-  public double ballCargo = 33.0; //more like 34.5
-  public double ballIntake = 0.75;
+  public double hatchLow = 6.5;
+  public double ballHigh = 60.5; //more like 57
+  public double ballMid = 42.0; //more like 33-35
+  public double ballLow = 16.0; //more like 11.2
+  public double ballCargo = 37.5; //more like 34.5
+  public double ballIntake = 2.5;
 
   public double wristFlat = 1.74; //1.74 for first robot
   public double wristHigh = 0.68; // 2 or something

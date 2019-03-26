@@ -9,6 +9,7 @@ package org.ligerbots.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -18,7 +19,6 @@ import org.ligerbots.robot.Commands.ManualWristCommand;
 import org.ligerbots.robot.Commands.SetIntakeCommand;
 import org.ligerbots.robot.Commands.StartingCommandGroup;
 import org.ligerbots.robot.Commands.TuneElevator;
-import org.ligerbots.robot.Commands.WristStupid;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
@@ -114,7 +114,9 @@ public class Robot extends TimedRobot {
     driveCommand.start();
     intakeCommand.start();
     tuneElevator.start();
-    wristCommand.start();
+    //wristCommand.start();
+
+    Robot.driveTrain.zeroYaw();
     m_autoSelected = m_chooser.getSelected();
     // autoSelected = SmartDashboard.getString("Auto Selector",
     // defaultAuto);
@@ -141,6 +143,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    Robot.driveTrain.setLEDRing(true);
     driveCommand.start();
     intakeCommand.start();
     tuneElevator.start();
