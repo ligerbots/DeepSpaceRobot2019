@@ -77,15 +77,15 @@ public class Elevator extends Subsystem {
     SmartDashboard.putNumber("WristF", RobotMap.WRIST_F);
 
     leader1 = new WPI_TalonSRX(9); //It is the top left motor when looking at the back of the robot
-    follower1 = new WPI_TalonSRX(8); //Same side as leader should be 8 on first robot
+    follower1 = new WPI_TalonSRX(13); //Same side as leader should be 8 on first robot
     follower2 = new WPI_TalonSRX(7); //top right
     follower3 = new WPI_TalonSRX(6); //bottom right
     //wrist = new WPI_TalonSRX(11);
 
     leader1.setInverted(true); //should be inverted
-    follower1.setInverted(InvertType.FollowMaster); //should follow
+    follower1.setInverted(InvertType.OpposeMaster); //should follow
     follower2.setInverted(InvertType.OpposeMaster); //Should oppose on first
-    follower3.setInverted(InvertType.OpposeMaster); //should oppose
+    follower3.setInverted(InvertType.FollowMaster); //should oppose
 
     leader1.setSelectedSensorPosition(0);
     leader1.setSensorPhase(false); //might need to change?
