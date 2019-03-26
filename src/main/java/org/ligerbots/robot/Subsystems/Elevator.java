@@ -107,7 +107,7 @@ public class Elevator extends Subsystem {
     encoder = new AnalogInput(RobotMap.ABSOLUTE_ENCODER_CHANNEL);
     //pidController = new PIDController(0, 0, 0, 0, encoder, wrist);
 
-    pidController.setPercentTolerance(0);
+    // pidController.setPercentTolerance(0);
 
 
     leader1.set(ControlMode.PercentOutput, 0);
