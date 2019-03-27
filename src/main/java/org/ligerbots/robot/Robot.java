@@ -9,7 +9,6 @@ package org.ligerbots.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -114,7 +113,6 @@ public class Robot extends TimedRobot {
     driveCommand.start();
     intakeCommand.start();
     tuneElevator.start();
-    //wristCommand.start();
 
     Robot.driveTrain.zeroYaw();
     m_autoSelected = m_chooser.getSelected();
@@ -148,10 +146,6 @@ public class Robot extends TimedRobot {
     intakeCommand.start();
     tuneElevator.start();
     wristCommand.start();
-    //Robot.driveTrain.setLEDRing(true);
-    
-    //wristCommand.start();
-    //wristStupid.start();
   }
   /**
    * This function is called periodically during operator control.
