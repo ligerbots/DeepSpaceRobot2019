@@ -95,7 +95,7 @@ public class DriveToVisionTarget extends Command {
 
     // See if we found the target
     if (!visionTargetFound) {
-      visionTargetFound = (distance > 2 ? true : false);
+      visionTargetFound = (distance > 2);
     }
 
     // If we haven't found the target, wait until next time
