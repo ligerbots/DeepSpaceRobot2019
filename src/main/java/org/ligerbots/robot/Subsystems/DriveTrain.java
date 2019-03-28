@@ -98,7 +98,8 @@ public class DriveTrain extends Subsystem {
       diffDrive.arcadeDrive(throttle * Math.cos(getYaw() + squaredStrafe * Math.sin(getYaw())), rotate);
       centerLeader.set(-throttle * Math.sin(getYaw()) + squaredStrafe * Math.cos(getYaw()));
     }
-    else {
+    else
+    {
       if (Robot.elevator.getPosition() > 40) {
         limitedThrottle = throttle * (1 - (Robot.elevator.getPosition() - 40) / 60.0);
       }
@@ -106,20 +107,19 @@ public class DriveTrain extends Subsystem {
         limitedThrottle = throttle;
       }
       diffDrive.arcadeDrive(limitedThrottle, -rotate);
-      if (Math.abs(squaredStrafe) >= Math.abs(lastStrafe)) {
-        currentRampedStrafe = (lastStrafe + 0.01 > squaredStrafe ? squaredStrafe : lastStrafe + 0.01);
-      }
-      else {
+
+      currentRampedStrafe = lastStrafe + 0.01 * Math.signum(squaredStrafe);
+      if (Math.abs(squaredStrafe) < Math.abs(currentRampedStrafe)) {
         currentRampedStrafe = squaredStrafe;
       }
-     // System.out.println("Strafe Speed: " + currentRampedStrafe);
+      // System.out.println("Strafe Speed: " + currentRampedStrafe);
       centerLeader.set(currentRampedStrafe);
       //centerLeader.set(squaredStrafe);
     }
-   // rightLeader.set(0.5);
-   // leftLeader.set(0.5);
-   // centerLeader.set(0.5);
-   lastStrafe = currentRampedStrafe;
+    // rightLeader.set(0.5);
+    // leftLeader.set(0.5);
+    // centerLeader.set(0.5);
+    lastStrafe = currentRampedStrafe;
   }
 
   public float getYaw() {

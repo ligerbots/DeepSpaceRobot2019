@@ -89,21 +89,22 @@ public class DriveToVisionTarget extends Command {
     
     }*/
 
-    // Need to read visionnfo to see if we acquired the vision target
+    // Need to read vision/target_info to see if we acquired the vision target
     visionInfo = SmartDashboard.getNumberArray("vision/target_info", empty);  //refetch value
     distance = visionInfo[3];                                                 //reset distance and angle
-    // See f we found the target
+
+    // See if we found the target
     if (!visionTargetFound) {
       visionTargetFound = (distance > 2 ? true : false);
     }
-  // If we haven't found the target, wait until next time
-  if (visionTargetFound) {
+
+    // If we haven't found the target, wait until next time
+    if (visionTargetFound) {
       angle = visionInfo[4] * (180/Math.PI);
-      deltaAngle = angle + (visionInfo[5] * (
-        180/Math.PI));
+      deltaAngle = angle + (visionInfo[5] * (180/Math.PI));
       distanceToStrafe = Math.sin(visionInfo[4]) * distance;
       if (!setTurnControl) {
-        Robot.driveTrain.enableTurningControl((visionInfo[4] + visionInfo[5]) * (180.0 / Math.PI), 0.5);
+        Robot.driveTrain.enableTurningControl(deltaAngle, 0.5);
         setTurnControl = true;
       }
       Robot.driveTrain.allDrive(-Robot.driveTrain.driveSpeedCalc(distance), Robot.driveTrain.getTurnOutput(), Robot.driveTrain.strafeSpeedCalc(distanceToStrafe));
@@ -114,9 +115,9 @@ public class DriveToVisionTarget extends Command {
       if (Math.abs(Robot.oi.getThrottle()) > 0.2) {
         quit = true;
       }
-    // System.out.println("Parallel Angle: " + parallelAngle);
+      // System.out.println("Parallel Angle: " + parallelAngle);
     }
-}
+  }
 
   protected void findAngle () {
     double temp;
