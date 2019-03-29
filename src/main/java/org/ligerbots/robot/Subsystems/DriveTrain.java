@@ -158,13 +158,13 @@ public class DriveTrain extends Subsystem {
   }
 
   public double driveSpeedCalc(double error) {
-    /*if (error <= 40) {return 0.0;}
-    else*/ return error / 85.0 * Math.signum(error); //shouldn't need signum, but just in case we do ever use (-) numbers...
+    if (error <= 28) {return 0.0;}
+    else return error / 75.0 * Math.signum(error); //shouldn't need signum, but just in case we do ever use (-) numbers...
   }
 
   public double strafeSpeedCalc (double error) {
     //if (error <= 5.0 && error >= -5.0) {return 0.0;}
-    return 0.055 * error;
+    return 0.071 * error;
   }
 
   public double alignSpeedCalc (double error) {
