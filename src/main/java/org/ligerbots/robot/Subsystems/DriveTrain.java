@@ -186,49 +186,61 @@ public class DriveTrain extends Subsystem {
     turningController.setToleranceBuffer(1);
     turningController.setContinuous(true);
     turningController.setSetpoint(temp);
-}
-
-public double getTurnError() {
-  return turningController.getError();
-}
-
-public void resetTurningPID() {
-  turningController.setI(0.0013);
-}
-
-public double getTurnOutput() {
-    return this.turnOutput;
   }
 
-  public double turnError() {
+  public double getTurnError() {
     return turningController.getError();
   }
-  public boolean isFieldCentric(){
-    return fieldCentric;
-}
 
-public void setFieldCentric(boolean set){
-    fieldCentric = set;
-}
+  public void resetTurningPID() {
+    turningController.setI(0.0013);
+  }
 
-double temporaryFixDegrees(double input) {
-    if (input > 180) {return input - 360;}
-    else if (input < -180){return input + 360;}
-    else {return input;}
-}
+  public double getTurnOutput() {
+      return this.turnOutput;
+    }
 
-public void setLEDRing (boolean on) {
-  spike.set(on ? Value.kForward : Value.kReverse);
-  System.out.println("it's on");
-}
+    public double turnError() {
+      return turningController.getError();
+    }
+    public boolean isFieldCentric(){
+      return fieldCentric;
+  }
 
-public String leftLeaderInfo() {
-  return "CenterFollower: " + rightFollower.isFollower();
-}
+  public void setFieldCentric(boolean set){
+      fieldCentric = set;
+  }
+
+  double temporaryFixDegrees(double input) {
+      if (input > 180) {return input - 360;}
+      else if (input < -180){return input + 360;}
+      else {return input;}
+  }
+
+  public void setLEDRing (boolean on) {
+    spike.set(on ? Value.kForward : Value.kReverse);
+    System.out.println("it's on");
+  }
+
+  public String leftLeaderInfo() {
+    return "CenterFollower: " + rightFollower.isFollower();
+  }
+
+  public void setAutoRampRate (double secondsToMaxSpeed) {
+    leftLeader.setOpenLoopRampRate(secondsToMaxSpeed);
+    rightLeader.setOpenLoopRampRate(secondsToMaxSpeed);
+  }
+
+  public void disableRampRate () {
+    leftLeader.setOpenLoopRampRate(0);
+    rightLeader.setOpenLoopRampRate(0);
+  }
 
   @Override
   public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
+      // Set the default command for a subsystem here.
+      // setDefaultCommand(new MySpecialCommand());
   }
+
+  
 }

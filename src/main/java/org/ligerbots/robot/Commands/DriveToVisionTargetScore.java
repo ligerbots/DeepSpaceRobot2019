@@ -114,17 +114,16 @@ public class DriveToVisionTargetScore extends Command {
       }
       switch (commandState) {
         case LINE_UP:
-      Robot.driveTrain.allDrive(-Robot.driveTrain.driveSpeedCalc(distance), Robot.driveTrain.getTurnOutput(), Robot.driveTrain.strafeSpeedCalc(distanceToStrafe));
+          Robot.driveTrain.allDrive(-Robot.driveTrain.driveSpeedCalc(distance), Robot.driveTrain.getTurnOutput(), Robot.driveTrain.strafeSpeedCalc(distanceToStrafe));
 
-      if (distanceToStrafe < 2) {
-        commandState = CommandState.DRIVE_IN;
-      }
-      break;
+          if (Math.abs(distanceToStrafe) < 2) {
+            commandState = CommandState.DRIVE_IN;
+          }
+          break;
 
-      case DRIVE_IN:
-      Robot.driveTrain.allDrive(-0.4, Robot.driveTrain.getTurnOutput(), Robot.driveTrain.strafeSpeedCalc(distanceToStrafe));
-
-      break;
+        case DRIVE_IN:
+          Robot.driveTrain.allDrive(-0.4, Robot.driveTrain.getTurnOutput(), Robot.driveTrain.strafeSpeedCalc(distanceToStrafe));
+          break;
     }
 
       System.out.println("Angle 1: " + angle + ", Angle 2: " + visionInfo[5] * (180.0 / Math.PI));
