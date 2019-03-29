@@ -9,6 +9,7 @@ package org.ligerbots.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 import org.ligerbots.robot.FieldMap;
 import org.ligerbots.robot.Robot;
@@ -46,6 +47,8 @@ public class DriveToVisionTarget extends Command {
     System.out.println("STARTED DRIVETOVISIONTARGET COMMAND");
     Robot.driveTrain.setLEDRing(true);
     SmartDashboard.putString("vision/active_mode", "rrtarget");
+    NetworkTable.flush();
+
     quit = false;
     parallel = false;
     visionTargetFound = false;
@@ -146,12 +149,12 @@ public class DriveToVisionTarget extends Command {
   @Override
   protected void end() {
     System.out.println("COMMAND ENDED");
-    //Robot.driveTrain.setLEDRing(false);
-    //SmartDashboard.putString("vision/active_mode", "driver_front");   FIX LATER
+    Robot.driveTrain.setLEDRing(false);
+
     Robot.grabber.setPistons(true);
     Robot.driveCommand.start();
     SmartDashboard.putString("vision/active_mode", "driver_target");
-
+    NetworkTable.flush();
   }
 
   // Called when another command which requires one or more of the same

@@ -9,6 +9,7 @@ package org.ligerbots.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 public class ToggleCamera extends Command {
   public ToggleCamera() {
@@ -31,6 +32,7 @@ public class ToggleCamera extends Command {
     else {
       SmartDashboard.putString("vision/active_mode", "driver_intake");
     }
+    NetworkTable.flush();
   }
 
   // Make this return true when this Command no longer needs to run execute()
