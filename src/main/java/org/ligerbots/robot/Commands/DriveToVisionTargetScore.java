@@ -38,7 +38,7 @@ public class DriveToVisionTargetScore extends Command {
   CommandState commandState;
 
 
-  public DriveToVisionTarget() {
+  public DriveToVisionTargetScore() {
     requires(Robot.driveTrain);
     // Use requires() here to declare subsystem dependencRies
     // eg. requires(chassis);

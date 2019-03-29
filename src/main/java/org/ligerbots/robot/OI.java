@@ -54,6 +54,9 @@ public class OI {
         JoystickButton xboxB = new JoystickButton(xbox, 2);
         xboxB.whenPressed(new DriveToVisionTarget());
 
+        JoystickButton xboxX = new JoystickButton(xbox, 3);
+        xboxB.whenPressed(new DriveToVisionTarget());
+
         JoystickButton compressorOn = new JoystickButton (xbox, 8);
         compressorOn.whenPressed(new CompressorCommand(true));
 
