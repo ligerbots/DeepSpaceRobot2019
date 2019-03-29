@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import org.ligerbots.robot.Commands.DriveToVisionTarget;
+import org.ligerbots.robot.Commands.DriveToVisionTargetScore;
 import org.ligerbots.robot.Commands.ElevatorPositionCommand;
 import org.ligerbots.robot.Commands.FieldCentricToggleCommand;
 import org.ligerbots.robot.Commands.GoToIntake;
@@ -55,7 +56,7 @@ public class OI {
         xboxB.whenPressed(new DriveToVisionTarget());
 
         JoystickButton xboxX = new JoystickButton(xbox, 3);
-        xboxB.whenPressed(new DriveToVisionTarget());
+        xboxB.whenPressed(new DriveToVisionTargetScore());
 
         JoystickButton compressorOn = new JoystickButton (xbox, 8);
         compressorOn.whenPressed(new CompressorCommand(true));
