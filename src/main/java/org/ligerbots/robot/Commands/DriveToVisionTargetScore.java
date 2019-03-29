@@ -62,41 +62,8 @@ public class DriveToVisionTargetScore extends Command {
   @Override
   protected void execute() {
 
-   /* if (!parallel) {
-      System.out.println("stage 1");
-      if (!angleFound) {
-        findAngle();
-        angleFound = true;
-        Robot.driveTrain.enableTurningControl(parallelAngle - Robot.driveTrain.getYaw(), 2.0);
-      }
-      Robot.driveTrain.allDrive(0, Robot.driveTrain.getTurnOutput(), 0);
-      if (Math.abs(Robot.driveTrain.getYaw() - parallelAngle) < 0.5) {
-        parallel = true;
-      }
-    }
-    else {
-      System.out.println("stage 2");
-      if (!setTurnControl) {
-        Robot.driveTrain.enableTurningControl(0, 0.5);
-        setTurnControl = true;
-      }
-      visionInfo = SmartDashboard.getNumberArray("vision/target_info", empty);  //refetch value
-      distance = visionInfo[3];                                                 //reset distance and angle
-      angle = visionInfo[4] * (180/Math.PI);
-      deltaAngle = angle + (visionInfo[5] * (
-        180/Math.PI));
-      distanceToStrafe = Math.sin(visionInfo[4]) * distance;
-      System.out.println(("Strafe Dist: " + distanceToStrafe + ", Angle 1: " + angle + ", Angle 2: " + visionInfo[5] * (180.0/Math.PI)));
-      System.out.println("Yaw: " + Robot.driveTrain.getYaw());
-      System.out.println("Dist: " + distance);
-      
-      Robot.driveTrain.allDrive(-Robot.driveTrain.driveSpeedCalc(distance), Robot.driveTrain.getTurnOutput(), Robot.driveTrain.strafeSpeedCalc(distanceToStrafe));
-    
-    }*/
-
-    // Need to read vision/target_info to see if we acquired the vision target
     visionInfo = SmartDashboard.getNumberArray("vision/target_info", empty);  //refetch value
-    distance = visionInfo[3];                                                 //reset distance and angle
+    distance = visionInfo[3]; //reset distance and angle
 
     // See if we found the target
     if (!visionTargetFound) {
@@ -109,14 +76,14 @@ public class DriveToVisionTargetScore extends Command {
       deltaAngle = angle + (visionInfo[5] * (180/Math.PI));
       distanceToStrafe = Math.sin(visionInfo[4]) * distance;
       if (!setTurnControl) {
-        Robot.driveTrain.enableTurningControl(deltaAngle, 0.5);
+        Robot.driveTrain.enableTurningControl(deltaAngle, 0.1);
         setTurnControl = true;
       }
       switch (commandState) {
         case LINE_UP:
           Robot.driveTrain.allDrive(-Robot.driveTrain.driveSpeedCalc(distance), Robot.driveTrain.getTurnOutput(), Robot.driveTrain.strafeSpeedCalc(distanceToStrafe));
 
-          if (Math.abs(distanceToStrafe) < 2) {
+          if (Math.abs(distanceToStrafe) < 2 &&  Math.abs(Robot.driveTrain.getTurnError()) < 5.0) {
             commandState = CommandState.DRIVE_IN;
           }
           break;
