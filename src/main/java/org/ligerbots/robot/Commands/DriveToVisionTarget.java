@@ -146,8 +146,8 @@ public class DriveToVisionTarget extends Command {
   @Override
   protected void end() {
     System.out.println("COMMAND ENDED");
-    //Robot.driveTrain.setLEDRing(false);
-    //SmartDashboard.putString("vision/active_mode", "driver_front");   FIX LATER
+    Robot.driveTrain.setLEDRing(false);
+
     Robot.grabber.setPistons(true);
     Robot.driveCommand.start();
     SmartDashboard.putString("vision/active_mode", "driver_target");
