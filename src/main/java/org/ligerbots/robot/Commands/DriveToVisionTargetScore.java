@@ -14,7 +14,7 @@ import org.ligerbots.robot.FieldMap;
 import org.ligerbots.robot.Robot;
 
 
-public class DriveToVisionTarget extends Command {
+public class DriveToVisionTargetScore extends Command {
 
   double[] visionInfo;                                          //holds info recieved from the Odroid through NT
   double[] empty = new double[] {0.0,0.0,0.0,0.0,0.0,0.0};      //empty array of values to be used for default value when fetching
@@ -33,8 +33,12 @@ public class DriveToVisionTarget extends Command {
 
   boolean setTurnControl;
 
+  enum CommandState {LINE_UP, DRIVE_IN};
 
-  public DriveToVisionTarget() {
+  CommandState commandState;
+
+
+  public DriveToVisionTargetScore() {
     requires(Robot.driveTrain);
     // Use requires() here to declare subsystem dependencRies
     // eg. requires(chassis);
@@ -46,6 +50,7 @@ public class DriveToVisionTarget extends Command {
     System.out.println("STARTED DRIVETOVISIONTARGET COMMAND");
     Robot.driveTrain.setLEDRing(true);
     SmartDashboard.putString("vision/active_mode", "rrtarget");
+    commandState = CommandState.LINE_UP;
     quit = false;
     parallel = false;
     visionTargetFound = false;
@@ -107,15 +112,23 @@ public class DriveToVisionTarget extends Command {
         Robot.driveTrain.enableTurningControl(deltaAngle, 0.5);
         setTurnControl = true;
       }
+      switch (commandState) {
+        case LINE_UP:
       Robot.driveTrain.allDrive(-Robot.driveTrain.driveSpeedCalc(distance), Robot.driveTrain.getTurnOutput(), Robot.driveTrain.strafeSpeedCalc(distanceToStrafe));
+
+      if (distanceToStrafe < 2) {
+        commandState = CommandState.DRIVE_IN;
+      }
+      break;
+
+      case DRIVE_IN:
+      Robot.driveTrain.allDrive(-0.4, Robot.driveTrain.getTurnOutput(), Robot.driveTrain.strafeSpeedCalc(distanceToStrafe));
+
+      break;
+    }
 
       System.out.println("Angle 1: " + angle + ", Angle 2: " + visionInfo[5] * (180.0 / Math.PI));
 
-      quit = distance < 22.0 && distance > 2;
-      if (Math.abs(Robot.oi.getThrottle()) > 0.2) {
-        quit = true;
-      }
-      // System.out.println("Parallel Angle: " + parallelAngle);
     }
   }
 
@@ -131,15 +144,16 @@ public class DriveToVisionTarget extends Command {
         best = angle;
       }
     }
-    System.out.println("Yaw: " + Robot.driveTrain.getYaw() + ", Picked Angle: " + best);
+   // System.out.println("Yaw: " + Robot.driveTrain.getYaw() + ", Picked Angle: " + best);
     parallelAngle = best;
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    
-    return /*distance <= 40 && Math.abs(angle) <= 1*/quit; //This isn't totally done...
+    System.out.println("Dist: " + distance);
+    return (Math.abs(Robot.oi.getThrottle()) > 0.2) || (distance < 20.0 && distance > 0.1); 
+
   }
 
   // Called once after isFinished returns true

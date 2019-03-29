@@ -98,7 +98,8 @@ public class DriveTrain extends Subsystem {
       diffDrive.arcadeDrive(throttle * Math.cos(getYaw() + squaredStrafe * Math.sin(getYaw())), rotate);
       centerLeader.set(-throttle * Math.sin(getYaw()) + squaredStrafe * Math.cos(getYaw()));
     }
-    else {
+    else
+    {
       if (Robot.elevator.getPosition() > 40) {
         limitedThrottle = throttle * (1 - (Robot.elevator.getPosition() - 40) / 60.0);
       }
@@ -106,24 +107,27 @@ public class DriveTrain extends Subsystem {
         limitedThrottle = throttle;
       }
       diffDrive.arcadeDrive(limitedThrottle, -rotate);
-      if (Math.abs(squaredStrafe) >= Math.abs(lastStrafe)) {
-        currentRampedStrafe = (lastStrafe + 0.01 > squaredStrafe ? squaredStrafe : lastStrafe + 0.01);
-      }
-      else {
+
+      currentRampedStrafe = lastStrafe + 0.01 * Math.signum(squaredStrafe);
+      if (Math.abs(squaredStrafe) < Math.abs(currentRampedStrafe)) {
         currentRampedStrafe = squaredStrafe;
       }
-     // System.out.println("Strafe Speed: " + currentRampedStrafe);
+      // System.out.println("Strafe Speed: " + currentRampedStrafe);
       centerLeader.set(currentRampedStrafe);
       //centerLeader.set(squaredStrafe);
     }
-   // rightLeader.set(0.5);
-   // leftLeader.set(0.5);
-   // centerLeader.set(0.5);
-   lastStrafe = currentRampedStrafe;
+    // rightLeader.set(0.5);
+    // leftLeader.set(0.5);
+    // centerLeader.set(0.5);
+    lastStrafe = currentRampedStrafe;
   }
 
   public float getYaw() {
     return navX.getYaw();
+  }
+
+  public void zeroYaw() {
+    navX.zeroYaw();
   }
 
  /* public double getEncoderDistance (DriveSide driveSide) {
@@ -154,13 +158,13 @@ public class DriveTrain extends Subsystem {
   }
 
   public double driveSpeedCalc(double error) {
-    /*if (error <= 40) {return 0.0;}
-    else*/ return error / 85.0 * Math.signum(error); //shouldn't need signum, but just in case we do ever use (-) numbers...
+    if (error <= 28) {return 0.0;}
+    else return error / 75.0 * Math.signum(error); //shouldn't need signum, but just in case we do ever use (-) numbers...
   }
 
   public double strafeSpeedCalc (double error) {
     //if (error <= 5.0 && error >= -5.0) {return 0.0;}
-    return 0.055 * error;
+    return 0.071 * error;
   }
 
   public double alignSpeedCalc (double error) {
@@ -194,8 +198,12 @@ public void resetTurningPID() {
 
 public double getTurnOutput() {
     return this.turnOutput;
-}
-public boolean isFieldCentric(){
+  }
+
+  public double turnError() {
+    return turningController.getError();
+  }
+  public boolean isFieldCentric(){
     return fieldCentric;
 }
 
