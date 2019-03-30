@@ -33,7 +33,8 @@ public class ElevatorPositionCommand extends Command {
 
 
    // Robot.intake.deployIntake(true);
-    Robot.elevator.setElevatorPID(0.075, 0.0, 0.0);
+    if (pos == ElevatorPosition.BALL_HIGH && Robot.elevator.currentPosition == ElevatorPosition.BALL_MID) Robot.elevator.setElevatorPID(0.1, 0.0, 0.0); 
+    else Robot.elevator.setElevatorPID(0.075, 0.0, 0.0);
 
     Robot.elevator.setElevatorPosition(pos);
 

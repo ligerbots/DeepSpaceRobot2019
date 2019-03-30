@@ -31,6 +31,7 @@ import org.ligerbots.robot.Commands.GrabberKickerToggleCommand;
 import org.ligerbots.robot.Commands.GrabberToggleCommand;
 import org.ligerbots.robot.Commands.IntakeToggleCommand;
 import org.ligerbots.robot.Commands.MoveWristCommand;
+import org.ligerbots.robot.Commands.NewScore;
 import org.ligerbots.robot.Commands.ToggleCamera;
 import org.ligerbots.robot.Subsystems.Elevator.ElevatorPosition;
 
@@ -56,7 +57,7 @@ public class OI {
         xboxB.whenPressed(new DriveToVisionTarget());
 
         JoystickButton xboxX = new JoystickButton(xbox, 3);
-        xboxX.whenPressed(new DriveToVisionTargetScore());
+        xboxX.whenPressed(new NewScore());
 
         JoystickButton compressorOn = new JoystickButton (xbox, 8);
         compressorOn.whenPressed(new CompressorCommand(true));

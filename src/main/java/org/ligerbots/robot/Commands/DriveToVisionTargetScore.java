@@ -81,15 +81,15 @@ public class DriveToVisionTargetScore extends Command {
       }
       switch (commandState) {
         case LINE_UP:
-          Robot.driveTrain.allDrive(-Robot.driveTrain.driveSpeedCalc(distance), Robot.driveTrain.getTurnOutput(), Robot.driveTrain.strafeSpeedCalc(distanceToStrafe));
+          Robot.driveTrain.allDrive(-Robot.driveTrain.driveSpeedCalcPlace(distance), Robot.driveTrain.turnSpeedCalc(deltaAngle), Robot.driveTrain.strafeSpeedCalc(distanceToStrafe));
 
-          if (Math.abs(distanceToStrafe) < 2 &&  Math.abs(Robot.driveTrain.getTurnError()) < 5.0) {
+          if (Math.abs(distanceToStrafe) < 2 &&  Math.abs(deltaAngle) < 5.0) {
             commandState = CommandState.DRIVE_IN;
           }
           break;
 
         case DRIVE_IN:
-          Robot.driveTrain.allDrive(-0.4, Robot.driveTrain.getTurnOutput(), Robot.driveTrain.strafeSpeedCalc(distanceToStrafe));
+          Robot.driveTrain.allDrive(-0.4, Robot.driveTrain.turnSpeedCalc(deltaAngle), Robot.driveTrain.strafeSpeedCalc(distanceToStrafe));
           break;
     }
 
@@ -126,9 +126,10 @@ public class DriveToVisionTargetScore extends Command {
   @Override
   protected void end() {
     System.out.println("COMMAND ENDED");
-    //Robot.driveTrain.setLEDRing(false);
+    Robot.driveTrain.setLEDRing(false);
     //SmartDashboard.putString("vision/active_mode", "driver_front");   FIX LATER
-    Robot.grabber.setPistons(true);
+    //
+    //Robot.grabber.setPistons(true);
     Robot.driveCommand.start();
     SmartDashboard.putString("vision/active_mode", "driver_target");
 

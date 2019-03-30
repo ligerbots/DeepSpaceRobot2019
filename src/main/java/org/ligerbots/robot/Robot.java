@@ -7,8 +7,10 @@
 
 package org.ligerbots.robot;
 
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -53,6 +55,7 @@ public class Robot extends TimedRobot {
   public static StartingCommandGroup start;
   public static TuneElevator tuneElevator;
   public static ManualWristCommand wristCommand;
+  public static PowerDistributionPanel pdp;
   //public static WristStupid wristStupid;
   /**
    * This function is run when the robot is first started up and should be
@@ -60,9 +63,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
+    pdp = new PowerDistributionPanel(15);
+    /*m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
-    SmartDashboard.putData("Auto choices", m_chooser);
+    SmartDashboard.putData("Auto choices", m_chooser);*/
+    LiveWindow.disableAllTelemetry();
+    //LiveWindow.enableTelemetry(pdp);
     driveTrain = new DriveTrain();
     elevator = new Elevator();
     driveCommand = new DriveCommand();
@@ -115,10 +121,8 @@ public class Robot extends TimedRobot {
     tuneElevator.start();
 
     Robot.driveTrain.zeroYaw();
-    m_autoSelected = m_chooser.getSelected();
     // autoSelected = SmartDashboard.getString("Auto Selector",
     // defaultAuto);
-    System.out.println("Auto selected: " + m_autoSelected);
   }
 
   /**
@@ -126,22 +130,14 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    switch (m_autoSelected) {
-      case kCustomAuto:
-        // Put custom auto code here
-        break;
-      case kDefaultAuto:
-      default:
-        // Put default auto code here
-        break;
-    }
+    
     Scheduler.getInstance().run();
   }
 
 
   @Override
   public void teleopInit() {
-    Robot.driveTrain.setLEDRing(true);
+    //Robot.driveTrain.setLEDRing(true);
     driveCommand.start();
     intakeCommand.start();
     tuneElevator.start();
@@ -158,7 +154,7 @@ public class Robot extends TimedRobot {
     // //driveTrain.allDrive(0.5, 0.5, 0.5);
     // SmartDashboard.putNumber("wrist encoder", elevator.encoder.getValue());
     // SmartDashboard.putNumber("wrist encoder raw", elevator.encoder.getVoltage());
-     Scheduler.getInstance().run();
+    Scheduler.getInstance().run();
     // SmartDashboard.putNumber("Pressure", compressor.getPressure());
     // SmartDashboard.putNumber("Elevator Position", Robot.elevator.getPosition());
   }

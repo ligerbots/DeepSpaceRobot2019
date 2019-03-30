@@ -62,12 +62,15 @@ public class DriveTrain extends Subsystem {
     centerLeader = new CANSparkMax(4, MotorType.kBrushless);
     centerFollower = new CANSparkMax(5, MotorType.kBrushless);
 
+
     leftLeader.setInverted(false);
     leftFollower.follow(leftLeader, false);
     rightFollower.follow(rightLeader);
     centerFollower.follow(centerLeader); //MIGHT NEED TO BE INVERTED
 
     diffDrive = new DifferentialDrive(leftLeader, rightLeader); //fix l8r
+
+    diffDrive.setSafetyEnabled(false);
 
     navX = new AHRS(Port.kMXP, (byte) 200);
 
@@ -81,7 +84,7 @@ public class DriveTrain extends Subsystem {
 
          Arrays.asList(leftLeader, leftFollower, rightLeader, rightFollower, centerLeader, centerFollower)
          .forEach((CANSparkMax spark) -> spark.setIdleMode(IdleMode.kBrake));
-    turningController = new PIDController(0.037, 0.000, 0.0, navX, output -> this.turnOutput = output);
+    turningController = new PIDController(0.033, 0.000, 0.0, navX, output -> this.turnOutput = output);
 
     //centerLeader.setOpenLoopRampRate(0.3);
 
@@ -101,7 +104,7 @@ public class DriveTrain extends Subsystem {
     else
     {
       if (Robot.elevator.getPosition() > 40) {
-        limitedThrottle = throttle * (1 - (Robot.elevator.getPosition() - 40) / 60.0);
+        limitedThrottle = Math.abs(throttle) > 0.5 ? 0.5 * Math.signum(throttle) : throttle;
       }
       else {
         limitedThrottle = throttle;
@@ -154,12 +157,16 @@ public class DriveTrain extends Subsystem {
   public double turnSpeedCalc(double error) {
     //if (error <= 5.0 && error >= -5.0) {return 0.0;}
    // if (error / 110.0 <= 0.4) return 0.25 * Math.signum(error);  //have 30 degrees be the cutoff point
-    return error / 30.0;
+    return 0.033 * error;
+  }
+
+  public double driveSpeedCalcPlace(double error) {
+    if (error <= 28) {return 0.0;}
+    else return error / 75.0 * Math.signum(error); //shouldn't need signum, but just in case we do ever use (-) numbers...
   }
 
   public double driveSpeedCalc(double error) {
-    if (error <= 28) {return 0.0;}
-    else return error / 75.0 * Math.signum(error); //shouldn't need signum, but just in case we do ever use (-) numbers...
+    return error / 75.0 * Math.signum(error); //shouldn't need signum, but just in case we do ever use (-) numbers...
   }
 
   public double strafeSpeedCalc (double error) {
@@ -219,7 +226,6 @@ public class DriveTrain extends Subsystem {
 
   public void setLEDRing (boolean on) {
     spike.set(on ? Value.kForward : Value.kReverse);
-    System.out.println("it's on");
   }
 
   public String leftLeaderInfo() {
