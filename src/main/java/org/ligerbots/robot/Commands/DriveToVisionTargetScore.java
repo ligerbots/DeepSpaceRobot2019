@@ -29,6 +29,10 @@ public class DriveToVisionTargetScore extends Command {
   boolean parallel;
   boolean visionTargetFound;
 
+  boolean secondCheck;
+  boolean thirdCheck;
+  boolean secondTurnCheck;
+
   double parallelAngle;
 
   boolean setTurnControl;
@@ -56,6 +60,11 @@ public class DriveToVisionTargetScore extends Command {
     visionTargetFound = false;
     Robot.driveTrain.resetTurnI();
     setTurnControl = false;
+    secondCheck = false;
+    thirdCheck = false;
+    Robot.driveTrain.strafeIDist = 0;
+    Robot.driveTrain.turnIDist = 0;
+    secondTurnCheck = false;
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -74,26 +83,30 @@ public class DriveToVisionTargetScore extends Command {
     if (visionTargetFound) {
       angle = visionInfo[4] * (180/Math.PI);
       deltaAngle = angle + (visionInfo[5] * (180/Math.PI));
-      distanceToStrafe = Math.sin(visionInfo[4]) * distance;
+      distanceToStrafe = -Math.sin(visionInfo[5]) * distance;
       if (!setTurnControl) {
         Robot.driveTrain.enableTurningControl(deltaAngle, 0.1);
         setTurnControl = true;
       }
       switch (commandState) {
         case LINE_UP:
-          Robot.driveTrain.allDrive(-Robot.driveTrain.driveSpeedCalcPlace(distance), Robot.driveTrain.turnSpeedCalc(deltaAngle), Robot.driveTrain.strafeSpeedCalc(distanceToStrafe));
+          Robot.driveTrain.allDrive(-Robot.driveTrain.driveSpeedCalcPlace(distance), Robot.driveTrain.turnSpeedCalcNew(deltaAngle), Robot.driveTrain.strafeSpeedCalcNew(distanceToStrafe));
 
-          if (Math.abs(distanceToStrafe) < 2 &&  Math.abs(deltaAngle) < 5.0) {
+          if (thirdCheck && secondTurnCheck) {
             commandState = CommandState.DRIVE_IN;
           }
+          thirdCheck = Math.abs(distanceToStrafe) < 1.75 && secondCheck;
+          secondCheck = Math.abs(distanceToStrafe) < 1.75;
+          secondTurnCheck = Math.abs(deltaAngle) < 1.75;
+
           break;
 
         case DRIVE_IN:
-          Robot.driveTrain.allDrive(-0.4, Robot.driveTrain.turnSpeedCalc(deltaAngle), Robot.driveTrain.strafeSpeedCalc(distanceToStrafe));
+          Robot.driveTrain.allDrive(-0.4, Robot.driveTrain.turnSpeedCalcNew(deltaAngle), /*Robot.driveTrain.strafeSpeedCalcNew(distanceToStrafe)*/0);
           break;
     }
 
-      System.out.println("Angle 1: " + angle + ", Angle 2: " + visionInfo[5] * (180.0 / Math.PI));
+     // System.out.println("Angle 1: " + angle + ", Angle 2: " + visionInfo[5] * (180.0 / Math.PI));
 
     }
   }
@@ -117,8 +130,8 @@ public class DriveToVisionTargetScore extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    System.out.println("Dist: " + distance);
-    return (Math.abs(Robot.oi.getThrottle()) > 0.2) || (distance < 20.0 && distance > 0.1); 
+    //System.out.println("Dist: " + distance);
+    return (Math.abs(Robot.oi.getThrottle()) > 0.2) || (distance < 19.0 && distance > 0.1); 
 
   }
 

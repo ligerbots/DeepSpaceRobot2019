@@ -21,6 +21,7 @@ public class NewScore extends Command {
   double angle;                              //angle from robot to target in degrees (NT is initially in radians)
   double deltaAngle;
   double distanceToStrafe;
+  double angle2;
 
   boolean quit;
   boolean parallel;
@@ -59,6 +60,7 @@ public class NewScore extends Command {
   @Override
   protected void execute() {
 
+    System.out.println("Current Mode: " + (commandState == CommandState.LINE_UP ? "Line Up" : "Deliver"));
     visionInfo = SmartDashboard.getNumberArray("vision/target_info", empty);  //refetch value
     distance = visionInfo[3]; //reset distance and angle
 
@@ -71,22 +73,23 @@ public class NewScore extends Command {
     if (visionTargetFound) {
       angle = visionInfo[4] * (180/Math.PI);
       deltaAngle = angle + (visionInfo[5] * (180/Math.PI));
-      distanceToStrafe = Math.sin(visionInfo[4]) * distance;
+      distanceToStrafe = Math.sin(visionInfo[5]) * distance;
+      angle2 = visionInfo[5] * (180.0 / Math.PI);
       if (!setTurnControl) {
         Robot.driveTrain.enableTurningControl(deltaAngle, 0.1);
         setTurnControl = true;
       }
       switch (commandState) {
         case LINE_UP:
-          Robot.driveTrain.allDrive(-Robot.driveTrain.driveSpeedCalcPlace(distance), Robot.driveTrain.turnSpeedCalc(visionInfo[5]), /*Robot.driveTrain.strafeSpeedCalc(distanceToStrafe)*/0);
+          Robot.driveTrain.allDrive(/*-Robot.driveTrain.driveSpeedCalcPlace(distance)*/0, Robot.driveTrain.turnSpeedCalc(angle), /*Robot.driveTrain.strafeSpeedCalc(distanceToStrafe)*/0);
 
-          if (Math.abs(visionInfo[5]) < 3.0 && distance < 30) {
+          if (Math.abs(angle) < 3.0/* && distance < 30*/) {
             commandState = CommandState.DRIVE_IN;
           }
           break;
 
         case DRIVE_IN:
-          Robot.driveTrain.allDrive(-0.4, Robot.driveTrain.turnSpeedCalc(visionInfo[5]), 0);
+          Robot.driveTrain.allDrive(-0.4, Robot.driveTrain.turnSpeedCalc(angle), 0);
           break;
     }
 

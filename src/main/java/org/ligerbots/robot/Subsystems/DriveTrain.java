@@ -88,8 +88,8 @@ public class DriveTrain extends Subsystem {
 
     //centerLeader.setOpenLoopRampRate(0.3);
 
-  //  rightLeader.setOpenLoopRampRate(0.0065);
-  //6  leftLeader.setOpenLoopRampRate(0.0065);
+    rightLeader.setOpenLoopRampRate(0.0065);
+    leftLeader.setOpenLoopRampRate(0.0065);
   }
   
   double squaredStrafe;
@@ -160,8 +160,16 @@ public class DriveTrain extends Subsystem {
     return 0.033 * error;
   }
 
+  public double turnIDist;
+  public double turnSpeedCalcNew(double error) {
+    //if (error <= 5.0 && error >= -5.0) {return 0.0;}
+   // if (error / 110.0 <= 0.4) return 0.25 * Math.signum(error);  //have 30 degrees be the cutoff point
+    turnIDist += error;
+    return 0.033 * error + (0.0009 * turnIDist);
+  }
+
   public double driveSpeedCalcPlace(double error) {
-    if (error <= 28) {return 0.0;}
+    if (error <= 45) {return 0.0;}
     else return error / 75.0 * Math.signum(error); //shouldn't need signum, but just in case we do ever use (-) numbers...
   }
 
@@ -171,7 +179,13 @@ public class DriveTrain extends Subsystem {
 
   public double strafeSpeedCalc (double error) {
     //if (error <= 5.0 && error >= -5.0) {return 0.0;}
-    return 0.071 * error;
+    return 0.052 * error;
+  }
+
+  public double strafeIDist;
+  public double strafeSpeedCalcNew (double error) {
+    strafeIDist += error;
+    return (0.03 * error) + (0.0001 * strafeIDist);
   }
 
   public double alignSpeedCalc (double error) {
