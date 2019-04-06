@@ -33,6 +33,8 @@ public class DriveToVisionTargetScore extends Command {
   boolean thirdCheck;
   boolean secondTurnCheck;
 
+  int strafeCount;
+
   double parallelAngle;
 
   boolean setTurnControl;
@@ -65,6 +67,7 @@ public class DriveToVisionTargetScore extends Command {
     Robot.driveTrain.strafeIDist = 0;
     Robot.driveTrain.turnIDist = 0;
     secondTurnCheck = false;
+    strafeCount = 10;
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -92,13 +95,16 @@ public class DriveToVisionTargetScore extends Command {
         case LINE_UP:
           Robot.driveTrain.allDrive(-Robot.driveTrain.driveSpeedCalcPlace(distance), Robot.driveTrain.turnSpeedCalcNew(deltaAngle), Robot.driveTrain.strafeSpeedCalcNew(distanceToStrafe));
 
-          if (thirdCheck && secondTurnCheck) {
+          if (strafeCount == 0) {
             commandState = CommandState.DRIVE_IN;
           }
-          thirdCheck = Math.abs(distanceToStrafe) < 1.75 && secondCheck;
-          secondCheck = Math.abs(distanceToStrafe) < 1.75;
-          secondTurnCheck = Math.abs(deltaAngle) < 1.75;
-
+          if (Math.abs(distanceToStrafe) < 1.75 && Math.abs(deltaAngle) < 1.75) {
+            strafeCount -= 1;
+          }
+          else {
+            strafeCount = 10;
+          }
+          
           break;
 
         case DRIVE_IN:

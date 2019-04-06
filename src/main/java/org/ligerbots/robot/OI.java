@@ -148,4 +148,7 @@ public class OI {
     public double manualWrist() {
         return farm.getX();
     }
+    public double getManualElevator() {
+        return xbox.getY(Hand.kRight);
+    }
 }

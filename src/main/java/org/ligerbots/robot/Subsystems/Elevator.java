@@ -60,7 +60,7 @@ public class Elevator extends Subsystem {
   public double hatchHigh = 56.5;
   public double hatchMid = 34.0;
   public double hatchLow = 7.25; // Robot 1 = 7.25
-  public double ballHigh = 57.5; // Robot 1 = 57.0
+  public double ballHigh = 57.1; // Robot 1 = 57.0
   public double ballMid = 40.0; // Robot 1 = 40.0
   public double ballLow = 16.0; // Robot 1 = 15.0
   public double ballCargo = 29.5; // Robot 1 = 33.0
@@ -77,7 +77,7 @@ public class Elevator extends Subsystem {
     SmartDashboard.putNumber("WristF", RobotMap.WRIST_F);
 
     leader1 = new WPI_TalonSRX(9); //It is the top left motor when looking at the back of the robot
-    follower1 = new WPI_TalonSRX(8); //Same side as leader should be 8 on first robot
+    follower1 = new WPI_TalonSRX(13); //Same side as leader should be 8 on first robot
     follower2 = new WPI_TalonSRX(7); //top right
     follower3 = new WPI_TalonSRX(6); //bottom right
     //wrist = new WPI_TalonSRX(11);

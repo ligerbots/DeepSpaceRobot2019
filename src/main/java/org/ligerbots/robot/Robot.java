@@ -142,6 +142,7 @@ public class Robot extends TimedRobot {
     intakeCommand.start();
     tuneElevator.start();
     wristCommand.start();
+    //elevatorBad.start();
   }
   /**
    * This function is called periodically during operator control.
