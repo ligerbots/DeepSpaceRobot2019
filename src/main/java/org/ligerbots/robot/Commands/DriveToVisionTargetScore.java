@@ -67,7 +67,7 @@ public class DriveToVisionTargetScore extends Command {
     Robot.driveTrain.strafeIDist = 0;
     Robot.driveTrain.turnIDist = 0;
     secondTurnCheck = false;
-    strafeCount = 20;
+    strafeCount = 10;
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -93,22 +93,22 @@ public class DriveToVisionTargetScore extends Command {
       }
       switch (commandState) {
         case LINE_UP:
-          Robot.driveTrain.allDrive(-Robot.driveTrain.driveSpeedCalcPlace(distance), Robot.driveTrain.turnSpeedCalcNew(deltaAngle), Robot.driveTrain.strafeSpeedCalcNew(distanceToStrafe));
+          Robot.driveTrain.allDrive(-Robot.driveTrain.driveSpeedCalcPlace(distance), Robot.driveTrain.turnSpeedCalc(deltaAngle), Robot.driveTrain.strafeSpeedCalcNew(distanceToStrafe));
 
           if (strafeCount == 0) {
             commandState = CommandState.DRIVE_IN;
           }
-          if (Math.abs(distanceToStrafe) < 1.75 && Math.abs(deltaAngle) < 1.0) {
+          if (Math.abs(distanceToStrafe) < 2.5/* && Math.abs(deltaAngle) < 1.0*/) {
             strafeCount -= 1;
           }
           else {
-            strafeCount = 20;
+            strafeCount = 10;
           }
           
           break;
 
         case DRIVE_IN:
-          Robot.driveTrain.allDrive(-0.4, Robot.driveTrain.turnSpeedCalcNew(deltaAngle), Robot.driveTrain.strafeSpeedCalcNew(distanceToStrafe));
+          Robot.driveTrain.allDrive(-0.4, Robot.driveTrain.turnSpeedCalcNew(angle), Robot.driveTrain.strafeSpeedCalcNew(distanceToStrafe));
           break;
     }
 
