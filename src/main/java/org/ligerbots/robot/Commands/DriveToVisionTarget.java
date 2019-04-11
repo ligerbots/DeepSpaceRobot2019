@@ -102,7 +102,7 @@ public class DriveToVisionTarget extends Command {
     if (visionTargetFound) {
       angle = visionInfo[4] * (180/Math.PI);
       deltaAngle = angle + (visionInfo[5] * (180/Math.PI));
-      distanceToStrafe = Math.sin(visionInfo[4]) * distance;
+      distanceToStrafe = -Math.sin(visionInfo[5]) * distance;
       if (!setTurnControl) {
         Robot.driveTrain.enableTurningControl(deltaAngle, 0.5);
         setTurnControl = true;
@@ -150,7 +150,7 @@ public class DriveToVisionTarget extends Command {
     //SmartDashboard.putString("vision/active_mode", "driver_front");   FIX LATER
     Robot.grabber.setPistons(true);
     Robot.driveCommand.start();
-    SmartDashboard.putString("vision/active_mode", "driver_target");
+    SmartDashboard.putString("vision/active_mode", "rrtarget");
 
   }
 

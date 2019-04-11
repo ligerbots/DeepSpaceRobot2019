@@ -165,7 +165,7 @@ public class DriveTrain extends Subsystem {
     //if (error <= 5.0 && error >= -5.0) {return 0.0;}
    // if (error / 110.0 <= 0.4) return 0.25 * Math.signum(error);  //have 30 degrees be the cutoff point
     turnIDist += error;
-    return 0.033 * error + (0.0009 * turnIDist);
+    return 0.027 * error + (0.0017 * turnIDist);
   }
 
   public double driveSpeedCalcPlace(double error) {
@@ -179,13 +179,13 @@ public class DriveTrain extends Subsystem {
 
   public double strafeSpeedCalc (double error) {
     //if (error <= 5.0 && error >= -5.0) {return 0.0;}
-    return 0.052 * error;
+    return 0.05 * error;
   }
 
   public double strafeIDist;
   public double strafeSpeedCalcNew (double error) {
     strafeIDist += error;
-    return (0.03 * error) + (0.0001 * strafeIDist);
+    return (0.03 * error) + (0.00043 * strafeIDist);
   }
 
   public double alignSpeedCalc (double error) {

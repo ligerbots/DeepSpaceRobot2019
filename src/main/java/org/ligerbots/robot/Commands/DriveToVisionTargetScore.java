@@ -67,7 +67,7 @@ public class DriveToVisionTargetScore extends Command {
     Robot.driveTrain.strafeIDist = 0;
     Robot.driveTrain.turnIDist = 0;
     secondTurnCheck = false;
-    strafeCount = 10;
+    strafeCount = 20;
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -98,17 +98,17 @@ public class DriveToVisionTargetScore extends Command {
           if (strafeCount == 0) {
             commandState = CommandState.DRIVE_IN;
           }
-          if (Math.abs(distanceToStrafe) < 1.75 && Math.abs(deltaAngle) < 1.75) {
+          if (Math.abs(distanceToStrafe) < 1.75 && Math.abs(deltaAngle) < 1.0) {
             strafeCount -= 1;
           }
           else {
-            strafeCount = 10;
+            strafeCount = 20;
           }
           
           break;
 
         case DRIVE_IN:
-          Robot.driveTrain.allDrive(-0.4, Robot.driveTrain.turnSpeedCalcNew(deltaAngle), /*Robot.driveTrain.strafeSpeedCalcNew(distanceToStrafe)*/0);
+          Robot.driveTrain.allDrive(-0.4, Robot.driveTrain.turnSpeedCalcNew(deltaAngle), Robot.driveTrain.strafeSpeedCalcNew(distanceToStrafe));
           break;
     }
 
@@ -150,7 +150,7 @@ public class DriveToVisionTargetScore extends Command {
     //
     //Robot.grabber.setPistons(true);
     Robot.driveCommand.start();
-    SmartDashboard.putString("vision/active_mode", "driver_target");
+    SmartDashboard.putString("vision/active_mode", "rrtarget");
 
   }
 
