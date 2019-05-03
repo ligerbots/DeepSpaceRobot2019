@@ -48,7 +48,7 @@ public class DriveCommand extends Command {
     }*/
 
     SmartDashboard.putString("LeftLeaderInfo", Robot.driveTrain.leftLeaderInfo());
-    Robot.driveTrain.allDrive(Robot.oi.getThrottle(), /*correctedYaw*/Robot.oi.getRotate(), Robot.oi.getStrafe());
+    Robot.driveTrain.allDrive(Robot.oi.getThrottle(), /*correctedYaw*/Robot.oi.getRotate());
    // System.out.printf("Throttle: %5.2f, Rotate: %5.2f, Strafe: %5.2f", Robot.oi.getThrottle(), Robot.oi.getRotate(), Robot.oi.getStrafe());
   }
 

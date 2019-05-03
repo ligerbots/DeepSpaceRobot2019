@@ -95,34 +95,15 @@ public class DriveTrain extends Subsystem {
   double squaredStrafe;
   double currentRampedStrafe = 0;
   double lastStrafe = 0;
-  public void allDrive (double throttle, double rotate, double strafe) {
-    squaredStrafe = strafe/2/* * strafe * Math.signum(strafe)*/;
-    if (fieldCentric) {
-      diffDrive.arcadeDrive(throttle * Math.cos(getYaw() + squaredStrafe * Math.sin(getYaw())), rotate);
-      centerLeader.set(-throttle * Math.sin(getYaw()) + squaredStrafe * Math.cos(getYaw()));
+  public void allDrive (double throttle, double rotate) {
+    if (Robot.elevator.getPosition() > 40) {
+      limitedThrottle = Math.abs(throttle) > 0.5 ? 0.5 * Math.signum(throttle) : throttle;
     }
-    else
-    {
-      if (Robot.elevator.getPosition() > 40) {
-        limitedThrottle = Math.abs(throttle) > 0.5 ? 0.5 * Math.signum(throttle) : throttle;
-      }
-      else {
-        limitedThrottle = throttle;
-      }
-      diffDrive.arcadeDrive(limitedThrottle, -rotate);
+    else {
+      limitedThrottle = throttle;
+    }
 
-      currentRampedStrafe = lastStrafe + 0.01 * Math.signum(squaredStrafe);
-      if (Math.abs(squaredStrafe) < Math.abs(currentRampedStrafe)) {
-        currentRampedStrafe = squaredStrafe;
-      }
-      // System.out.println("Strafe Speed: " + currentRampedStrafe);
-      centerLeader.set(currentRampedStrafe);
-      //centerLeader.set(squaredStrafe);
-    }
-    // rightLeader.set(0.5);
-    // leftLeader.set(0.5);
-    // centerLeader.set(0.5);
-    lastStrafe = currentRampedStrafe;
+    diffDrive.arcadeDrive(throttle, rotate);
   }
 
   public float getYaw() {
