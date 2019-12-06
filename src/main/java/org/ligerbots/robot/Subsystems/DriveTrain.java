@@ -58,6 +58,13 @@ public class DriveTrain extends Subsystem {
     rightFollower.follow(rightLeader);
     centerFollower.follow(centerLeader); //MIGHT NEED TO BE INVERTED
 
+    leftLeader.setRampRate(1.0);
+    leftFollower.setRampRate(1.0);
+    rightLeader.setRampRate(1.0);
+    rightFollower.setRampRate(1.0);
+    centerLeader.setRampRate(1.0);
+    centerFollower.setRampRate(1.0);
+
     diffDrive = new DifferentialDrive(leftLeader, rightLeader);
 
     navX = new AHRS(Port.kMXP, (byte) 200);
